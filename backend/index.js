@@ -15,6 +15,10 @@ mongoose
 
 const app=express();
 
-app.listen(300, () => {
-    console.log('server is running on port 3000!');
+app.listen(3000, () => {
+    console.log('server is running on port 3000');
+});
+
+app.get('/test', (req, res) =>{
+    res.json({message: 'API is working!'});
 });

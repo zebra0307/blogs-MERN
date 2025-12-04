@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/post/getPosts`
+        `${import.meta.env.VITE_BACKEND_URL}/api/post/getposts`
       );
       const data = await res.json();
       setPosts(data.posts);

@@ -78,7 +78,7 @@ export default function Header() {
       </Button>
       <div className='flex gap-2 md:order-2'>
         <Button
-          className='w-12 h-10 hidden sm:inline'
+          className='w-12 h-10 inline'
           color='gray'
           pill
           onClick={() => dispatch(toggleTheme())}
@@ -107,7 +107,7 @@ export default function Header() {
           </Dropdown>
         ) : (
           <Link to='/sign-in'>
-            <Button gradientDuoTone='purpleToBlue'>
+            <Button gradientDuoTone='purpleToBlue' outline>
               Sign In
             </Button>
           </Link>
@@ -116,13 +116,15 @@ export default function Header() {
       </div>
       <NavbarCollapse>
         <NavbarLink active={path === '/'} as={Link} to='/'>
-          Home
+          <span className={path === '/' ? 'text-green-400' : ''}>Home</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
-          About
+          <span className={path === '/about' ? 'text-green-400' : ''}>About</span>
         </NavbarLink>
         <NavbarLink active={path === '/projects'} as={Link} to='/projects'>
-          Projects
+          <span className={path === '/projects' ? 'text-green-400' : ''}>
+            Projects
+          </span>
         </NavbarLink>
       </NavbarCollapse>
     </Navbar>

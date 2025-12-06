@@ -29,8 +29,7 @@ export default function UpdatePost() {
     try {
       const fetchPost = async () => {
         const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
+          `${import.meta.env.VITE_BACKEND_URL
           }/api/post/getposts?postId=${postId}`,
           {
             credentials: 'include',
@@ -94,8 +93,7 @@ export default function UpdatePost() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/post/updatepost/${
-          formData._id
+        `${import.meta.env.VITE_BACKEND_URL}/api/post/updatepost/${formData._id
         }/${currentUser._id}`,
         {
           method: 'PUT',
@@ -156,11 +154,11 @@ export default function UpdatePost() {
           />
           <Button
             type='button'
-            gradientDuoTone='purpleToBlue'
             size='sm'
             outline
             onClick={handleUpdloadImage}
             disabled={imageUploadProgress}
+            className='bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
           >
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
@@ -192,7 +190,7 @@ export default function UpdatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type='submit' gradientDuoTone='purpleToPink'>
+        <Button type='submit' className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'>
           Update post
         </Button>
         {publishError && (

@@ -14,6 +14,16 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
+// Validate required environment variables
+if (!process.env.JWT_SECRET) {
+    console.error('ERROR: JWT_SECRET is not defined in .env file');
+    console.log('Please add JWT_SECRET=your_secret_key to your .env file');
+}
+
+if (!process.env.MONGO) {
+    console.error('ERROR: MONGO is not defined in .env file');
+}
+
 mongoose
     .connect(process.env.MONGO)
     .then(() => {

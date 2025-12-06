@@ -14,20 +14,37 @@ export const signup = async (req, res, next) => {
     email === '' ||
     password === ''
   ) {
-    next(errorHandler(400, 'All fields are required'));
+    return next(errorHandler(400, 'All fields are required'));
   }
 
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-
-  const newUser = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
-
   try {
+    // Check if username already exists
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return next(errorHandler(400, 'Username already exists'));
+    }
+
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return next(errorHandler(400, 'Email already exists'));
+    }
+
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
     await newUser.save();
-    res.json('Signup successful');
+
+    // Return proper JSON success response
+    res.status(201).json({
+      success: true,
+      message: 'Signup successful! Please sign in.',
+    });
   } catch (error) {
     next(error);
   }
@@ -37,7 +54,7 @@ export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password || email === '' || password === '') {
-    next(errorHandler(400, 'All fields are required'));
+    return next(errorHandler(400, 'All fields are required'));
   }
 
   try {
@@ -67,7 +84,10 @@ export const signin = async (req, res, next) => {
       cookieOptions.secure = true;
     }
 
-    res.status(200).cookie('access_token', token, cookieOptions).json(rest);
+    res.status(200).cookie('access_token', token, cookieOptions).json({
+      success: true,
+      ...rest,
+    });
   } catch (error) {
     next(error);
   }
@@ -95,7 +115,10 @@ export const google = async (req, res, next) => {
         cookieOptions.secure = true;
       }
 
-      res.status(200).cookie('access_token', token, cookieOptions).json(rest);
+      res.status(200).cookie('access_token', token, cookieOptions).json({
+        success: true,
+        ...rest,
+      });
     } else {
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
@@ -127,7 +150,10 @@ export const google = async (req, res, next) => {
         cookieOptions.secure = true;
       }
 
-      res.status(200).cookie('access_token', token, cookieOptions).json(rest);
+      res.status(200).cookie('access_token', token, cookieOptions).json({
+        success: true,
+        ...rest,
+      });
     }
   } catch (error) {
     next(error);

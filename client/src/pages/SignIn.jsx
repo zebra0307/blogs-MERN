@@ -1,27 +1,39 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   signInStart,
   signInSuccess,
   signInFailure,
+  clearError,
 } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
+  const [successMessage, setSuccessMessage] = useState(null);
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Clear any existing error when component mounts
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccessMessage(null);
+
     if (!formData.email || !formData.password) {
       return dispatch(signInFailure('Please fill all the fields'));
     }
+
     try {
       dispatch(signInStart());
       const res = await fetch(
@@ -34,26 +46,32 @@ export default function SignIn() {
         }
       );
       const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+
+      if (!res.ok || data.success === false) {
+        return dispatch(signInFailure(data.message || 'Something went wrong'));
       }
 
-      if (res.ok) {
-        dispatch(signInSuccess(data));
+      // Show success message briefly before redirecting
+      setSuccessMessage('Sign in successful! Redirecting...');
+      dispatch(signInSuccess(data));
+
+      setTimeout(() => {
         navigate('/');
-      }
+      }, 1000);
+
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
   };
+
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
         {/* left */}
         <div className='flex-1'>
           <Link to='/' className='font-bold dark:text-white text-4xl'>
-            <span className='px-2 py-1 bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-              Sahand's
+            <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
+              Z
             </span>
             Blog
           </Link>
@@ -85,9 +103,9 @@ export default function SignIn() {
               />
             </div>
             <Button
-              gradientduotone='purpleToPink'
               type='submit'
               disabled={loading}
+              className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
             >
               {loading ? (
                 <>
@@ -106,6 +124,11 @@ export default function SignIn() {
               Sign Up
             </Link>
           </div>
+          {successMessage && (
+            <Alert className='mt-5' color='success'>
+              {successMessage}
+            </Alert>
+          )}
           {errorMessage && (
             <Alert className='mt-5' color='failure'>
               {errorMessage}

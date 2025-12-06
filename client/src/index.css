@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @source "../node_modules/flowbite-react";
 
+/* Enable dark mode with class selector for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
 body {
   height: 100vh;
 }

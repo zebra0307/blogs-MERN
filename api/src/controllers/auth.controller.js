@@ -98,6 +98,13 @@ export const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
+      // Update profile picture to Google photo if user has default avatar
+      const defaultAvatar = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
+      if (googlePhotoUrl && user.profilePicture === defaultAvatar) {
+        user.profilePicture = googlePhotoUrl;
+        await user.save();
+      }
+
       const token = jwt.sign(
         { id: user._id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET

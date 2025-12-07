@@ -17,7 +17,6 @@ export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Clear any existing error when component mounts
   useEffect(() => {
     dispatch(clearError());
   }, [dispatch]);
@@ -51,7 +50,6 @@ export default function SignIn() {
         return dispatch(signInFailure(data.message || 'Something went wrong'));
       }
 
-      // Show success message briefly before redirecting
       setSuccessMessage('Sign in successful! Redirecting...');
       dispatch(signInSuccess(data));
 
@@ -67,25 +65,21 @@ export default function SignIn() {
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
-        {/* left */}
         <div className='flex-1'>
-          <Link to='/' className='font-bold dark:text-white text-4xl'>
-            <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-              Z
-            </span>
-            Blog
+          <Link to='/' className='font-bold dark:text-white text-4xl flex items-center gap-2'>
+            <img src='/logo.png' alt='Z Blogs' className='h-12 w-12 rounded' />
+            <span className='text-gray-900 dark:text-white'>Blogs</span>
           </Link>
-          <p className='text-sm mt-5'>
-            This is a demo project. You can sign in with your email and password
+          <p className='text-sm mt-5 text-gray-600 dark:text-gray-400'>
+            Welcome to Z Blogs. You can sign in with your email and password
             or with Google.
           </p>
         </div>
-        {/* right */}
 
         <div className='flex-1'>
           <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
-              <Label value='Your email' />
+              <Label value='Your email' className='text-gray-700 dark:text-gray-300' />
               <TextInput
                 type='email'
                 placeholder='name@company.com'
@@ -94,10 +88,10 @@ export default function SignIn() {
               />
             </div>
             <div>
-              <Label value='Your password' />
+              <Label value='Your password' className='text-gray-700 dark:text-gray-300' />
               <TextInput
                 type='password'
-                placeholder='**********'
+                placeholder='********'
                 id='password'
                 onChange={handleChange}
               />
@@ -105,7 +99,7 @@ export default function SignIn() {
             <Button
               type='submit'
               disabled={loading}
-              className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
+              className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
             >
               {loading ? (
                 <>
@@ -119,8 +113,8 @@ export default function SignIn() {
             <OAuth />
           </form>
           <div className='flex gap-2 text-sm mt-5'>
-            <span>Dont Have an account?</span>
-            <Link to='/sign-up' className='text-blue-500'>
+            <span className='text-gray-600 dark:text-gray-400'>Dont Have an account?</span>
+            <Link to='/sign-up' className='text-blue-500 hover:underline'>
               Sign Up
             </Link>
           </div>

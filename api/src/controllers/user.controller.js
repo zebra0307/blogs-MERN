@@ -36,6 +36,7 @@ export const updateUser = async (req, res, next) => {
       req.body.password = bcryptjs.hashSync(req.body.newPassword, 10);
     }
 
+    // Username validation and uniqueness check
     if (req.body.username) {
       if (req.body.username.length < 3 || req.body.username.length > 20) {
         return next(
@@ -52,6 +53,14 @@ export const updateUser = async (req, res, next) => {
         return next(
           errorHandler(400, 'Username can only contain letters and numbers')
         );
+      }
+
+      // Check if username is already taken by another user
+      if (req.body.username !== user.username) {
+        const existingUser = await User.findOne({ username: req.body.username });
+        if (existingUser) {
+          return next(errorHandler(400, 'Username is already taken'));
+        }
       }
     }
 

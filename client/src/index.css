@@ -4,14 +4,219 @@
 /* Enable dark mode with class selector for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Twitter-like color scheme */
+:root {
+  --twitter-blue: #1d9bf0;
+  --twitter-dark-bg: #000000;
+  --twitter-dark-secondary: #16181c;
+  --twitter-dark-border: #2f3336;
+  --twitter-light-bg: #ffffff;
+  --twitter-light-secondary: #f7f9f9;
+  --twitter-light-border: #eff3f4;
+  --hover-light: rgba(0, 0, 0, 0.1);
+  --hover-dark: rgba(255, 255, 255, 0.1);
+}
+
+/* Circular profile picture hover container */
+.profile-pic-container {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-pic-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: opacity 0.2s ease;
+}
+
+.profile-pic-container:hover img {
+  opacity: 0.7;
+}
+
+.profile-pic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.profile-pic-container:hover .profile-pic-overlay {
+  opacity: 1;
+}
+
 body {
   height: 100vh;
 }
 
+/* Light mode base styles */
+.light {
+  --bg-primary: var(--twitter-light-bg);
+  --bg-secondary: var(--twitter-light-secondary);
+  --border-color: var(--twitter-light-border);
+  --text-primary: #0f1419;
+  --text-secondary: #536471;
+}
+
+/* Dark mode base styles */
+.dark {
+  --bg-primary: var(--twitter-dark-bg);
+  --bg-secondary: var(--twitter-dark-secondary);
+  --border-color: var(--twitter-dark-border);
+  --text-primary: #e7e9ea;
+  --text-secondary: #71767b;
+}
+
+/* Flowbite component overrides for dark mode */
+.dark .bg-white {
+  background-color: var(--twitter-dark-secondary) !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: var(--twitter-dark-bg) !important;
+}
+
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: var(--twitter-dark-border) !important;
+}
+
+/* Input fields dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--twitter-dark-secondary) !important;
+  border-color: var(--twitter-dark-border) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--text-secondary) !important;
+}
+
+/* Navbar dark mode */
+.dark nav {
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(12px);
+  border-color: var(--twitter-dark-border) !important;
+}
+
+/* Cards and modals dark mode */
+.dark .rounded-lg,
+.dark [class*="modal"] {
+  border-color: var(--twitter-dark-border);
+}
+
+/* Sidebar dark mode */
+.dark aside {
+  background-color: var(--twitter-dark-bg) !important;
+  border-color: var(--twitter-dark-border) !important;
+}
+
+/* Dropdown dark mode */
+.dark [role="menu"],
+.dark .dropdown {
+  background-color: var(--twitter-dark-secondary) !important;
+  border-color: var(--twitter-dark-border) !important;
+}
+
+/* Links - No underline, dark/light text color */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Remove underline on hover for all links */
+a:hover {
+  text-decoration: none;
+}
+
+/* Twitter-like hover effect for buttons and interactive elements */
+button:hover,
+[role="button"]:hover {
+  transition: background-color 0.2s ease;
+}
+
+.light button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Navigation link hover - Twitter style pill background */
+nav a:hover,
+aside a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  text-decoration: none;
+}
+
+.light nav a:hover,
+.light aside a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Dropdown item hover */
+.dark [role="menuitem"]:hover,
+.dark li[role="option"]:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.light [role="menuitem"]:hover,
+.light li[role="option"]:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Clickable text (like Delete Account, Sign Out) */
+.cursor-pointer:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+/* Rich text editor styles */
 .ql-editor {
   font-size: 1.05rem;
 }
 
+.dark .ql-toolbar {
+  background-color: var(--twitter-dark-secondary) !important;
+  border-color: var(--twitter-dark-border) !important;
+}
+
+.dark .ql-container {
+  background-color: var(--twitter-dark-secondary) !important;
+  border-color: var(--twitter-dark-border) !important;
+}
+
+.dark .ql-editor {
+  color: var(--text-primary) !important;
+}
+
+.dark .ql-toolbar button {
+  color: var(--text-secondary) !important;
+}
+
+.dark .ql-toolbar button:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Post content styles */
 .post-content p {
   margin-bottom: 0.5rem;
 }
@@ -41,9 +246,9 @@ body {
   list-style-type: decimal;
 }
 
+/* Post content links keep the underline on hover for readability */
 .post-content a {
-  /* light blue */
-  color: rgb(73, 149, 199);
+  color: var(--twitter-blue);
   text-decoration: none;
 }
 
@@ -52,23 +257,78 @@ body {
 }
 
 .post-content pre {
-  background-color: rgb(30, 41, 59);
-  border: 1px solid rgb(61, 69, 83);
-  color: rgb(232, 231, 231);
+  background-color: #16181c;
+  border: 1px solid #2f3336;
+  color: #e7e9ea;
   white-space: pre-wrap;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
   margin-bottom: 0.5rem;
+  font-family: 'Fira Code', 'Monaco', monospace;
 }
 
 .post-content code {
-  background-color: rgb(236, 236, 236);
-  padding: 0.25rem;
+  background-color: #eff3f4;
+  padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.9rem;
 }
 
 .dark .post-content code {
-  background-color: rgb(30, 41, 59);
-  border: 1px solid rgb(61, 69, 83);
+  background-color: #2f3336;
+  color: #e7e9ea;
+}
+
+/* Alert/notification styling */
+.dark [class*="alert"] {
+  border-color: var(--twitter-dark-border) !important;
+}
+
+/* Table styles for dark mode */
+.dark table {
+  border-color: var(--twitter-dark-border) !important;
+}
+
+.dark th,
+.dark td {
+  border-color: var(--twitter-dark-border) !important;
+}
+
+.dark thead {
+  background-color: var(--twitter-dark-secondary) !important;
+}
+
+.dark tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Scrollbar styling for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--twitter-dark-bg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--twitter-dark-border);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #536471;
+}
+
+/* Focus states */
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: var(--twitter-blue) !important;
+  box-shadow: 0 0 0 1px var(--twitter-blue) !important;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }

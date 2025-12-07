@@ -1,4 +1,4 @@
-import { Avatar, Button, Dropdown, Navbar, TextInput, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
+import { Avatar, Button, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Navbar, TextInput, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
@@ -53,15 +53,13 @@ export default function Header() {
   };
 
   return (
-    <Navbar className='border-b-2'>
+    <Navbar className='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black'>
       <Link
         to='/'
-        className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'
+        className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800'
       >
-        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>
-          Z
-        </span>
-        {/* Blog */}
+        <img src='/logo.png' alt='Z Blogs' className='h-8 w-8 rounded' />
+        <span className='text-gray-900 dark:text-white'>Blogs</span>
       </Link>
       <form onSubmit={handleSubmit}>
         <TextInput
@@ -78,12 +76,12 @@ export default function Header() {
       </Button>
       <div className='flex gap-2 md:order-2'>
         <Button
-          className='w-12 h-10 inline'
+          className='w-12 h-10'
           color='gray'
           pill
           onClick={() => dispatch(toggleTheme())}
         >
-          {theme === 'light' ? <FaSun /> : <FaMoon />}
+          {theme === 'light' ? <FaMoon /> : <FaSun />}
         </Button>
         {currentUser ? (
           <Dropdown
@@ -93,21 +91,22 @@ export default function Header() {
               <Avatar alt='user' img={currentUser.profilePicture} rounded />
             }
           >
-            <Dropdown.Header>
-              <span className='block text-sm'>@{currentUser.username}</span>
-              <span className='block text-sm font-medium truncate'>
+            <DropdownHeader>
+              <span className='block text-sm font-semibold'>@{currentUser.username}</span>
+              <span className='block text-sm text-gray-500 truncate'>
                 {currentUser.email}
               </span>
-            </Dropdown.Header>
+            </DropdownHeader>
+            <DropdownDivider />
             <Link to={'/dashboard?tab=profile'}>
-              <Dropdown.Item>Profile</Dropdown.Item>
+              <DropdownItem>Profile</DropdownItem>
             </Link>
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
+            <DropdownDivider />
+            <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
           </Dropdown>
         ) : (
           <Link to='/sign-in'>
-            <Button outline className='bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'>
+            <Button className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'>
               Sign In
             </Button>
           </Link>
@@ -116,13 +115,13 @@ export default function Header() {
       </div>
       <NavbarCollapse>
         <NavbarLink active={path === '/'} as={Link} to='/'>
-          <span className={path === '/' ? 'text-green-400' : ''}>Home</span>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/' ? 'font-bold text-black dark:text-white' : ''}`}>Home</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
-          <span className={path === '/about' ? 'text-green-400' : ''}>About</span>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/about' ? 'font-bold text-black dark:text-white' : ''}`}>About</span>
         </NavbarLink>
         <NavbarLink active={path === '/projects'} as={Link} to='/projects'>
-          <span className={path === '/projects' ? 'text-green-400' : ''}>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/projects' ? 'font-bold text-black dark:text-white' : ''}`}>
             Projects
           </span>
         </NavbarLink>

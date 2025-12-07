@@ -1,4 +1,4 @@
-import { Sidebar } from 'flowbite-react';
+import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from 'flowbite-react';
 import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiChartPie } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -10,6 +10,7 @@ export default function DashSidebar() {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state) => state.user);
     const [tab, setTab] = useState('');
+
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const tabFromUrl = urlParams.get('tab');
@@ -17,10 +18,12 @@ export default function DashSidebar() {
             setTab(tabFromUrl);
         }
     }, [location.search]);
+
     const handleSignout = async () => {
         try {
-            const res = await fetch('/api/user/signout', {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/signout`, {
                 method: 'POST',
+                credentials: 'include',
             });
             const data = await res.json();
             if (!res.ok) {
@@ -32,23 +35,24 @@ export default function DashSidebar() {
             console.log(error.message);
         }
     };
+
     return (
         <Sidebar className='w-full md:w-56'>
-            <Sidebar.Items>
-                <Sidebar.ItemGroup>
+            <SidebarItems>
+                <SidebarItemGroup>
                     {currentUser && currentUser.isAdmin && (
                         <Link to='/dashboard?tab=dash'>
-                            <Sidebar.Item
+                            <SidebarItem
                                 active={tab === 'dash' || !tab}
                                 icon={HiChartPie}
                                 as='div'
                             >
                                 Dashboard
-                            </Sidebar.Item>
+                            </SidebarItem>
                         </Link>
                     )}
                     <Link to='/dashboard?tab=profile'>
-                        <Sidebar.Item
+                        <SidebarItem
                             active={tab === 'profile'}
                             icon={HiUser}
                             label={currentUser.isAdmin ? 'Admin' : 'User'}
@@ -56,50 +60,50 @@ export default function DashSidebar() {
                             as='div'
                         >
                             Profile
-                        </Sidebar.Item>
+                        </SidebarItem>
                     </Link>
                     {currentUser.isAdmin && (
                         <Link to='/dashboard?tab=posts'>
-                            <Sidebar.Item
+                            <SidebarItem
                                 active={tab === 'posts'}
                                 icon={HiDocumentText}
                                 as='div'
                             >
                                 Posts
-                            </Sidebar.Item>
+                            </SidebarItem>
                         </Link>
                     )}
                     {currentUser.isAdmin && (
                         <>
                             <Link to='/dashboard?tab=users'>
-                                <Sidebar.Item
+                                <SidebarItem
                                     active={tab === 'users'}
                                     icon={HiOutlineUserGroup}
                                     as='div'
                                 >
                                     Users
-                                </Sidebar.Item>
+                                </SidebarItem>
                             </Link>
                             <Link to='/dashboard?tab=comments'>
-                                <Sidebar.Item
+                                <SidebarItem
                                     active={tab === 'comments'}
                                     icon={HiAnnotation}
                                     as='div'
                                 >
                                     Comments
-                                </Sidebar.Item>
+                                </SidebarItem>
                             </Link>
                         </>
                     )}
-                    <Sidebar.Item
+                    <SidebarItem
                         icon={HiArrowSmRight}
                         className='cursor-pointer'
                         onClick={handleSignout}
                     >
                         Sign Out
-                    </Sidebar.Item>
-                </Sidebar.ItemGroup>
-            </Sidebar.Items>
+                    </SidebarItem>
+                </SidebarItemGroup>
+            </SidebarItems>
         </Sidebar>
     );
 }

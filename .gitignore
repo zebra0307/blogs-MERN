@@ -2,13 +2,20 @@
 node_modules/
 */node_modules/
 
-# Environment variables
+# Environment variables - IMPORTANT: Never commit these!
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+api/.env
+client/.env
 *.local
+
+# Allow .env.example files (they don't contain secrets)
+!.env.example
+!api/.env.example
+!client/.env.example
 
 # Build outputs
 dist/
@@ -53,8 +60,11 @@ coverage/
 *.temp
 .cache/
 
-# Package lock files (optional - uncomment if you want to ignore)
-# package-lock.json
-
 # Flowbite cache
 .flowbite-react/
+
+# CORS config
+cors.json
+
+# Agent/AI files
+.agent/

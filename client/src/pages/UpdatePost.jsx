@@ -1,18 +1,13 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../firebase';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 import { useEffect, useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
 export default function UpdatePost() {
   const [file, setFile] = useState(null);
@@ -29,8 +24,7 @@ export default function UpdatePost() {
     try {
       const fetchPost = async () => {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL
-          }/api/post/getposts?postId=${postId}`,
+          `${BACKEND_URL}/api/post/getposts?postId=${postId}`,
           {
             credentials: 'include',
           }
@@ -53,48 +47,75 @@ export default function UpdatePost() {
     }
   }, [postId]);
 
-  const handleUpdloadImage = async () => {
+  /**
+   * Convert image file to Base64 string
+   */
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleUploadImage = async () => {
     try {
       if (!file) {
         setImageUploadError('Please select an image');
         return;
       }
+
+      // Validate file size (max 5MB for post images)
+      if (file.size > 5 * 1024 * 1024) {
+        setImageUploadError('Image must be less than 5MB');
+        return;
+      }
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setImageUploadError('Please select an image file');
+        return;
+      }
+
       setImageUploadError(null);
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageUploadError('Image upload failed');
-          setImageUploadProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
-          });
-        }
-      );
+      setImageUploadProgress(0);
+
+      // Simulate progress for UX
+      const progressInterval = setInterval(() => {
+        setImageUploadProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 100);
+
+      // Convert to Base64
+      const base64 = await convertToBase64(file);
+
+      clearInterval(progressInterval);
+      setImageUploadProgress(100);
+      setFormData({ ...formData, image: base64 });
+
+      // Clear progress after a moment
+      setTimeout(() => {
+        setImageUploadProgress(null);
+      }, 500);
+
     } catch (error) {
       setImageUploadError('Image upload failed');
       setImageUploadProgress(null);
       console.log(error);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/post/updatepost/${formData._id
-        }/${currentUser._id}`,
+        `${BACKEND_URL}/api/post/updatepost/${formData._id}/${currentUser._id}`,
         {
           method: 'PUT',
           credentials: 'include',
@@ -118,6 +139,7 @@ export default function UpdatePost() {
       setPublishError('Something went wrong');
     }
   };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update post</h1>
@@ -156,9 +178,9 @@ export default function UpdatePost() {
             type='button'
             size='sm'
             outline
-            onClick={handleUpdloadImage}
+            onClick={handleUploadImage}
             disabled={imageUploadProgress}
-            className='bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600'
+            className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'
           >
             {imageUploadProgress ? (
               <div className='w-16 h-16'>
@@ -190,7 +212,7 @@ export default function UpdatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
-        <Button type='submit' className='bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'>
+        <Button type='submit' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
           Update post
         </Button>
         {publishError && (

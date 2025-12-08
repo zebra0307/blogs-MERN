@@ -3,7 +3,7 @@ import CallToAction from '../components/CallToAction';
 export default function Projects() {
   return (
     <div className='min-h-screen max-w-4xl mx-auto flex justify-center gap-8 items-center flex-col p-6'>
-      <h1 className='text-4xl font-bold text-center'>Explore Our Projects</h1>
+      <h1 className='text-4xl font-bold text-center'>Explore Projects</h1>
       <p className='text-lg text-gray-600 text-center max-w-3xl'>
         Dive into a collection of fun and engaging projects designed to help you
         learn and master HTML, CSS, and JavaScript. Whether you're a beginner or

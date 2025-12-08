@@ -10,7 +10,6 @@ import authRoutes from './src/routes/auth.route.js';
 import postRoutes from './src/routes/post.route.js';
 import commentRoutes from './src/routes/comment.route.js';
 import otpRoutes from './src/routes/otp.route.js';
-import path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,10 +57,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-app.use((req, res, next) => {
-    console.log(`Incoming request: ${req.method} ${req.url}`);
-    next();
-});
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
@@ -75,9 +70,12 @@ app.get('/test', (req, res) => {
     res.json({ message: 'API is working!' });
 });
 
-app.use(express.static(path.join(__dirname, '../client/build')));
+// Serve static files from the React app (Vite builds to 'dist')
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client','build','index.html'));
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 app.use((err, req, res, next) => {
@@ -90,6 +88,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });

@@ -16,7 +16,5 @@ export default defineConfig({
       },
     },
   },
-  define: {
-    'import.meta.env.VITE_BACKEND_URL': JSON.stringify(''),
-  },
+
 })

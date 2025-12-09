@@ -115,7 +115,7 @@ export default function UpdatePost() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `${BACKEND_URL}/api/post/updatepost/${formData._id}/${currentUser._id}`,
+        `${BACKEND_URL}/api/post/updatepost/${postId}/${currentUser._id}`,
         {
           method: 'PUT',
           credentials: 'include',

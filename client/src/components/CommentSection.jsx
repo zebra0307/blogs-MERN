@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Comment from './Comment';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function CommentSection({ postId }) {
     const { currentUser } = useSelector((state) => state.user);
     const [comment, setComment] = useState('');
@@ -20,7 +22,7 @@ export default function CommentSection({ postId }) {
         }
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/comment/create`,
+                `${BACKEND_URL}/api/comment/create`,
                 {
                     method: 'POST',
                     credentials: 'include',
@@ -49,8 +51,7 @@ export default function CommentSection({ postId }) {
         const getComments = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL
-                    }/api/comment/getPostComments/${postId}`
+                    `${BACKEND_URL}/api/comment/getPostComments/${postId}`
                 );
                 if (res.ok) {
                     const data = await res.json();
@@ -70,8 +71,7 @@ export default function CommentSection({ postId }) {
                 return;
             }
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL
-                }/api/comment/likeComment/${commentId}`,
+                `${BACKEND_URL}/api/comment/likeComment/${commentId}`,
                 {
                     method: 'PUT',
                     credentials: 'include',
@@ -112,8 +112,7 @@ export default function CommentSection({ postId }) {
                 return;
             }
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL
-                }/api/comment/deleteComment/${commentId}`,
+                `${BACKEND_URL}/api/comment/deleteComment/${commentId}`,
                 {
                     method: 'DELETE',
                     credentials: 'include',

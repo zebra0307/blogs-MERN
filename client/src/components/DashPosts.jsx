@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function DashPosts() {
     const { currentUser } = useSelector((state) => state.user);
     const [userPosts, setUserPosts] = useState([]);
@@ -15,7 +17,7 @@ export default function DashPosts() {
         const fetchPosts = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/post/getposts?userId=${currentUser._id}`,
+                    `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}`,
                     {
                         credentials: 'include',
                     }
@@ -40,7 +42,7 @@ export default function DashPosts() {
         const startIndex = userPosts.length;
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
+                `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
                 {
                     credentials: 'include',
                 }
@@ -61,7 +63,7 @@ export default function DashPosts() {
         setShowModal(false);
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
+                `${BACKEND_URL}/api/post/deletepost/${postIdToDelete}/${currentUser._id}`,
                 {
                     method: 'DELETE',
                     credentials: 'include',

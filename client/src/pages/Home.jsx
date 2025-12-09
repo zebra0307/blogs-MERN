@@ -3,6 +3,8 @@ import CallToAction from '../components/CallToAction';
 import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
 
@@ -10,7 +12,7 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/post/getposts`
+          `${BACKEND_URL}/api/post/getposts`
         );
         const data = await res.json();
         console.log('Fetched posts:', data);

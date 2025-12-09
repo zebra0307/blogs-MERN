@@ -7,6 +7,8 @@ import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useEffect, useState } from 'react';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function Header() {
   const path = useLocation().pathname;
   const location = useLocation();
@@ -27,7 +29,7 @@ export default function Header() {
   const handleSignout = async () => {
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/user/signout`,
+        `${BACKEND_URL}/api/user/signout`,
         {
           method: 'POST',
           credentials: 'include',

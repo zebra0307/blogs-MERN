@@ -4,6 +4,8 @@ import { FaThumbsUp } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Button, Textarea } from 'flowbite-react';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const [user, setUser] = useState({});
     const [isEditing, setIsEditing] = useState(false);
@@ -13,7 +15,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
         const getUser = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/user/${comment.userId}`
+                    `${BACKEND_URL}/api/user/${comment.userId}`
                 );
                 const data = await res.json();
                 if (res.ok) {
@@ -34,7 +36,7 @@ export default function Comment({ comment, onLike, onEdit, onDelete }) {
     const handleSave = async () => {
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/comment/editComment/${comment._id}`,
+                `${BACKEND_URL}/api/comment/editComment/${comment._id}`,
                 {
                     method: 'PUT',
                     credentials: 'include',

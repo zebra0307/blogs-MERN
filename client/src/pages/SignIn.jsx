@@ -10,6 +10,8 @@ import {
 } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function SignIn() {
   const [formData, setFormData] = useState({});
   const [successMessage, setSuccessMessage] = useState(null);
@@ -36,7 +38,7 @@ export default function SignIn() {
     try {
       dispatch(signInStart());
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/auth/signin`,
+        `${BACKEND_URL}/api/auth/signin`,
         {
           method: 'POST',
           credentials: 'include',

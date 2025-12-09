@@ -51,7 +51,15 @@ const app = express();
 
 // CORS configuration - allow frontend to make requests
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174', 'http://127.0.0.1:5175'],
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://127.0.0.1:5173',
+        'http://127.0.0.1:5174',
+        'http://127.0.0.1:5175',
+        'https://blogs-mern-hhov.onrender.com'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -74,8 +82,14 @@ app.get('/test', (req, res) => {
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Handle React routing, return all requests to React app
-// Express 5 uses path-to-regexp v8 which requires {*splat} syntax for catch-all
-app.get('/{*splat}', (req, res) => {
+// This catch-all must come AFTER all API routes
+// Only serve index.html for non-API routes
+app.use((req, res, next) => {
+    // If the request is for an API route, pass to error handler
+    if (req.path.startsWith('/api')) {
+        return next();
+    }
+    // For all other routes, serve the React app
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 

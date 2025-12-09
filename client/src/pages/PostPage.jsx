@@ -5,6 +5,8 @@ import CallToAction from '../components/CallToAction';
 import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function PostPage() {
   const { postSlug } = useParams();
   const [loading, setLoading] = useState(true);
@@ -17,9 +19,7 @@ export default function PostPage() {
       try {
         setLoading(true);
         const res = await fetch(
-          `${
-            import.meta.env.VITE_BACKEND_URL
-          }/api/post/getposts?slug=${postSlug}`
+          `${BACKEND_URL}/api/post/getposts?slug=${postSlug}`
         );
         const data = await res.json();
         if (!res.ok) {
@@ -44,7 +44,7 @@ export default function PostPage() {
     try {
       const fetchRecentPosts = async () => {
         const res = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/api/post/getposts?limit=3`
+          `${BACKEND_URL}/api/post/getposts?limit=3`
         );
         const data = await res.json();
         if (res.ok) {
@@ -94,7 +94,7 @@ export default function PostPage() {
       <div className='max-w-4xl mx-auto w-full'>
         <CallToAction />
       </div>
-      <CommentSection postId={post._id} />
+      {post && <CommentSection postId={post._id} />}
 
       <div className='flex flex-col justify-center items-center mb-5'>
         <h1 className='text-xl mt-5'>Recent articles</h1>

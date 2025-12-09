@@ -5,6 +5,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function DashSidebar() {
     const location = useLocation();
     const dispatch = useDispatch();
@@ -21,7 +23,7 @@ export default function DashSidebar() {
 
     const handleSignout = async () => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/signout`, {
+            const res = await fetch(`${BACKEND_URL}/api/user/signout`, {
                 method: 'POST',
                 credentials: 'include',
             });

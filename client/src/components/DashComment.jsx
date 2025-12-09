@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export default function DashComments() {
     const { currentUser } = useSelector((state) => state.user);
     const [comments, setComments] = useState([]);
@@ -14,7 +16,7 @@ export default function DashComments() {
         const fetchComments = async () => {
             try {
                 const res = await fetch(
-                    `${import.meta.env.VITE_BACKEND_URL}/api/comment/getcomments`,
+                    `${BACKEND_URL}/api/comment/getcomments`,
                     {
                         credentials: 'include',
                     }
@@ -39,7 +41,7 @@ export default function DashComments() {
         const startIndex = comments.length;
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/comment/getcomments?startIndex=${startIndex}`,
+                `${BACKEND_URL}/api/comment/getcomments?startIndex=${startIndex}`,
                 {
                     credentials: 'include',
                 }
@@ -60,7 +62,7 @@ export default function DashComments() {
         setShowModal(false);
         try {
             const res = await fetch(
-                `${import.meta.env.VITE_BACKEND_URL}/api/comment/deleteComment/${commentIdToDelete}`,
+                `${BACKEND_URL}/api/comment/deleteComment/${commentIdToDelete}`,
                 {
                     method: 'DELETE',
                     credentials: 'include',

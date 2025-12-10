@@ -94,7 +94,7 @@ export default function Header() {
             }
             theme={{
               floating: {
-                base: 'z-50 w-fit rounded-lg divide-y divide-gray-100 shadow focus:outline-none bg-white dark:bg-gray-800 dark:divide-gray-600',
+                base: 'z-[9999] w-fit rounded-lg divide-y divide-gray-100 shadow-lg focus:outline-none bg-white dark:bg-gray-800 dark:divide-gray-600',
                 content: 'py-1 text-sm text-gray-700 dark:text-gray-200',
                 header: 'block py-2 px-4 text-sm text-gray-700 dark:text-gray-200',
                 item: {

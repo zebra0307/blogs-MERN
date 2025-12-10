@@ -92,19 +92,29 @@ export default function Header() {
             label={
               <Avatar alt='user' img={currentUser.profilePicture} rounded />
             }
+            theme={{
+              floating: {
+                base: 'z-50 w-fit rounded-lg divide-y divide-gray-100 shadow focus:outline-none bg-white dark:bg-gray-800 dark:divide-gray-600',
+                content: 'py-1 text-sm text-gray-700 dark:text-gray-200',
+                header: 'block py-2 px-4 text-sm text-gray-700 dark:text-gray-200',
+                item: {
+                  base: 'flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer w-full hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white',
+                },
+              },
+            }}
           >
-            <DropdownHeader>
-              <span className='block text-sm font-semibold'>@{currentUser.username}</span>
-              <span className='block text-sm text-gray-500 truncate'>
+            <DropdownHeader className='dark:text-gray-200'>
+              <span className='block text-sm font-semibold dark:text-white'>@{currentUser.username}</span>
+              <span className='block text-sm text-gray-500 truncate dark:text-gray-400'>
                 {currentUser.email}
               </span>
             </DropdownHeader>
-            <DropdownDivider />
+            <DropdownDivider className='dark:border-gray-600' />
             <Link to={'/dashboard?tab=profile'}>
-              <DropdownItem>Profile</DropdownItem>
+              <DropdownItem className='dark:text-gray-200 dark:hover:bg-gray-600'>Profile</DropdownItem>
             </Link>
-            <DropdownDivider />
-            <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
+            <DropdownDivider className='dark:border-gray-600' />
+            <DropdownItem onClick={handleSignout} className='dark:text-gray-200 dark:hover:bg-gray-600'>Sign out</DropdownItem>
           </Dropdown>
         ) : (
           <Link to='/sign-in'>

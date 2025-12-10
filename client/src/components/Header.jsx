@@ -1,4 +1,4 @@
-import { Avatar, Button, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Navbar, TextInput, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
+import { Avatar, Button, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Navbar, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa';
@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useEffect, useState } from 'react';
+import SearchAutocomplete from './SearchAutocomplete';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
@@ -46,16 +47,8 @@ export default function Header() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(location.search);
-    urlParams.set('searchTerm', searchTerm);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
-  };
-
   return (
-    <Navbar className='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black'>
+    <Navbar className='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black sticky top-0 z-[9999]'>
       <Link
         to='/'
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800'
@@ -63,17 +56,20 @@ export default function Header() {
         <img src='/logo.png' alt='Z Blogs' className='h-8 w-8 rounded' />
         <span className='text-gray-900 dark:text-white'>Blogs</span>
       </Link>
-      <form onSubmit={handleSubmit}>
-        <TextInput
-          type='text'
-          placeholder='Search...'
-          rightIcon={AiOutlineSearch}
-          className='hidden lg:inline'
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </form>
-      <Button className='w-12 h-10 lg:hidden' color='gray' pill>
+
+      {/* Desktop Search with Autocomplete */}
+      <SearchAutocomplete
+        initialValue={searchTerm}
+        className='hidden lg:block w-64'
+      />
+
+      {/* Mobile Search Button */}
+      <Button
+        className='w-12 h-10 lg:hidden'
+        color='gray'
+        pill
+        onClick={() => navigate('/search')}
+      >
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>

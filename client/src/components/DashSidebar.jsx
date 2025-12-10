@@ -39,7 +39,7 @@ export default function DashSidebar() {
     };
 
     return (
-        <Sidebar className='w-full md:w-56'>
+        <Sidebar className='w-full md:w-56 md:sticky md:top-[60px] md:h-[calc(100vh-60px)]'>
             <SidebarItems>
                 <SidebarItemGroup>
                     {currentUser && currentUser.isAdmin && (

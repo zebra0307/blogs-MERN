@@ -66,9 +66,9 @@ export default function UpdatePost() {
         return;
       }
 
-      // Validate file size (max 5MB for post images)
-      if (file.size > 5 * 1024 * 1024) {
-        setImageUploadError('Image must be less than 5MB');
+      // Validate file size (max 500KB for post images)
+      if (file.size > 500 * 1024) {
+        setImageUploadError('Image must be less than 500KB');
         return;
       }
 

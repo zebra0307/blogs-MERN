@@ -109,8 +109,14 @@ body {
 }
 
 /* Navbar dark mode */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 9999 !important;
+}
+
 .dark nav {
-  background-color: rgba(0, 0, 0, 0.65) !important;
+  background-color: rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(12px);
   border-color: var(--twitter-dark-border) !important;
 }
@@ -121,7 +127,7 @@ body {
   border-color: var(--twitter-dark-border);
 }
 
-/* Sidebar dark mode */
+/* Sidebar styling */
 .dark aside {
   background-color: var(--twitter-dark-bg) !important;
   border-color: var(--twitter-dark-border) !important;
@@ -331,4 +337,21 @@ aside a:hover {
 /* Smooth transitions */
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out forwards;
 }

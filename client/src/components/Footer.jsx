@@ -30,7 +30,7 @@ export default function FooterCom() {
               </FooterLinkGroup>
             </div>
             <div>
-              <FooterTitle title='Follow on' className='text-gray-900 dark:text-white' />
+              <FooterTitle title='Contact us' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
                 <FooterLink
                   href='https://www.github.com/zebra0307'

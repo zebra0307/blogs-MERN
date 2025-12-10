@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import CallToAction from '../components/CallToAction';
 import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
+import HomeSlides from '../components/HomeSlides';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
 
@@ -28,11 +29,12 @@ export default function Home() {
 
   return (
     <div>
+      {/* Welcome Section */}
       <div className='flex flex-col gap-6 p-10 px-3 max-w-6xl mx-auto'>
-        <h1 className='text-3xl font-bold lg:text-6xl pt-10'>
-          Welcome to Z Blogs
+        <h1 className='text-3xl font-bold lg:text-6xl pt-10 text-gray-900 dark:text-white'>
+          Welcome to <span className='text-teal-600 dark:text-teal-500'>Z Blogs</span>
         </h1>
-        <p className='text-gray-500 text-xs sm:text-sm'>
+        <p className='text-gray-600 dark:text-gray-400 text-sm sm:text-base leading-relaxed'>
           Welcome to Z Blogs! Here you'll find a wide range of articles,
           tutorials, and resources designed to help you grow as a developer.
           Whether you're interested in web development, software engineering,
@@ -42,29 +44,35 @@ export default function Home() {
         </p>
         <Link
           to='/search'
-          className='text-xs sm:text-sm text-teal-500 font-bold hover:underline'
+          className='text-sm sm:text-base text-teal-600 dark:text-teal-400 font-semibold hover:underline'
         >
-          View all posts
+          View all posts →
         </Link>
-        <div className='p-3 bg-amber-100 dark:bg-slate-700'>
+        <div className='p-4 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700'>
           <CallToAction />
         </div>
       </div>
 
-      <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-3'>
+      {/* Homepage Slides: About Us, How to Use, FAQs, Resources */}
+      <HomeSlides />
+
+      {/* Recent Posts Section */}
+      <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-16'>
         {posts && posts.length > 0 && (
           <div className='flex flex-col gap-6'>
-            <h2 className='text-2xl font-semibold text-center'>Recent Posts</h2>
-            <div className='flex flex-wrap gap-3 justify-center'>
+            <h2 className='text-2xl font-semibold text-center text-gray-900 dark:text-white'>
+              Recent Posts
+            </h2>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
               {posts.map((post) => (
                 <PostCard key={post._id} post={post} />
               ))}
             </div>
             <Link
               to={'/search'}
-              className='text-lg text-teal-500 hover:underline text-center'
+              className='text-base text-teal-600 dark:text-teal-400 hover:underline text-center font-medium'
             >
-              View all posts
+              View all posts →
             </Link>
           </div>
         )}
@@ -72,3 +80,4 @@ export default function Home() {
     </div>
   );
 }
+

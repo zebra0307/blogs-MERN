@@ -108,29 +108,34 @@ export default function Search() {
 
   return (
     <div className='flex flex-col md:flex-row'>
-      <div className='p-7 border-b md:border-r md:min-h-screen border-gray-500'>
-        <form className='flex flex-col gap-8' onSubmit={handleSubmit}>
-          <div className='flex   items-center gap-2'>
-            <label className='whitespace-nowrap font-semibold'>
-              Search Term:
+      {/* Filter Sidebar - Thin & Compact */}
+      <div className='p-4 border-b md:border-r md:min-h-screen border-gray-200 dark:border-gray-700 md:w-56 flex-shrink-0 bg-gray-50 dark:bg-gray-900/50'>
+        <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+          {/* Search Term */}
+          <div className='flex flex-col gap-1'>
+            <label className='text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide'>
+              Search
             </label>
             <TextInput
-              placeholder='Search topic...'
+              placeholder='Search...'
               id='searchTerm'
               type='text'
+              sizing='sm'
               value={sidebarData.searchTerm}
               onChange={handleChange}
             />
           </div>
-          <div className='flex items-center gap-2'>
-            <label className='font-semibold'>Sort:</label>
-            <Select onChange={handleChange} value={sidebarData.sort} id='sort'>
+          {/* Sort */}
+          <div className='flex flex-col gap-1'>
+            <label className='text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide'>Sort</label>
+            <Select onChange={handleChange} value={sidebarData.sort} id='sort' sizing='sm'>
               <option value='desc'>Latest</option>
               <option value='asc'>Oldest</option>
             </Select>
           </div>
-          <div className='flex items-center gap-2'>
-            <label className='font-semibold'>Category:</label>
+          {/* Category */}
+          <div className='flex flex-col gap-1'>
+            <label className='text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide'>Category</label>
             <Select
               onChange={handleChange}
               value={sidebarData.category}
@@ -385,27 +390,32 @@ export default function Search() {
               </optgroup>
             </Select>
           </div>
-          <Button type='submit' outline className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
-            Apply Filters
+          <Button type='submit' size='sm' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white w-full'>
+            Apply
           </Button>
         </form>
       </div>
-      <div className='w-full'>
-        <h1 className='text-3xl font-semibold sm:border-b border-gray-500 p-3 mt-5 '>
-          Posts results:
+
+      {/* Main Content Area - Blog Grid */}
+      <div className='flex-1 min-w-0'>
+        <h1 className='text-2xl font-semibold border-b border-gray-200 dark:border-gray-700 px-4 py-3'>
+          Posts results
         </h1>
-        <div className='p-7 flex flex-wrap gap-4'>
+        <div className='p-4'>
           {!loading && posts.length === 0 && (
-            <p className='text-xl text-gray-500'>No posts found.</p>
+            <p className='text-lg text-gray-500 text-center py-8'>No posts found.</p>
           )}
-          {loading && <p className='text-xl text-gray-500'>Loading...</p>}
-          {!loading &&
-            posts &&
-            posts.map((post) => <PostCard key={post._id} post={post} />)}
+          {loading && <p className='text-lg text-gray-500 text-center py-8'>Loading...</p>}
+          {/* 3-Column Grid */}
+          <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+            {!loading &&
+              posts &&
+              posts.map((post) => <PostCard key={post._id} post={post} />)}
+          </div>
           {showMore && (
             <button
               onClick={handleShowMore}
-              className='text-teal-500 text-lg hover:underline p-7 w-full'
+              className='text-teal-500 text-sm font-medium hover:underline py-6 w-full text-center'
             >
               Show More
             </button>

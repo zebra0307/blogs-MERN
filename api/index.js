@@ -52,23 +52,40 @@ const app = express();
 const normalizeOrigin = (origin = '') =>
     origin.trim().replace(/^['"]|['"]$/g, '').replace(/\/$/, '');
 
+const parseCorsOrigins = (rawOrigins = '') => {
+    const input = rawOrigins.trim();
+    if (!input) {
+        return [];
+    }
+
+    // Support JSON-array style values in env, e.g. ["https://a.com","https://b.com"].
+    if (input.startsWith('[') && input.endsWith(']')) {
+        try {
+            const parsed = JSON.parse(input);
+            if (Array.isArray(parsed)) {
+                return parsed.map(origin => normalizeOrigin(String(origin))).filter(Boolean);
+            }
+        } catch {
+            // Fall back to comma-separated parsing below.
+        }
+    }
+
+    return input.split(',').map(normalizeOrigin).filter(Boolean);
+};
+
 const defaultCorsOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:5175',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
-    'http://127.0.0.1:5175',
-    'https://blogs-mern-hhov.onrender.com',
     'https://z-blogs.vercel.app'
 ].map(normalizeOrigin);
 
-const corsOrigins = (process.env.CORS_ORIGINS || '')
-    .split(',')
-    .map(normalizeOrigin)
-    .filter(Boolean);
+const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGINS || '');
 
-const allowedCorsOrigins = corsOrigins.length > 0 ? corsOrigins : defaultCorsOrigins;
+// Always include safe defaults, then extend with custom env origins.
+const allowedCorsOrigins = [...new Set([...defaultCorsOrigins, ...corsOrigins])];
 
 const corsOptions = {
     origin: (origin, callback) => {

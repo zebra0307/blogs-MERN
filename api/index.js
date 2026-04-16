@@ -105,7 +105,6 @@ const corsOptions = {
 
 // CORS configuration - supports separate frontend/backend deployment.
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 if (corsOrigins.length > 0) {
     console.log('✓ CORS_ORIGINS loaded from environment');

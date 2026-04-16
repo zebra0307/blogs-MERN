@@ -11,8 +11,8 @@ export default function CallToAction() {
                     Checkout these blogs with complete roadmaps
                 </p>
                 <Button className='rounded-tl-xl rounded-bl-none bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800'>
-                    <a href="/search" className='text-white'>
-                        Explore Blogs
+                    <a href="/projects" className='text-white'>
+                        Explore Projects
                     </a>
                 </Button>
             </div>

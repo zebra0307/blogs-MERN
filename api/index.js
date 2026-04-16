@@ -49,21 +49,42 @@ mongoose
 
 const app = express();
 
-// CORS configuration - allow frontend to make requests
+const defaultCorsOrigins = [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:5175',
+    'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
+    'http://127.0.0.1:5175',
+    'https://blogs-mern-hhov.onrender.com'
+];
+
+const corsOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
+
+const allowedCorsOrigins = corsOrigins.length > 0 ? corsOrigins : defaultCorsOrigins;
+
+// CORS configuration - supports separate frontend/backend deployment.
 app.use(cors({
-    origin: [
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://localhost:5175',
-        'http://127.0.0.1:5173',
-        'http://127.0.0.1:5174',
-        'http://127.0.0.1:5175',
-        'https://blogs-mern-hhov.onrender.com'
-    ],
+    origin: (origin, callback) => {
+        // Allow non-browser clients and same-origin requests.
+        if (!origin) {
+            return callback(null, true);
+        }
+        return callback(null, allowedCorsOrigins.includes(origin));
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+if (corsOrigins.length > 0) {
+    console.log('✓ CORS_ORIGINS loaded from environment');
+} else {
+    console.log('Using default CORS origins (set CORS_ORIGINS to override)');
+}
 
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
@@ -78,20 +99,27 @@ app.get('/test', (req, res) => {
     res.json({ message: 'API is working!' });
 });
 
-// Serve static files from the React app (Vite builds to 'dist')
-app.use(express.static(path.join(__dirname, '../client/dist')));
+const shouldServeClient = process.env.SERVE_CLIENT === 'true';
 
-// Handle React routing, return all requests to React app
-// This catch-all must come AFTER all API routes
-// Only serve index.html for non-API routes
-app.use((req, res, next) => {
-    // If the request is for an API route, pass to error handler
-    if (req.path.startsWith('/api')) {
-        return next();
-    }
-    // For all other routes, serve the React app
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+if (shouldServeClient) {
+    const clientDistPath = path.join(__dirname, '../client/dist');
+
+    // Serve static files from the React app (Vite builds to 'dist').
+    app.use(express.static(clientDistPath));
+
+    // Handle React routing for non-API routes.
+    app.use((req, res, next) => {
+        if (req.path.startsWith('/api')) {
+            return next();
+        }
+        res.sendFile(path.join(clientDistPath, 'index.html'));
+    });
+} else {
+    // API-only mode for separate frontend hosting.
+    app.get('/', (req, res) => {
+        res.json({ message: 'API is running' });
+    });
+}
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

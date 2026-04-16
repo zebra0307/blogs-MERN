@@ -101,8 +101,15 @@ export const deleteUser = async (req, res, next) => {
 
 export const signout = (req, res, next) => {
   try {
+    const cookieOptions = {};
+
+    if (process.env.NODE_ENV === 'production') {
+      cookieOptions.sameSite = 'none';
+      cookieOptions.secure = true;
+    }
+
     res
-      .clearCookie('access_token')
+      .clearCookie('access_token', cookieOptions)
       .status(200)
       .json({ success: true, message: 'User has been signed out' });
   } catch (error) {

@@ -8,8 +8,11 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*
 api/.env
+api/.env.*
 client/.env
+client/.env.*
 *.local
 
 # Allow .env.example files (they don't contain secrets)
@@ -22,9 +25,16 @@ dist/
 dist-ssr/
 client/dist/
 
+# Deployment platform artifacts
+.vercel/
+.netlify/
+.firebase/
+.render/
+
 # Logs
 logs/
 *.log
+*.pid
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

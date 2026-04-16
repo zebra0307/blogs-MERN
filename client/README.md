@@ -1,16 +1,55 @@
-# React + Vite
+# Blogs MERN - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for the Blogs MERN application, built with React + Vite.
 
-Currently, two official plugins are available:
+## Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `npm run dev` - Start Vite dev server
+- `npm run build` - Build production assets to `dist/`
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint
 
-## React Compiler
+## Environment Variables
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+Copy `client/.env.example` to `client/.env` and fill values.
 
-## Expanding the ESLint configuration
+Required:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `VITE_BACKEND_URL` - Backend base URL (example: `https://your-api-domain.com`)
+- Firebase keys used in `client/src/firebase.js`
+
+## Local Development
+
+From project root:
+
+1. `npm install`
+2. `npm install --prefix client`
+3. Configure `api/.env` and `client/.env`
+4. Start backend: `npm run dev`
+5. Start frontend: `npm run dev --prefix client`
+
+## Separate Deployment (Frontend + Backend on Different Hosts)
+
+### Backend service
+
+- Build command: `npm install`
+- Start command: `npm start`
+- Required env:
+	- `MONGO`
+	- `JWT_SECRET`
+	- `NODE_ENV=production`
+	- `CORS_ORIGINS=https://your-frontend-domain.com`
+	- `SERVE_CLIENT=false`
+
+### Frontend service
+
+- Root directory: `client`
+- Build command: `npm install && npm run build`
+- Output directory: `dist`
+- Required env:
+	- `VITE_BACKEND_URL=https://your-backend-domain.com`
+
+## Notes
+
+- Use HTTPS for both frontend and backend in production to allow secure cross-site auth cookies.
+- For multiple frontend domains, set `CORS_ORIGINS` as a comma-separated list.

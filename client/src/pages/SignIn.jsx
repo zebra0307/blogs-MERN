@@ -10,7 +10,7 @@ import {
 } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});

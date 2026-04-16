@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
 import HomeSlides from '../components/HomeSlides';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);

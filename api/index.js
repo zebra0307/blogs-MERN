@@ -49,6 +49,9 @@ mongoose
 
 const app = express();
 
+const normalizeOrigin = (origin = '') =>
+    origin.trim().replace(/^['"]|['"]$/g, '').replace(/\/$/, '');
+
 const defaultCorsOrigins = [
     'http://localhost:5173',
     'http://localhost:5174',
@@ -56,29 +59,36 @@ const defaultCorsOrigins = [
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
     'http://127.0.0.1:5175',
-    'https://blogs-mern-hhov.onrender.com'
-];
+    'https://blogs-mern-hhov.onrender.com',
+    'https://z-blogs.vercel.app'
+].map(normalizeOrigin);
 
 const corsOrigins = (process.env.CORS_ORIGINS || '')
     .split(',')
-    .map(origin => origin.trim())
+    .map(normalizeOrigin)
     .filter(Boolean);
 
 const allowedCorsOrigins = corsOrigins.length > 0 ? corsOrigins : defaultCorsOrigins;
 
-// CORS configuration - supports separate frontend/backend deployment.
-app.use(cors({
+const corsOptions = {
     origin: (origin, callback) => {
         // Allow non-browser clients and same-origin requests.
         if (!origin) {
             return callback(null, true);
         }
-        return callback(null, allowedCorsOrigins.includes(origin));
+
+        const requestOrigin = normalizeOrigin(origin);
+        const isAllowed = allowedCorsOrigins.includes(requestOrigin);
+        return callback(null, isAllowed ? requestOrigin : false);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+
+// CORS configuration - supports separate frontend/backend deployment.
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 if (corsOrigins.length > 0) {
     console.log('✓ CORS_ORIGINS loaded from environment');

@@ -9,7 +9,6 @@ import userRoutes from './src/routes/user.route.js';
 import authRoutes from './src/routes/auth.route.js';
 import postRoutes from './src/routes/post.route.js';
 import commentRoutes from './src/routes/comment.route.js';
-import otpRoutes from './src/routes/otp.route.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,16 +25,14 @@ if (!process.env.MONGO) {
     console.error('ERROR: MONGO is not defined in .env file');
 }
 
-if (!process.env.BREVO_API_KEY) {
-    console.warn('WARNING: BREVO_API_KEY is not defined. Email features will not work.');
+if (
+    !process.env.FIREBASE_PROJECT_ID ||
+    !process.env.FIREBASE_CLIENT_EMAIL ||
+    !process.env.FIREBASE_PRIVATE_KEY
+) {
+    console.warn('WARNING: Firebase Admin env vars are incomplete. /api/auth/firebase will not work.');
 } else {
-    console.log('✓ BREVO_API_KEY is configured');
-}
-
-if (!process.env.BREVO_FROM_EMAIL) {
-    console.warn('WARNING: BREVO_FROM_EMAIL is not defined. Email features will not work.');
-} else {
-    console.log('✓ BREVO_FROM_EMAIL is configured:', process.env.BREVO_FROM_EMAIL);
+    console.log('✓ Firebase Admin credentials are configured');
 }
 
 mongoose
@@ -119,7 +116,6 @@ app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
-app.use('/api/otp', otpRoutes);
 
 app.get('/test', (req, res) => {
     res.json({ message: 'API is working!' });

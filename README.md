@@ -1,6 +1,6 @@
 # Blogs MERN
 
-Full-stack MERN blog platform with authentication, OTP-based flows, admin dashboard features, posts, and comments.
+Full-stack MERN blog platform with Firebase-based authentication, admin dashboard features, posts, and comments.
 
 ## Project Structure
 
@@ -16,14 +16,15 @@ blog-MERN/
 
 - Frontend: React, Vite, Redux Toolkit, Flowbite React, Firebase
 - Backend: Node.js, Express, MongoDB (Mongoose), JWT, Cookie-based auth
-- Email/OTP: Brevo
+- Auth emails: Firebase Auth (verification + password reset)
 
 ## Prerequisites
 
 - Node.js 18+ recommended
 - npm 9+ recommended
 - MongoDB connection string (Atlas or local)
-- Firebase project config (for Google auth and Firebase features)
+- Firebase project config (client SDK vars)
+- Firebase Admin service account values for backend token verification
 
 ## Environment Setup
 
@@ -45,9 +46,9 @@ Recommended / optional:
 - `NODE_ENV` - Use `production` in production deployments
 - `CORS_ORIGINS` - Comma-separated frontend origins for CORS
 - `SERVE_CLIENT` - `true` if backend should serve `client/dist`; `false` for API-only mode
-- `BREVO_API_KEY` - Required for OTP/email features
-- `BREVO_FROM_EMAIL` - Required for OTP/email features
-- `BREVO_FROM_NAME` - Sender display name for email
+- `FIREBASE_PROJECT_ID` - Required for `/api/auth/firebase`
+- `FIREBASE_CLIENT_EMAIL` - Required for `/api/auth/firebase`
+- `FIREBASE_PRIVATE_KEY` - Required for `/api/auth/firebase` (keep escaped `\n` in `.env`)
 
 Example:
 
@@ -58,9 +59,9 @@ PORT=3000
 NODE_ENV=production
 CORS_ORIGINS=https://your-frontend-domain.com
 SERVE_CLIENT=false
-BREVO_API_KEY=your_brevo_key
-BREVO_FROM_EMAIL=your_verified_email@example.com
-BREVO_FROM_NAME=Blogs MERN
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n
 ```
 
 ### Frontend Environment Variables (`client/.env`)
@@ -194,8 +195,10 @@ Important for auth cookies across domains:
   - Ensure `CORS_ORIGINS` includes the exact frontend URL (including `https://`).
 - Login works but session does not persist:
   - Confirm HTTPS and production cookie settings (`sameSite=none`, `secure=true`).
-- OTP emails not sending:
-  - Check `BREVO_API_KEY` and `BREVO_FROM_EMAIL`.
+- `/api/auth/firebase` fails:
+  - Verify backend `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`.
+- Verification/reset emails not received:
+  - Confirm Firebase Auth email templates and authorized domains in Firebase console.
 - Frontend calls wrong API:
   - Verify `VITE_BACKEND_URL` in `client/.env` and rebuild frontend.
 

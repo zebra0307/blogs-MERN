@@ -3,14 +3,43 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  getAuth,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
+import {
   signInStart,
   signInSuccess,
   signInFailure,
   clearError,
 } from '../redux/user/userSlice';
 import OAuth from '../components/OAuth';
+import { app } from '../firebase';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
+const auth = getAuth(app);
+
+const mapFirebaseSigninError = (error) => {
+  if (!error?.code || !String(error.code).startsWith('auth/')) {
+    return error?.message || 'Failed to sign in. Please try again.';
+  }
+
+  switch (error.code) {
+    case 'auth/invalid-credential':
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+      return 'Invalid email or password.';
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/too-many-requests':
+      return 'Too many attempts. Please try again in a few minutes.';
+    case 'auth/network-request-failed':
+      return 'Network error. Please check your internet connection.';
+    default:
+      return error.message || 'Failed to sign in. Please try again.';
+  }
+};
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -37,18 +66,42 @@ export default function SignIn() {
 
     try {
       dispatch(signInStart());
+
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      if (!userCredential.user.emailVerified) {
+        try {
+          await sendEmailVerification(userCredential.user);
+        } catch {
+          // Ignore resend failure and keep the primary verification message.
+        }
+
+        await signOut(auth);
+        return dispatch(
+          signInFailure(
+            'Your email is not verified yet. A new verification email has been sent.'
+          )
+        );
+      }
+
+      const idToken = await userCredential.user.getIdToken();
       const res = await fetch(
-        `${BACKEND_URL}/api/auth/signin`,
+        `${BACKEND_URL}/api/auth/firebase`,
         {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({ idToken }),
         }
       );
       const data = await res.json();
 
       if (!res.ok || data.success === false) {
+        await signOut(auth);
         return dispatch(signInFailure(data.message || 'Something went wrong'));
       }
 
@@ -60,7 +113,7 @@ export default function SignIn() {
       }, 1000);
 
     } catch (error) {
-      dispatch(signInFailure(error.message));
+      dispatch(signInFailure(mapFirebaseSigninError(error)));
     }
   };
 
@@ -97,11 +150,16 @@ export default function SignIn() {
                 id='password'
                 onChange={handleChange}
               />
+              <div className='mt-2 text-right'>
+                <Link to='/forgot-password' className='text-sm text-blue-500 hover:underline'>
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
             <Button
               type='submit'
               disabled={loading}
-              className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
+              className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
             >
               {loading ? (
                 <>

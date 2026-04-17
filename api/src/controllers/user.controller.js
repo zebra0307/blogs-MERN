@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
 import User from '../models/user.model.js';
+import { getPasswordValidationError } from '../utils/passwordValidation.js';
 
 export const test = (req, res) => {
   res.json({ message: 'API is working!' });
@@ -18,6 +19,28 @@ export const updateUser = async (req, res, next) => {
       return next(errorHandler(404, 'User not found'));
     }
 
+    if (user.firebaseUid && req.body.newPassword) {
+      return next(
+        errorHandler(
+          400,
+          'Password is managed by Firebase. Please use Firebase password reset/change flow.'
+        )
+      );
+    }
+
+    if (
+      user.firebaseUid &&
+      req.body.email &&
+      req.body.email !== user.email
+    ) {
+      return next(
+        errorHandler(
+          400,
+          'Email is managed by Firebase. Please update your email through Firebase auth flow.'
+        )
+      );
+    }
+
     // If new password is provided, verify old password first
     if (req.body.newPassword) {
       if (!req.body.oldPassword) {
@@ -29,8 +52,9 @@ export const updateUser = async (req, res, next) => {
         return next(errorHandler(400, 'Current password is incorrect'));
       }
 
-      if (req.body.newPassword.length < 6) {
-        return next(errorHandler(400, 'New password must be at least 6 characters'));
+      const passwordValidationError = getPasswordValidationError(req.body.newPassword);
+      if (passwordValidationError) {
+        return next(errorHandler(400, passwordValidationError));
       }
 
       req.body.password = bcryptjs.hashSync(req.body.newPassword, 10);

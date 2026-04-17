@@ -2,6 +2,7 @@ import { Button, TextInput, Modal, ModalHeader, ModalBody } from 'flowbite-react
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { getAuth, verifyBeforeUpdateEmail } from 'firebase/auth';
 import {
     updateStart,
     updateSuccess,
@@ -15,9 +16,34 @@ import { Link } from 'react-router-dom';
 import TimedAlert from './TimedAlert';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import { app } from '../firebase';
+import {
+    getPasswordValidationError,
+    PASSWORD_REQUIREMENTS_HINT,
+} from '../utils/passwordValidation';
 
 // Backend URL with fallback
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
+const auth = getAuth(app);
+
+const mapFirebaseEmailChangeError = (error) => {
+    if (!error?.code || !String(error.code).startsWith('auth/')) {
+        return error?.message || 'Failed to send verification email for new address.';
+    }
+
+    switch (error.code) {
+        case 'auth/invalid-email':
+            return 'Please enter a valid email address.';
+        case 'auth/email-already-in-use':
+            return 'This email is already in use.';
+        case 'auth/requires-recent-login':
+            return 'For security, please sign in again before changing email.';
+        case 'auth/too-many-requests':
+            return 'Too many requests. Please try again in a few minutes.';
+        default:
+            return error.message || 'Failed to send verification email for new address.';
+    }
+};
 
 /**
  * DashProfile Component
@@ -27,7 +53,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrende
  * 2. Update Profile Modal:
  *    - Profile Picture: Upload inside modal, stored as Base64
  *    - Username: No OTP, just validate uniqueness
- *    - Email: OTP sent to NEW email for verification
+ *    - Email: Firebase verify-before-update-email link sent to NEW email
  * 3. Change Password: Current password verification required
  * 4. Delete account functionality
  */
@@ -42,7 +68,6 @@ export default function DashProfile() {
         email: '',
         profilePicture: '',
     });
-    const [updateStep, setUpdateStep] = useState('form'); // 'form' | 'email-otp'
     const [updateLoading, setUpdateLoading] = useState(false);
     const [updateError, setUpdateError] = useState(null);
     const [updateSuccessMsg, setUpdateSuccessMsg] = useState(null);
@@ -53,13 +78,6 @@ export default function DashProfile() {
     const [imageUploadProgress, setImageUploadProgress] = useState(null);
     const [imageUploadError, setImageUploadError] = useState(null);
     const filePickerRef = useRef();
-
-    // OTP input state (for email change only)
-    const [otpValues, setOtpValues] = useState(['', '', '', '', '', '']);
-    const [otpError, setOtpError] = useState(null);
-    const [otpLoading, setOtpLoading] = useState(false);
-    const [countdown, setCountdown] = useState(300);
-    const otpInputRefs = useRef([]);
 
     // ==================== CHANGE PASSWORD MODAL STATE ====================
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -74,17 +92,6 @@ export default function DashProfile() {
 
     // ==================== DELETE ACCOUNT MODAL STATE ====================
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-    // ==================== OTP COUNTDOWN EFFECT ====================
-    useEffect(() => {
-        let timer;
-        if (updateStep === 'email-otp' && countdown > 0) {
-            timer = setInterval(() => {
-                setCountdown((prev) => prev - 1);
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [updateStep, countdown]);
 
     // ==================== PROFILE PICTURE FUNCTIONS ====================
 
@@ -166,22 +173,16 @@ export default function DashProfile() {
         setImagePreview(null);
         setImageUploadProgress(null);
         setImageUploadError(null);
-        setUpdateStep('form');
         setUpdateError(null);
         setUpdateSuccessMsg(null);
-        setOtpValues(['', '', '', '', '', '']);
-        setOtpError(null);
         setPendingNewEmail(null);
         setShowUpdateModal(true);
     };
 
     const closeUpdateModal = () => {
         setShowUpdateModal(false);
-        setUpdateStep('form');
         setUpdateError(null);
         setUpdateSuccessMsg(null);
-        setOtpError(null);
-        setOtpValues(['', '', '', '', '', '']);
         setPendingNewEmail(null);
         setImagePreview(null);
         setImageUploadProgress(null);
@@ -197,6 +198,8 @@ export default function DashProfile() {
      */
     const handleUpdateSubmit = async () => {
         setUpdateError(null);
+        setUpdateSuccessMsg(null);
+        setPendingNewEmail(null);
 
         const hasUsernameChange = updateFormData.username !== currentUser.username;
         const hasEmailChange = updateFormData.email !== currentUser.email;
@@ -221,34 +224,49 @@ export default function DashProfile() {
         setUpdateLoading(true);
 
         try {
-            if (hasEmailChange) {
-                const res = await fetch(`${BACKEND_URL}/api/otp/send-email-change-otp`, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ newEmail: updateFormData.email }),
-                });
-                const data = await res.json();
-                setUpdateLoading(false);
+            const hasProfileUpdates = hasUsernameChange || hasProfilePicChange;
 
-                if (!res.ok || data.success === false) {
-                    setUpdateError(data.message || 'Failed to send verification code');
+            if (hasProfileUpdates) {
+                const profileUpdated = await updateProfileDirectly(
+                    {
+                        username: hasUsernameChange ? updateFormData.username : undefined,
+                        profilePicture: hasProfilePicChange ? updateFormData.profilePicture : undefined,
+                    },
+                    {
+                        closeAfterSuccess: !hasEmailChange,
+                        successMessage: hasEmailChange ? null : 'Profile updated successfully!',
+                    }
+                );
+
+                if (!profileUpdated) {
+                    return;
+                }
+            }
+
+            if (hasEmailChange) {
+                const firebaseUser = auth.currentUser;
+
+                if (!firebaseUser) {
+                    setUpdateError('Your Firebase session expired. Please sign in again.');
                     return;
                 }
 
-                setPendingNewEmail(updateFormData.email);
-                setUpdateStep('email-otp');
-                setCountdown(300);
-                setOtpValues(['', '', '', '', '', '']);
-                setTimeout(() => otpInputRefs.current[0]?.focus(), 100);
-            } else {
-                await updateProfileDirectly({
-                    username: hasUsernameChange ? updateFormData.username : undefined,
-                    profilePicture: hasProfilePicChange ? updateFormData.profilePicture : undefined,
-                });
+                await verifyBeforeUpdateEmail(firebaseUser, updateFormData.email.trim());
+
+                setPendingNewEmail(updateFormData.email.trim());
+                setUpdateSuccessMsg(
+                    hasProfileUpdates
+                        ? `Profile updated. Verification link sent to ${updateFormData.email.trim()}. Check your new inbox to complete email change.`
+                        : `Verification link sent to ${updateFormData.email.trim()}. Check your new inbox to complete email change.`
+                );
+
+                setTimeout(() => {
+                    closeUpdateModal();
+                }, 2500);
             }
         } catch (error) {
-            setUpdateError(error.message);
+            setUpdateError(mapFirebaseEmailChangeError(error));
+        } finally {
             setUpdateLoading(false);
         }
     };
@@ -256,9 +274,14 @@ export default function DashProfile() {
     /**
      * Update profile directly (for username/profile picture - no OTP)
      */
-    const updateProfileDirectly = async (updates) => {
+    const updateProfileDirectly = async (
+        updates,
+        {
+            closeAfterSuccess = true,
+            successMessage = 'Profile updated successfully!',
+        } = {}
+    ) => {
         try {
-            setUpdateLoading(true);
             dispatch(updateStart());
 
             const res = await fetch(`${BACKEND_URL}/api/user/update/${currentUser._id}`, {
@@ -268,147 +291,30 @@ export default function DashProfile() {
                 body: JSON.stringify(updates),
             });
             const data = await res.json();
-            setUpdateLoading(false);
 
             if (!res.ok || data.success === false) {
                 dispatch(updateFailure(data.message));
                 setUpdateError(data.message || 'Failed to update profile');
-                return;
+                return false;
             }
 
             dispatch(updateSuccess(data));
-            setUpdateSuccessMsg('Profile updated successfully!');
+            if (successMessage) {
+                setUpdateSuccessMsg(successMessage);
+            }
 
-            setTimeout(() => {
-                closeUpdateModal();
-            }, 1500);
+            if (closeAfterSuccess) {
+                setTimeout(() => {
+                    closeUpdateModal();
+                }, 1500);
+            }
+
+            return true;
         } catch (error) {
             dispatch(updateFailure(error.message));
             setUpdateError(error.message);
-            setUpdateLoading(false);
+            return false;
         }
-    };
-
-    // OTP Input handlers
-    const handleOtpChange = (index, value) => {
-        if (value && !/^\d$/.test(value)) return;
-        const newOtp = [...otpValues];
-        newOtp[index] = value;
-        setOtpValues(newOtp);
-        if (value && index < 5) {
-            otpInputRefs.current[index + 1]?.focus();
-        }
-    };
-
-    const handleOtpKeyDown = (index, e) => {
-        if (e.key === 'Backspace' && !otpValues[index] && index > 0) {
-            otpInputRefs.current[index - 1]?.focus();
-        }
-    };
-
-    const handleOtpPaste = (e) => {
-        e.preventDefault();
-        const pasteData = e.clipboardData.getData('text').slice(0, 6);
-        if (/^\d+$/.test(pasteData)) {
-            const newOtp = [...otpValues];
-            pasteData.split('').forEach((digit, i) => {
-                if (i < 6) newOtp[i] = digit;
-            });
-            setOtpValues(newOtp);
-        }
-    };
-
-    /**
-     * Verify OTP for email change and apply all updates
-     */
-    const handleVerifyEmailOTP = async () => {
-        const otp = otpValues.join('');
-        if (otp.length !== 6) {
-            setOtpError('Please enter the complete 6-digit code');
-            return;
-        }
-
-        setOtpError(null);
-        setOtpLoading(true);
-
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/otp/verify-email-change-otp`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    newEmail: pendingNewEmail,
-                    otp,
-                }),
-            });
-            const data = await res.json();
-
-            if (!res.ok || data.success === false) {
-                setOtpError(data.message || 'Invalid verification code');
-                setOtpLoading(false);
-                return;
-            }
-
-            dispatch(updateSuccess(data));
-
-            const hasUsernameChange = updateFormData.username !== currentUser.username;
-            const hasProfilePicChange = updateFormData.profilePicture !== currentUser.profilePicture;
-
-            if (hasUsernameChange || hasProfilePicChange) {
-                const updateRes = await fetch(`${BACKEND_URL}/api/user/update/${currentUser._id}`, {
-                    method: 'PUT',
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: hasUsernameChange ? updateFormData.username : undefined,
-                        profilePicture: hasProfilePicChange ? updateFormData.profilePicture : undefined,
-                    }),
-                });
-                const updateData = await updateRes.json();
-
-                if (updateRes.ok && updateData.success !== false) {
-                    dispatch(updateSuccess(updateData));
-                }
-            }
-
-            setOtpLoading(false);
-            setUpdateSuccessMsg('Profile updated successfully!');
-
-            setTimeout(() => {
-                closeUpdateModal();
-            }, 1500);
-        } catch (error) {
-            setOtpError(error.message);
-            setOtpLoading(false);
-        }
-    };
-
-    const handleResendEmailOTP = async () => {
-        setOtpError(null);
-        try {
-            const res = await fetch(`${BACKEND_URL}/api/otp/send-email-change-otp`, {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ newEmail: pendingNewEmail }),
-            });
-            const data = await res.json();
-
-            if (!res.ok || data.success === false) {
-                setOtpError(data.message || 'Failed to resend code');
-            } else {
-                setCountdown(300);
-                setOtpValues(['', '', '', '', '', '']);
-            }
-        } catch (error) {
-            setOtpError(error.message);
-        }
-    };
-
-    const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     // ==================== CHANGE PASSWORD MODAL FUNCTIONS ====================
@@ -439,10 +345,13 @@ export default function DashProfile() {
             setPasswordError('Please enter your current password');
             return;
         }
-        if (!newPassword || newPassword.length < 6) {
-            setPasswordError('New password must be at least 6 characters');
+
+        const passwordValidationError = getPasswordValidationError(newPassword);
+        if (passwordValidationError) {
+            setPasswordError(passwordValidationError);
             return;
         }
+
         if (newPassword !== confirmPassword) {
             setPasswordError('New passwords do not match');
             return;
@@ -549,21 +458,21 @@ export default function DashProfile() {
                 <div className='w-full space-y-3 mt-4'>
                     <Button
                         onClick={openUpdateModal}
-                        className='w-full bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
+                        className='w-full bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
                     >
                         Update Profile
                     </Button>
 
                     <Button
                         onClick={openPasswordModal}
-                        className='w-full bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
+                        className='w-full bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
                     >
                         Change Password
                     </Button>
 
                     {currentUser.isAdmin && (
                         <Link to='/create-post'>
-                            <Button className='w-full bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
+                            <Button className='w-full bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
                                 Create a Post
                             </Button>
                         </Link>
@@ -587,158 +496,101 @@ export default function DashProfile() {
             <Modal show={showUpdateModal} onClose={closeUpdateModal} popup size='md'>
                 <ModalHeader />
                 <ModalBody>
-                    {updateStep === 'form' ? (
-                        <div className='space-y-4'>
-                            <h3 className='text-lg font-bold text-gray-900 dark:text-white text-center'>Update Profile</h3>
-                            <p className='text-sm text-gray-500 dark:text-gray-400 text-center'>
-                                Email changes require verification on the new email
-                            </p>
+                    <div className='space-y-4'>
+                        <h3 className='text-lg font-bold text-gray-900 dark:text-white text-center'>Update Profile</h3>
+                        <p className='text-sm text-gray-500 dark:text-gray-400 text-center'>
+                            Email updates are sent as a Firebase verification link to your new email.
+                        </p>
 
-                            {/* Profile Picture Upload Section */}
-                            <div className='flex flex-col items-center'>
-                                <input
-                                    type='file'
-                                    accept='image/*'
-                                    onChange={handleImageChange}
-                                    ref={filePickerRef}
-                                    hidden
-                                />
-                                <div
-                                    className='w-24 h-24 rounded-full overflow-hidden shadow-md cursor-pointer'
-                                    onClick={() => filePickerRef.current.click()}
-                                >
-                                    {imageUploadProgress !== null && (
-                                        <div className='absolute inset-0 flex items-center justify-center z-10' style={{ borderRadius: '50%' }}>
-                                            <CircularProgressbar
-                                                value={imageUploadProgress || 0}
-                                                text={`${imageUploadProgress}%`}
-                                                strokeWidth={5}
-                                                styles={{
-                                                    root: { width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 },
-                                                    path: { stroke: `rgba(124, 58, 237, ${imageUploadProgress / 100})` },
-                                                    text: { fill: '#fff', fontSize: '20px', fontWeight: 'bold' },
-                                                }}
-                                            />
-                                        </div>
-                                    )}
-                                    <img
-                                        src={imagePreview || updateFormData.profilePicture}
-                                        alt='profile'
-                                        className={`w-full h-full object-cover border-4 border-gray-200 dark:border-gray-600 ${imageUploadProgress !== null && 'opacity-60'}`}
-                                    />
-                                </div>
-                                <p className='text-xs text-gray-500 dark:text-gray-400 mt-2'>Click to change picture</p>
-
-                                {imageUploadError && (
-                                    <p className='text-xs text-red-500 mt-1'>{imageUploadError}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>Username</label>
-                                <TextInput
-                                    type='text'
-                                    id='username'
-                                    value={updateFormData.username}
-                                    onChange={handleUpdateFormChange}
-                                    disabled={updateLoading}
-                                />
-                            </div>
-
-                            <div>
-                                <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>Email</label>
-                                <TextInput
-                                    type='email'
-                                    id='email'
-                                    value={updateFormData.email}
-                                    onChange={handleUpdateFormChange}
-                                    disabled={updateLoading}
-                                />
-                            </div>
-
-                            {updateError && (
-                                <TimedAlert color='failure' duration={5000} onClose={() => setUpdateError(null)}>
-                                    {updateError}
-                                </TimedAlert>
-                            )}
-
-                            {updateSuccessMsg && (
-                                <TimedAlert color='success' duration={3000}>{updateSuccessMsg}</TimedAlert>
-                            )}
-
-                            <div className='flex gap-3'>
-                                <Button
-                                    onClick={handleUpdateSubmit}
-                                    disabled={updateLoading}
-                                    className='flex-1 bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
-                                >
-                                    {updateLoading ? 'Processing...' : 'Update'}
-                                </Button>
-                                <Button color='gray' onClick={closeUpdateModal} disabled={updateLoading}>Cancel</Button>
-                            </div>
-                        </div>
-                    ) : (
-                        /* Email OTP Verification Step */
-                        <div className='space-y-4'>
-                            <h3 className='text-lg font-bold text-gray-900 dark:text-white text-center'>Verify New Email</h3>
-                            <p className='text-sm text-gray-500 dark:text-gray-400 text-center'>
-                                Enter the 6-digit code sent to
-                            </p>
-                            <p className='text-sm font-medium text-purple-600 dark:text-purple-400 text-center'>{pendingNewEmail}</p>
-
-                            {/* OTP Input Boxes */}
-                            <div className='flex justify-center gap-2' onPaste={handleOtpPaste}>
-                                {otpValues.map((digit, index) => (
-                                    <input
-                                        key={index}
-                                        ref={(el) => (otpInputRefs.current[index] = el)}
-                                        type='text'
-                                        inputMode='numeric'
-                                        maxLength={1}
-                                        value={digit}
-                                        onChange={(e) => handleOtpChange(index, e.target.value)}
-                                        onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                                        className='w-12 h-14 text-center text-2xl font-bold border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-purple-500 dark:focus:border-purple-500 focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white transition-colors'
-                                        disabled={otpLoading}
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Countdown */}
-                            <p className='text-center text-sm text-gray-500 dark:text-gray-400'>
-                                Code expires in <span className={countdown < 60 ? 'text-red-500 font-medium' : ''}>{formatTime(countdown)}</span>
-                            </p>
-
-                            {otpError && (
-                                <TimedAlert color='failure' duration={3000} onClose={() => setOtpError(null)}>
-                                    {otpError}
-                                </TimedAlert>
-                            )}
-
-                            {updateSuccessMsg && (
-                                <TimedAlert color='success' duration={3000}>{updateSuccessMsg}</TimedAlert>
-                            )}
-
-                            <Button
-                                onClick={handleVerifyEmailOTP}
-                                disabled={otpLoading || otpValues.some(v => v === '')}
-                                className='w-full bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
+                        {/* Profile Picture Upload Section */}
+                        <div className='flex flex-col items-center'>
+                            <input
+                                type='file'
+                                accept='image/*'
+                                onChange={handleImageChange}
+                                ref={filePickerRef}
+                                hidden
+                            />
+                            <div
+                                className='w-24 h-24 rounded-full overflow-hidden shadow-md cursor-pointer'
+                                onClick={() => filePickerRef.current.click()}
                             >
-                                {otpLoading ? 'Verifying...' : 'Verify & Update Email'}
-                            </Button>
+                                {imageUploadProgress !== null && (
+                                    <div className='absolute inset-0 flex items-center justify-center z-10' style={{ borderRadius: '50%' }}>
+                                        <CircularProgressbar
+                                            value={imageUploadProgress || 0}
+                                            text={`${imageUploadProgress}%`}
+                                            strokeWidth={5}
+                                            styles={{
+                                                root: { width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 },
+                                                path: { stroke: `rgba(124, 58, 237, ${imageUploadProgress / 100})` },
+                                                text: { fill: '#fff', fontSize: '20px', fontWeight: 'bold' },
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                                <img
+                                    src={imagePreview || updateFormData.profilePicture}
+                                    alt='profile'
+                                    className={`w-full h-full object-cover border-4 border-gray-200 dark:border-gray-600 ${imageUploadProgress !== null && 'opacity-60'}`}
+                                />
+                            </div>
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-2'>Click to change picture</p>
 
-                            <p className='text-center text-sm text-gray-600 dark:text-gray-400'>
-                                Didn't receive the code?{' '}
-                                <button onClick={handleResendEmailOTP} className='font-medium text-purple-600 dark:text-purple-400 hover:underline'>
-                                    Resend
-                                </button>
-                            </p>
-
-                            <button onClick={() => setUpdateStep('form')} className='w-full text-sm text-gray-500 hover:underline'>
-                                ← Back to form
-                            </button>
+                            {imageUploadError && (
+                                <p className='text-xs text-red-500 mt-1'>{imageUploadError}</p>
+                            )}
                         </div>
-                    )}
+
+                        <div>
+                            <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>Username</label>
+                            <TextInput
+                                type='text'
+                                id='username'
+                                value={updateFormData.username}
+                                onChange={handleUpdateFormChange}
+                                disabled={updateLoading}
+                            />
+                        </div>
+
+                        <div>
+                            <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>Email</label>
+                            <TextInput
+                                type='email'
+                                id='email'
+                                value={updateFormData.email}
+                                onChange={handleUpdateFormChange}
+                                disabled={updateLoading}
+                            />
+                        </div>
+
+                        {pendingNewEmail && (
+                            <p className='text-xs text-center text-gray-500 dark:text-gray-400'>
+                                Pending email verification for: {pendingNewEmail}
+                            </p>
+                        )}
+
+                        {updateError && (
+                            <TimedAlert color='failure' duration={5000} onClose={() => setUpdateError(null)}>
+                                {updateError}
+                            </TimedAlert>
+                        )}
+
+                        {updateSuccessMsg && (
+                            <TimedAlert color='success' duration={3500}>{updateSuccessMsg}</TimedAlert>
+                        )}
+
+                        <div className='flex gap-3'>
+                            <Button
+                                onClick={handleUpdateSubmit}
+                                disabled={updateLoading}
+                                className='flex-1 bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
+                            >
+                                {updateLoading ? 'Processing...' : 'Update'}
+                            </Button>
+                            <Button color='gray' onClick={closeUpdateModal} disabled={updateLoading}>Cancel</Button>
+                        </div>
+                    </div>
                 </ModalBody>
             </Modal>
 
@@ -769,11 +621,14 @@ export default function DashProfile() {
                             <TextInput
                                 type='password'
                                 id='newPassword'
-                                placeholder='Enter new password (min 6 characters)'
+                                placeholder='Enter new password'
                                 value={passwordFormData.newPassword}
                                 onChange={handlePasswordFormChange}
                                 disabled={passwordLoading}
                             />
+                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                                {PASSWORD_REQUIREMENTS_HINT}
+                            </p>
                         </div>
 
                         <div>

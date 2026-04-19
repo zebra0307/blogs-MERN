@@ -1,5 +1,5 @@
 import { Button, TextInput, Modal, ModalHeader, ModalBody } from 'flowbite-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { getAuth, verifyBeforeUpdateEmail } from 'firebase/auth';
@@ -58,7 +58,7 @@ const mapFirebaseEmailChangeError = (error) => {
  * 4. Delete account functionality
  */
 export default function DashProfile() {
-    const { currentUser, error, loading } = useSelector((state) => state.user);
+    const { currentUser, error } = useSelector((state) => state.user);
     const dispatch = useDispatch();
 
     // ==================== UPDATE PROFILE MODAL STATE ====================
@@ -156,7 +156,7 @@ export default function DashProfile() {
                 setImageUploadProgress(null);
             }, 500);
 
-        } catch (error) {
+        } catch {
             setImageUploadError('Failed to process image');
             setImageUploadProgress(null);
         }

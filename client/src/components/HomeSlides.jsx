@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 /**
  * Home Page Slides Component
- * 4 Full-width slides: About Us, How to Use, FAQs, Resources
+ * 3 Full-width slides: About Us, How to Use, FAQs
  * All slides support both light and dark modes - Teal accent color
  */
 
@@ -34,7 +34,7 @@ export function AboutUsSlide() {
     ];
 
     return (
-        <section className="w-full bg-white dark:bg-black py-16 md:py-24 border-t border-gray-200 dark:border-gray-800">
+        <section className="w-full bg-white dark:bg-black py-16 md:py-24 border-t border-gray-300 dark:border-gray-800">
             <div className="max-w-6xl mx-auto px-6 md:px-10">
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16">
@@ -52,7 +52,7 @@ export function AboutUsSlide() {
                     {features.map((feature, index) => (
                         <div
                             key={index}
-                            className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-teal-500 dark:hover:border-teal-500 hover:shadow-xl transition-all duration-300"
+                            className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 hover:border-teal-500 dark:hover:border-teal-500 hover:shadow-xl transition-all duration-300"
                         >
                             <div className="text-3xl font-bold text-teal-500 dark:text-teal-500 mb-3">
                                 {feature.number}
@@ -66,25 +66,6 @@ export function AboutUsSlide() {
                         </div>
                     ))}
                 </div>
-
-                {/* Trust Section */}
-                <div className="text-center py-8 border-t border-gray-200 dark:border-gray-800">
-                    <p className="text-gray-500 dark:text-gray-500 text-sm mb-6">Trusted by students and developers worldwide</p>
-                    <div className="flex flex-wrap justify-center gap-12">
-                        <div className="flex flex-col items-center">
-                            <span className="text-3xl font-bold text-teal-600 dark:text-teal-500">20+</span>
-                            <span className="text-sm text-gray-500 dark:text-gray-500">Articles</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-3xl font-bold text-teal-600 dark:text-teal-500">30+</span>
-                            <span className="text-sm text-gray-500 dark:text-gray-500">Categories</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-3xl font-bold text-teal-600 dark:text-teal-500">300+</span>
-                            <span className="text-sm text-gray-500 dark:text-gray-500">Readers</span>
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     );
@@ -97,23 +78,23 @@ export function HowToUseSlide() {
     const steps = [
         {
             number: '01',
-            title: 'Browse Topics',
-            description: 'Explore our comprehensive categories covering Web Dev, Blockchain, DSA, AI/ML, and more.',
+            title: 'Start with Weekly Notes',
+            description: 'Open the blog feed and read the newest posts first to keep your learning consistent every week.',
         },
         {
             number: '02',
-            title: 'Read & Learn',
-            description: 'Dive deep into well-structured articles with code examples and practical explanations.',
+            title: 'Filter by Skill Focus',
+            description: 'Use search and categories to focus on DSA, C++, web development, and systems topics that matter most.',
         },
         {
             number: '03',
-            title: 'Practice Along',
-            description: 'Follow tutorials, build projects, and apply what you learn in real-world scenarios.',
+            title: 'Connect with Projects',
+            description: 'Move from theory to implementation by checking project pages and case-study style build details.',
         },
         {
             number: '04',
-            title: 'Grow Your Skills',
-            description: 'Track your progress, bookmark favorites, and continuously expand your knowledge.',
+            title: 'Apply and Iterate',
+            description: 'Implement ideas in your own codebase, then return for the next post to keep improving steadily.',
         },
     ];
 
@@ -123,10 +104,10 @@ export function HowToUseSlide() {
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                        How to <span className="text-teal-500">Use Z Blogs</span>
+                        How to <span className="text-teal-500">Use Z Blogs Effectively</span>
                     </h2>
                     <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
-                        Get started in minutes. Follow these simple steps to make the most of your learning journey.
+                        A simple learning loop for this app: read weekly, focus by topic, apply in projects, and iterate.
                     </p>
                 </div>
 
@@ -144,7 +125,7 @@ export function HowToUseSlide() {
 
                             {/* Connecting Line (hidden on mobile and last item) */}
                             {index < steps.length - 1 && (
-                                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-gradient-to-r from-teal-500/50 to-transparent" />
+                                <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-px bg-linear-to-r from-teal-500/50 to-transparent" />
                             )}
 
                             <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-teal-400 transition-colors">
@@ -161,15 +142,15 @@ export function HowToUseSlide() {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a
                         href="/search"
-                        className="px-8 py-3 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 transition-colors text-center"
+                        className="px-8 py-3 bg-teal-500 text-white! font-semibold rounded-lg hover:bg-teal-600 transition-colors text-center shadow-sm"
                     >
-                        Start Exploring
+                        Read Weekly Notes
                     </a>
                     <a
-                        href="/about"
-                        className="px-8 py-3 border border-gray-600 text-gray-300 font-semibold rounded-lg hover:bg-gray-800 hover:border-teal-500 transition-colors text-center"
+                        href="/projects"
+                        className="px-8 py-3 border border-teal-200/60 bg-gray-800/85 text-teal-100! font-semibold rounded-lg hover:bg-gray-700 hover:border-teal-100 transition-colors text-center shadow-sm"
                     >
-                        Learn More
+                        Explore Projects
                     </a>
                 </div>
             </div>
@@ -211,8 +192,8 @@ export function FAQsSlide() {
     };
 
     return (
-        <section className="w-full bg-white dark:bg-black py-16 md:py-24 border-t border-gray-200 dark:border-gray-800">
-            <div className="max-w-4xl mx-auto px-6 md:px-10">
+        <section className="w-full bg-white dark:bg-black py-16 md:py-24 border-t border-gray-300 dark:border-gray-800">
+            <div className="max-w-3xl mx-auto px-5 md:px-8">
                 {/* Header */}
                 <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -230,7 +211,7 @@ export function FAQsSlide() {
                             key={index}
                             className={`rounded-xl border overflow-hidden transition-all duration-300 ${openIndex === index
                                 ? 'border-teal-500 dark:border-teal-500'
-                                : 'border-gray-200 dark:border-gray-800'
+                                : 'border-gray-300 dark:border-gray-800'
                                 }`}
                         >
                             <button
@@ -240,7 +221,7 @@ export function FAQsSlide() {
                                 <span className="text-base font-semibold text-gray-900 dark:text-white pr-4">
                                     {faq.question}
                                 </span>
-                                <span className={`text-xl font-light transition-all duration-300 flex-shrink-0 ${openIndex === index
+                                <span className={`text-xl font-light transition-all duration-300 shrink-0 ${openIndex === index
                                     ? 'rotate-45 text-teal-500'
                                     : 'text-gray-500 dark:text-gray-400'
                                     }`}>
@@ -262,17 +243,6 @@ export function FAQsSlide() {
                     ))}
                 </div>
 
-                {/* Contact CTA */}
-                <div className="text-center mt-12">
-                    <p className="text-gray-500 dark:text-gray-500 mb-4">Still have questions?</p>
-                    <a
-                        href="/about"
-                        className="inline-flex items-center gap-2 text-teal-600 dark:text-teal-500 font-semibold hover:text-teal-700 dark:hover:text-teal-400 transition-colors"
-                    >
-                        Contact Us
-                        <span>→</span>
-                    </a>
-                </div>
             </div>
         </section>
     );
@@ -381,7 +351,6 @@ export default function HomeSlides() {
             <AboutUsSlide />
             <HowToUseSlide />
             <FAQsSlide />
-            <ResourcesSlide />
         </>
     );
 }

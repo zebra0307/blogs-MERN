@@ -35,7 +35,7 @@ export default function DashComments() {
         if (currentUser.isAdmin) {
             fetchComments();
         }
-    }, [currentUser._id]);
+    }, [currentUser._id, currentUser.isAdmin]);
 
     const handleShowMore = async () => {
         const startIndex = comments.length;

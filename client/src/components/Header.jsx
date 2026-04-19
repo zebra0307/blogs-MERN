@@ -5,27 +5,18 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../redux/theme/themeSlice';
 import { signoutSuccess } from '../redux/user/userSlice';
-import { useEffect, useState } from 'react';
 import SearchAutocomplete from './SearchAutocomplete';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function Header() {
-  const path = useLocation().pathname;
   const location = useLocation();
+  const path = location.pathname;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get('searchTerm');
-    if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl);
-    }
-  }, [location.search]);
+  const searchTerm = new URLSearchParams(location.search).get('searchTerm') || '';
 
   const handleSignout = async () => {
     try {
@@ -124,6 +115,9 @@ export default function Header() {
       <NavbarCollapse>
         <NavbarLink active={path === '/'} as={Link} to='/'>
           <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/' ? 'font-bold text-black dark:text-white' : ''}`}>Home</span>
+        </NavbarLink>
+        <NavbarLink active={path === '/search' || path.startsWith('/post/')} as={Link} to='/search'>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-black dark:text-white' : ''}`}>Blogs</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
           <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/about' ? 'font-bold text-black dark:text-white' : ''}`}>About</span>

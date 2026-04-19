@@ -135,7 +135,7 @@ export default function UpdatePost() {
         setPublishError(null);
         navigate(`/post/${data.slug}`);
       }
-    } catch (error) {
+    } catch {
       setPublishError('Something went wrong');
     }
   };

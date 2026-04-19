@@ -1,10 +1,10 @@
 import { Footer, FooterLink, FooterLinkGroup, FooterTitle } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsTwitter, BsGithub, BsDiscord, BsLinkedin } from 'react-icons/bs';
+import { BsTwitter, BsGithub, BsLinkedin } from 'react-icons/bs';
 
 export default function FooterCom() {
   return (
-    <Footer container className='border-t-4 border-gray-300 dark:border-gray-700'>
+    <Footer id='site-footer' container className='border-t-4 border-gray-300 dark:border-gray-700'>
       <div className='w-full max-w-7xl mx-auto'>
         <div className='grid w-full justify-between sm:flex md:grid-cols-1'>
           <div className='mt-5'>
@@ -16,28 +16,7 @@ export default function FooterCom() {
               <span className='text-gray-900 dark:text-white'>Blogs</span>
             </Link>
           </div>
-          <div className='grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6'>
-            <div>
-              <FooterTitle title='Resources' className='text-gray-900 dark:text-white' />
-              <FooterLinkGroup col>
-                <FooterLink
-                  href='/coming-soon'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
-                >
-                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <span>Docs</span>
-                  </div>
-                </FooterLink>
-                <FooterLink
-                  href='/coming-soon'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
-                >
-                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <span>Projects</span>
-                  </div>
-                </FooterLink>
-              </FooterLinkGroup>
-            </div>
+          <div className='grid grid-cols-1 gap-8 mt-4 sm:grid-cols-1 sm:gap-6'>
             <div>
               <FooterTitle title='Contact us' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
@@ -45,7 +24,7 @@ export default function FooterCom() {
                   href='#'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
+                  className='p-0! text-gray-700! dark:text-gray-300!'
                 >
                   <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
                     <BsGithub className='text-gray-700 dark:text-gray-300' />
@@ -53,21 +32,10 @@ export default function FooterCom() {
                   </div>
                 </FooterLink>
                 <FooterLink
-                  href='https://discord.com/channels/zebra_0307'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
-                >
-                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <BsDiscord className='text-gray-700 dark:text-gray-300' />
-                    <span>Discord</span>
-                  </div>
-                </FooterLink>
-                <FooterLink
                   href='#'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
+                  className='p-0! text-gray-700! dark:text-gray-300!'
                 >
                   <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
                     <BsTwitter className='text-gray-700 dark:text-gray-300' />
@@ -75,14 +43,14 @@ export default function FooterCom() {
                   </div>
                 </FooterLink>
                 <FooterLink
-                  href='https://www.linkedin.com/in/satyendra-yadav-8b0140323/'
+                  href='https://satyendra0307.vercel.app/'
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='!p-0 !text-gray-700 dark:!text-gray-300'
+                  className='p-0! text-gray-700! dark:text-gray-300!'
                 >
                   <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
                     <BsLinkedin className='text-gray-700 dark:text-gray-300' />
-                    <span>LinkedIn</span>
+                    <span>Portfolio</span>
                   </div>
                 </FooterLink>
               </FooterLinkGroup>

@@ -337,7 +337,7 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
                             <div className="px-3 py-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50 uppercase tracking-wider border-b border-gray-100 dark:border-gray-700">
                                 {group}
                             </div>
-                            {groupedSuggestions[group].map((suggestion, index) => {
+                            {groupedSuggestions[group].map((suggestion) => {
                                 const globalIndex = filteredSuggestions.findIndex(
                                     (s) => s.value === suggestion.value
                                 );

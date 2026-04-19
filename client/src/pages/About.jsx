@@ -1,96 +1,134 @@
-import CallToAction from '../components/CallToAction';
+import { Link } from 'react-router-dom';
 
 export default function About() {
   return (
     <div className='min-h-screen'>
-      {/* Hero Section */}
-      <div className='bg-gray-50 dark:bg-gray-900 py-16 md:py-24'>
-        <div className='max-w-4xl mx-auto px-6 text-center'>
-          <h1 className='text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6'>
-            About <span className='text-teal-600 dark:text-teal-500'>Z Blogs</span>
-          </h1>
-          <p className='text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto'>
-            A platform dedicated to sharing knowledge and helping developers grow their skills through quality content.
-          </p>
-        </div>
-      </div>
-
       {/* Content Section */}
       <div className='max-w-4xl mx-auto px-6 py-16'>
         <div className='space-y-12'>
-          {/* Story */}
+          {/* Who I Am */}
           <div className='grid md:grid-cols-3 gap-8 items-start'>
             <div className='md:col-span-1'>
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Our Story
+                Who I Am
               </h2>
               <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                Z Blogs was created by Satyendra Yadav as a personal project to share thoughts and ideas with the
-                world. With a passion for technology, coding, and everything in between, this platform has grown
-                into a resource for developers at all levels.
+                I am Satyendra Yadav, a developer focused on becoming a stronger software engineer through consistent
+                practice, implementation, and reflection.
+              </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                This site is my technical blog plus portfolio. It is where I document what I learn, what I build,
+                and how my engineering approach is improving over time.
               </p>
             </div>
           </div>
 
-          {/* Mission */}
+          {/* What I Write About */}
           <div className='grid md:grid-cols-3 gap-8 items-start'>
             <div className='md:col-span-1'>
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Our Mission
+                What I Write About
               </h2>
               <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                On this blog, you'll find weekly articles and tutorials on topics such as web development, DSA,
-                software engineering, and programming languages. We are always learning and exploring new
-                technologies, so be sure to check back often for new content!
+                I publish weekly technical notes on data structures and algorithms, C++, web development,
+                and systems concepts.
+              </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                My posts are practical learning notes, not generic summaries. I focus on what I implemented,
+                what failed, what changed, and what I learned.
               </p>
             </div>
           </div>
 
-          {/* Community */}
+          {/* How I Build */}
           <div className='grid md:grid-cols-3 gap-8 items-start'>
             <div className='md:col-span-1'>
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Community
+                How I Build and Practice
               </h2>
               <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                We encourage you to leave comments on our posts and engage with other readers. You can like
-                other people's comments and reply to them as well. We believe that a community of learners
-                can help each other grow and improve.
+                I use projects to apply concepts in real scenarios. Building helps me move from understanding
+                theory to making reliable implementation decisions.
               </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                The blog and projects support each other: project work creates writing topics, and writing helps me
+                reflect and improve the next iteration.
+              </p>
+            </div>
+          </div>
+
+          {/* Current Focus */}
+          <div className='grid md:grid-cols-3 gap-8 items-start'>
+            <div className='md:col-span-1'>
+              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+                Current Focus
+              </h2>
+              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
+            </div>
+            <div className='md:col-span-2'>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
+                Right now I am focused on improving DSA problem solving, writing stronger C++, and building
+                cleaner frontend and full-stack applications.
+              </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                I am also developing better engineering habits around debugging, code organization,
+                and practical system-level thinking.
+              </p>
+            </div>
+          </div>
+
+          {/* Tech Stack */}
+          <div className='grid md:grid-cols-3 gap-8 items-start'>
+            <div className='md:col-span-1'>
+              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+                Tech I Work With
+              </h2>
+              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
+            </div>
+            <div className='md:col-span-2'>
+              <ul className='space-y-3 text-gray-600 dark:text-gray-400'>
+                <li>Languages: C++, JavaScript, TypeScript</li>
+                <li>Web: React, Next.js, Node.js</li>
+                <li>Core Focus: Data Structures, Algorithms, and Systems Concepts</li>
+                <li>Tools: Git, GitHub, VS Code</li>
+                <li>Deployment: Vercel, Render</li>
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className='mt-16 py-8 border-t border-b border-gray-200 dark:border-gray-800'>
-          <div className='grid grid-cols-3 gap-8 text-center'>
-            <div>
-              <div className='text-3xl font-bold text-teal-600 dark:text-teal-500'>20+</div>
-              <div className='text-sm text-gray-500 dark:text-gray-400 mt-1'>Articles</div>
-            </div>
-            <div>
-              <div className='text-3xl font-bold text-teal-600 dark:text-teal-500'>30+</div>
-              <div className='text-sm text-gray-500 dark:text-gray-400 mt-1'>Categories</div>
-            </div>
-            <div>
-              <div className='text-3xl font-bold text-teal-600 dark:text-teal-500'>300+</div>
-              <div className='text-sm text-gray-500 dark:text-gray-400 mt-1'>Readers</div>
-            </div>
+        {/* Next Steps */}
+        <div className='mt-16 p-8 border border-gray-200 dark:border-gray-800 rounded-2xl bg-gray-50 dark:bg-gray-900'>
+          <h2 className='text-2xl font-semibold text-gray-900 dark:text-white mb-3'>
+            Where to Go Next
+          </h2>
+          <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
+            If you want to see how I think and build, start with my latest technical posts,
+            then explore projects where those ideas are applied in code.
+          </p>
+          <div className='flex flex-wrap items-center gap-6 mt-5'>
+            <Link
+              to='/search'
+              className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
+            >
+              Read my latest technical posts →
+            </Link>
+            <Link
+              to='/projects'
+              className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
+            >
+              Explore my projects →
+            </Link>
           </div>
-        </div>
-
-        {/* CTA */}
-        <div className='mt-16 p-6 bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700'>
-          <CallToAction />
         </div>
       </div>
     </div>

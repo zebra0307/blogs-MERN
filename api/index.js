@@ -13,16 +13,30 @@ import commentRoutes from './src/routes/comment.route.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.join(__dirname, '../.env') });
+const envPaths = [path.join(__dirname, '.env'), path.join(__dirname, '../.env')];
+let loadedEnvFile = null;
 
-// Validate required environment variables
-if (!process.env.JWT_SECRET) {
-    console.error('ERROR: JWT_SECRET is not defined in .env file');
-    console.log('Please add JWT_SECRET=your_secret_key to your .env file');
+for (const envPath of envPaths) {
+    const result = dotenv.config({ path: envPath });
+    if (!result.error) {
+        loadedEnvFile = envPath;
+        break;
+    }
 }
 
-if (!process.env.MONGO) {
-    console.error('ERROR: MONGO is not defined in .env file');
+if (loadedEnvFile) {
+    console.log(`\u2713 Environment loaded from ${path.relative(process.cwd(), loadedEnvFile)}`);
+}
+
+// Validate required environment variables
+const requiredEnvVars = ['JWT_SECRET', 'MONGO'];
+const missingRequiredEnvVars = requiredEnvVars.filter(key => !process.env[key]);
+
+if (missingRequiredEnvVars.length > 0) {
+    console.error(
+        `ERROR: Missing required environment variables: ${missingRequiredEnvVars.join(', ')}`
+    );
+    process.exit(1);
 }
 
 if (
@@ -34,15 +48,6 @@ if (
 } else {
     console.log('✓ Firebase Admin credentials are configured');
 }
-
-mongoose
-    .connect(process.env.MONGO)
-    .then(() => {
-        console.log('MongoDb is connected');
-    })
-    .catch(err => {
-        console.log(err);
-    });
 
 const app = express();
 
@@ -154,6 +159,18 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+
+const startServer = async () => {
+    await mongoose.connect(process.env.MONGO);
+    console.log('MongoDb is connected');
+
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+};
+
+startServer().catch(err => {
+    console.error('ERROR: Failed to start server');
+    console.error(err);
+    process.exit(1);
 });

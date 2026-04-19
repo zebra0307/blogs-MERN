@@ -20,8 +20,8 @@ blog-MERN/
 
 ## Prerequisites
 
-- Node.js 18+ recommended
-- npm 9+ recommended
+- Node.js `^20.19.0 || >=22.12.0` (required by Vite 7)
+- npm 10+ recommended
 - MongoDB connection string (Atlas or local)
 - Firebase project config (client SDK vars)
 - Firebase Admin service account values for backend token verification
@@ -32,6 +32,9 @@ Create these files:
 
 - `api/.env` from `api/.env.example`
 - `client/.env` from `client/.env.example`
+
+Note:
+- Backend loads `api/.env` first, and falls back to root `.env` for backward compatibility.
 
 ### Backend Environment Variables (`api/.env`)
 
@@ -183,6 +186,9 @@ Frontend service:
 - Required env:
   - `VITE_BACKEND_URL=https://your-backend-domain.com`
 
+Runtime note for both services:
+- Use Node.js `^20.19.0 || >=22.12.0` to avoid Vite build/runtime incompatibilities.
+
 Important for auth cookies across domains:
 
 - Use HTTPS on both frontend and backend in production.
@@ -197,6 +203,8 @@ Important for auth cookies across domains:
   - Confirm HTTPS and production cookie settings (`sameSite=none`, `secure=true`).
 - `/api/auth/firebase` fails:
   - Verify backend `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY`.
+- Backend exits on startup:
+  - Verify required backend env vars are set (`MONGO`, `JWT_SECRET`).
 - Verification/reset emails not received:
   - Confirm Firebase Auth email templates and authorized domains in Firebase console.
 - Frontend calls wrong API:

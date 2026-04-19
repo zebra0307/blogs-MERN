@@ -6,34 +6,24 @@ import PostCard from '../components/PostCard';
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function Search() {
-  const [sidebarData, setSidebarData] = useState({
-    searchTerm: '',
-    sort: 'desc',
-    category: 'uncategorized',
+  const location = useLocation();
+  const [sidebarData, setSidebarData] = useState(() => {
+    const urlParams = new URLSearchParams(location.search);
+    return {
+      searchTerm: urlParams.get('searchTerm') || '',
+      sort: urlParams.get('sort') || 'desc',
+      category: urlParams.get('category') || 'uncategorized',
+    };
   });
 
-  console.log(sidebarData);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
-
-  const location = useLocation();
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get('searchTerm');
-    const sortFromUrl = urlParams.get('sort');
-    const categoryFromUrl = urlParams.get('category');
-    if (searchTermFromUrl || sortFromUrl || categoryFromUrl) {
-      setSidebarData({
-        ...sidebarData,
-        searchTerm: searchTermFromUrl,
-        sort: sortFromUrl,
-        category: categoryFromUrl,
-      });
-    }
 
     const fetchPosts = async () => {
       setLoading(true);
@@ -109,7 +99,7 @@ export default function Search() {
   return (
     <div className='flex flex-col md:flex-row'>
       {/* Filter Sidebar - Thin & Compact */}
-      <div className='p-4 border-b md:border-r md:min-h-screen border-gray-200 dark:border-gray-700 md:w-56 flex-shrink-0 bg-gray-50 dark:bg-gray-900/50'>
+      <div className='p-4 border-b md:border-r md:min-h-screen border-gray-200 dark:border-gray-700 md:w-56 shrink-0 bg-gray-50 dark:bg-gray-900/50'>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           {/* Search Term */}
           <div className='flex flex-col gap-1'>
@@ -390,7 +380,7 @@ export default function Search() {
               </optgroup>
             </Select>
           </div>
-          <Button type='submit' size='sm' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white w-full'>
+          <Button type='submit' size='sm' className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white w-full'>
             Apply
           </Button>
         </form>
@@ -399,11 +389,15 @@ export default function Search() {
       {/* Main Content Area - Blog Grid */}
       <div className='flex-1 min-w-0'>
         <h1 className='text-2xl font-semibold border-b border-gray-200 dark:border-gray-700 px-4 py-3'>
-          Posts results
+          Weekly Technical Notes
         </h1>
         <div className='p-4'>
+          <p className='text-sm md:text-base text-gray-600 dark:text-gray-400 mb-5'>
+            I publish regular learning notes on data structures, C++, web development,
+            systems, and implementation decisions from ongoing projects.
+          </p>
           {!loading && posts.length === 0 && (
-            <p className='text-lg text-gray-500 text-center py-8'>No posts found.</p>
+            <p className='text-lg text-gray-500 text-center py-8'>No matching notes found.</p>
           )}
           {loading && <p className='text-lg text-gray-500 text-center py-8'>Loading...</p>}
           {/* 3-Column Grid */}

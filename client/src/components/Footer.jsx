@@ -21,7 +21,7 @@ export default function FooterCom() {
               <FooterTitle title='Contact us' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
                 <FooterLink
-                  href='#'
+                  href='https://github.com/zebra0307'
                   target='_blank'
                   rel='noopener noreferrer'
                   className='p-0! text-gray-700! dark:text-gray-300!'
@@ -32,7 +32,7 @@ export default function FooterCom() {
                   </div>
                 </FooterLink>
                 <FooterLink
-                  href='#'
+                  href='https://x.com/stndr_0307'
                   target='_blank'
                   rel='noopener noreferrer'
                   className='p-0! text-gray-700! dark:text-gray-300!'

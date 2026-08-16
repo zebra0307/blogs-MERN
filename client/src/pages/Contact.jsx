@@ -18,8 +18,9 @@ export default function Contact() {
     e.preventDefault();
     setStatus('sending');
 
-    // Make sure you add VITE_WEB3FORMS_KEY to your .env file
-    const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
+    // Clean the key in case it was copied with extra quotes or spaces from Vercel
+    const rawKey = import.meta.env.VITE_WEB3FORMS_KEY || '';
+    const WEB3FORMS_KEY = rawKey.replace(/['"]/g, '').trim();
 
     if (!WEB3FORMS_KEY) {
       setStatus('error_key');

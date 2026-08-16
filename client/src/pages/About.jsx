@@ -6,104 +6,65 @@ export default function About() {
       {/* Content Section */}
       <div className='max-w-4xl mx-auto px-6 py-16'>
         <div className='space-y-12'>
-          {/* Who I Am */}
+          {/* Welcome Section */}
           <div className='grid md:grid-cols-3 gap-8 items-start'>
             <div className='md:col-span-1'>
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Who I Am
+                Welcome to Z-Blogs
               </h2>
               <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                I am Satyendra Yadav, a developer focused on becoming a stronger software engineer through consistent
-                practice, implementation, and reflection.
+                Z-Blogs is a vibrant public community designed for students, developers, and lifelong learners. 
+                Our platform provides a space to interact, read high-quality technical blogs, and access university resources.
               </p>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                This site is my technical blog plus portfolio. It is where I document what I learn, what I build,
-                and how my engineering approach is improving over time.
+                Whether you are looking for past question papers to prepare for your exams or seeking insightful articles on 
+                data structures, algorithms, and web development, you are in the right place!
               </p>
             </div>
           </div>
 
-          {/* What I Write About */}
+          {/* How to Contribute */}
           <div className='grid md:grid-cols-3 gap-8 items-start'>
             <div className='md:col-span-1'>
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                What I Write About
+                How You Can Contribute
               </h2>
               <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                I publish weekly technical notes on data structures and algorithms, C++, web development,
-                and systems concepts.
+                This platform thrives on community participation! Every registered member is encouraged to contribute their knowledge and engage with others.
               </p>
-              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                My posts are practical learning notes, not generic summaries. I focus on what I implemented,
-                what failed, what changed, and what I learned.
-              </p>
-            </div>
-          </div>
-
-          {/* How I Build */}
-          <div className='grid md:grid-cols-3 gap-8 items-start'>
-            <div className='md:col-span-1'>
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                How I Build and Practice
-              </h2>
-              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
-            </div>
-            <div className='md:col-span-2'>
-              <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                I use projects to apply concepts in real scenarios. Building helps me move from understanding
-                theory to making reliable implementation decisions.
-              </p>
-              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                The blog and projects support each other: project work creates writing topics, and writing helps me
-                reflect and improve the next iteration.
-              </p>
-            </div>
-          </div>
-
-          {/* Current Focus */}
-          <div className='grid md:grid-cols-3 gap-8 items-start'>
-            <div className='md:col-span-1'>
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Current Focus
-              </h2>
-              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
-            </div>
-            <div className='md:col-span-2'>
-              <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                Right now I am focused on improving DSA problem solving, writing stronger C++, and building
-                cleaner frontend and full-stack applications.
-              </p>
-              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                I am also developing better engineering habits around debugging, code organization,
-                and practical system-level thinking.
-              </p>
-            </div>
-          </div>
-
-          {/* Tech Stack */}
-          <div className='grid md:grid-cols-3 gap-8 items-start'>
-            <div className='md:col-span-1'>
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                Tech I Work With
-              </h2>
-              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
-            </div>
-            <div className='md:col-span-2'>
-              <ul className='space-y-3 text-gray-600 dark:text-gray-400'>
-                <li>Languages: C++, JavaScript, TypeScript</li>
-                <li>Web: React, Next.js, Node.js</li>
-                <li>Core Focus: Data Structures, Algorithms, and Systems Concepts</li>
-                <li>Tools: Git, GitHub, VS Code</li>
-                <li>Deployment: Vercel, Render</li>
+              <ul className='space-y-3 text-gray-600 dark:text-gray-400 mt-4 list-disc pl-5'>
+                <li><strong>Write Blog Posts:</strong> You can publish your own technical articles, tutorials, or study notes. To ensure quality, members can submit <strong>one blog post per month</strong>. All submissions are reviewed by our admins before going live.</li>
+                <li><strong>Engage in Comments:</strong> Discuss topics, ask questions, and help out your peers in the comment sections of blog posts.</li>
+                <li><strong>Stay Anonymous:</strong> Your privacy is fully protected. When you comment or post, only your unique username and profile picture are visible to the public. Your personal details are completely hidden.</li>
               </ul>
             </div>
           </div>
+
+          {/* Resources */}
+          <div className='grid md:grid-cols-3 gap-8 items-start'>
+            <div className='md:col-span-1'>
+              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+                University Resources
+              </h2>
+              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
+            </div>
+            <div className='md:col-span-2'>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
+                Our dedicated <strong>Question Papers</strong> section is continuously updated with past exam papers 
+                across various branches and semesters. It's a one-stop destination to test your preparation and understand exam patterns.
+              </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                All papers are neatly categorized by Year, Semester, and Exam Type, and can be instantly viewed or downloaded in PDF format.
+              </p>
+            </div>
+          </div>
+
         </div>
 
         {/* Next Steps */}
@@ -112,21 +73,20 @@ export default function About() {
             Where to Go Next
           </h2>
           <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-            If you want to see how I think and build, start with my latest technical posts,
-            then explore projects where those ideas are applied in code.
+            Dive right in! Read the latest articles from the community, or head over to the Question Papers portal to gear up for your exams.
           </p>
           <div className='flex flex-wrap items-center gap-6 mt-5'>
             <Link
               to='/search'
               className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
             >
-              Read my latest technical posts →
+              Read Community Posts →
             </Link>
             <Link
-              to='/projects'
+              to='/question-papers'
               className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
             >
-              Explore my projects →
+              Access Question Papers →
             </Link>
           </div>
         </div>

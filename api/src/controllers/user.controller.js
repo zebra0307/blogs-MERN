@@ -189,8 +189,13 @@ export const getUser = async (req, res, next) => {
     if (!user) {
       return next(errorHandler(404, 'User not found'));
     }
-    const { password, ...rest } = user._doc;
-    res.status(200).json(rest);
+    // For anonymity, strictly return only public fields
+    const publicData = {
+      _id: user._id,
+      username: user.username,
+      profilePicture: user.profilePicture,
+    };
+    res.status(200).json(publicData);
   } catch (error) {
     next(error);
   }

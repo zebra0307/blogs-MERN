@@ -1,35 +1,9 @@
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import PostCard from '../components/PostCard';
 import HomeSlides from '../components/HomeSlides';
 import DotGrid from '../components/DotGrid';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function Home() {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch(
-          `${BACKEND_URL}/api/post/getposts`
-        );
-        const data = await res.json();
-        console.log('Fetched posts:', data);
-        if (res.ok && data.posts) {
-          setPosts(data.posts);
-        }
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
-    fetchPosts();
-  }, []);
-
-  const latestPosts = [...posts]
-    .sort((a, b) => new Date(b.createdAt || b.updatedAt || 0) - new Date(a.createdAt || a.updatedAt || 0))
-    .slice(0, 3);
 
   return (
     <div>
@@ -51,18 +25,18 @@ export default function Home() {
 
         <div className='relative z-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20'>
           <p className='inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-[0.14em] uppercase text-teal-200 bg-teal-500/10 px-3 py-1 rounded-full border border-teal-300/25'>
-            Weekly Engineering Journal
+            Your Public Tech Community
           </p>
 
           <h1 className='mt-6 max-w-4xl text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight text-white'>
-            Building as a Software Developer and sharing practical notes every week on{' '}
+            Learn, interact, and access university resources on{' '}
             <span className='text-teal-300'>Z Blogs</span>
           </h1>
 
           <p className='mt-6 max-w-3xl text-sm sm:text-base lg:text-lg leading-relaxed text-slate-200'>
-            I document what I build, what breaks, and what I learn while
-            improving in data structures, C++, web development, and systems
-            thinking.
+            Dive into a vibrant community where you can read insightful technical articles, 
+            engage anonymously through comments, and access past university question papers 
+            to help you ace your exams.
           </p>
 
           <div className='mt-8 flex flex-wrap items-center gap-3 sm:gap-4'>
@@ -73,68 +47,46 @@ export default function Home() {
               Read the blog
             </Link>
             <Link
-              to='/projects'
+              to='/resources'
               className='inline-flex items-center justify-center rounded-lg border border-teal-200/70 bg-slate-900/75 text-teal-100! hover:bg-slate-800 hover:border-teal-100 text-sm sm:text-base font-semibold px-5 py-2.5 transition-colors shadow-sm'
             >
-              View projects
+              Resources
             </Link>
           </div>
 
           <div className='mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl'>
             <div className='rounded-lg border border-slate-700 bg-slate-900/55 backdrop-blur-sm px-4 py-3'>
               <p className='text-xs uppercase tracking-wide text-slate-400'>
-                Focus
+                Community First
               </p>
               <p className='text-sm font-semibold text-white'>
-                DSA • C++ • Full-Stack
+                Read & Contribute
               </p>
             </div>
             <div className='rounded-lg border border-slate-700 bg-slate-900/55 backdrop-blur-sm px-4 py-3'>
               <p className='text-xs uppercase tracking-wide text-slate-400'>
-                Publishing
+                Exam Prep
               </p>
               <p className='text-sm font-semibold text-white'>
-                Weekly technical notes
+                Past Question Papers
               </p>
             </div>
             <div className='rounded-lg border border-slate-700 bg-slate-900/55 backdrop-blur-sm px-4 py-3'>
               <p className='text-xs uppercase tracking-wide text-slate-400'>
-                Build style
+                Privacy
               </p>
               <p className='text-sm font-semibold text-white'>
-                Product-minded iteration
+                100% Anonymous Interaction
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Homepage Slides: About Us, How to Use, FAQs */}
-      <HomeSlides />
 
-      {/* Recent Posts Section */}
-      <div className='w-full bg-gray-900 dark:bg-black border-t border-gray-700 dark:border-gray-800'>
-        <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 py-16'>
-          {latestPosts.length > 0 && (
-            <div className='flex flex-col gap-6'>
-              <h2 className='text-2xl font-semibold text-center text-white'>
-                Latest Weekly Notes
-              </h2>
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                {latestPosts.map((post) => (
-                  <PostCard key={post._id} post={post} />
-                ))}
-              </div>
-              <Link
-                to={'/search'}
-                className='text-base text-teal-300 hover:text-teal-200 hover:underline text-center font-medium'
-              >
-                View all posts →
-              </Link>
-            </div>
-          )}
-        </div>
-      </div>
+
+      {/* Homepage Slides: FAQs */}
+      <HomeSlides />
     </div>
   );
 }

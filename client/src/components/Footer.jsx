@@ -1,6 +1,6 @@
 import { Footer, FooterLink, FooterLinkGroup, FooterTitle } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsTwitter, BsGithub, BsLinkedin } from 'react-icons/bs';
+import { BsEnvelope } from 'react-icons/bs';
 
 export default function FooterCom() {
   return (
@@ -16,42 +16,32 @@ export default function FooterCom() {
               <span className='text-gray-900 dark:text-white'>Blogs</span>
             </Link>
           </div>
-          <div className='grid grid-cols-1 gap-8 mt-4 sm:grid-cols-1 sm:gap-6'>
+          <div className='flex flex-wrap gap-12 mt-4 sm:gap-16 justify-end'>
             <div>
               <FooterTitle title='Contact us' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
                 <FooterLink
-                  href='https://github.com/zebra0307'
-                  target='_blank'
-                  rel='noopener noreferrer'
+                  href='/contact'
                   className='p-0! text-gray-700! dark:text-gray-300!'
                 >
                   <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <BsGithub className='text-gray-700 dark:text-gray-300' />
-                    <span>Github</span>
+                    <BsEnvelope className='text-gray-700 dark:text-gray-300' />
+                    <span>Send a Message</span>
                   </div>
                 </FooterLink>
-                <FooterLink
-                  href='https://x.com/stndr_0307'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='p-0! text-gray-700! dark:text-gray-300!'
-                >
-                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <BsTwitter className='text-gray-700 dark:text-gray-300' />
-                    <span>Twitter</span>
-                  </div>
+              </FooterLinkGroup>
+            </div>
+            <div>
+              <FooterTitle title='Resources' className='text-gray-900 dark:text-white' />
+              <FooterLinkGroup col>
+                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Data Structure
                 </FooterLink>
-                <FooterLink
-                  href='https://satyendra0307.vercel.app/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='p-0! text-gray-700! dark:text-gray-300!'
-                >
-                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
-                    <BsLinkedin className='text-gray-700 dark:text-gray-300' />
-                    <span>Portfolio</span>
-                  </div>
+                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Web Development
+                </FooterLink>
+                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Blockchain
                 </FooterLink>
               </FooterLinkGroup>
             </div>

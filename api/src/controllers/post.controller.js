@@ -2,22 +2,35 @@ import Post from '../models/post.model.js';
 import { errorHandler } from '../utils/error.js';
 
 export const create = async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return next(errorHandler(403, 'You are not allowed to create a post'));
-  }
   if (!req.body.title || !req.body.content) {
     return next(errorHandler(400, 'Please provide all required fields'));
   }
+
+  // 1 post per month limit for non-admins
+  if (!req.user.isAdmin) {
+    const oneMonthAgo = new Date(new Date().setMonth(new Date().getMonth() - 1));
+    const recentPosts = await Post.countDocuments({
+      userId: req.user.id,
+      createdAt: { $gte: oneMonthAgo }
+    });
+    if (recentPosts >= 1) {
+      return next(errorHandler(403, 'You have reached your limit of 1 post per month.'));
+    }
+  }
+
   const slug = req.body.title
     .split(' ')
     .join('-')
     .toLowerCase()
     .replace(/[^a-zA-Z0-9-]/g, '');
+    
   const newPost = new Post({
     ...req.body,
     slug,
     userId: req.user.id,
+    isApproved: req.user.isAdmin ? true : false,
   });
+  
   try {
     const savedPost = await newPost.save();
     res.status(201).json(savedPost);
@@ -34,7 +47,7 @@ export const getposts = async (req, res, next) => {
     const sortDirection = req.query.order === 'asc' ? 1 : -1;
     console.log('Query params:', { startIndex, limit, sortDirection, query: req.query });
 
-    const posts = await Post.find({
+    const query = {
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.category && { category: req.query.category }),
       ...(req.query.slug && { slug: req.query.slug }),
@@ -45,7 +58,20 @@ export const getposts = async (req, res, next) => {
           { content: { $regex: req.query.searchTerm, $options: 'i' } },
         ],
       }),
-    })
+    };
+    
+    // Filter by isApproved unless specified otherwise (e.g. admin fetching all posts)
+    if (req.query.isApproved !== undefined) {
+      if (req.query.isApproved === 'true') {
+        query.isApproved = { $ne: false }; // Matches true and old posts where the field doesn't exist
+      } else {
+        query.isApproved = false;
+      }
+    } else if (!req.query.userId) { // Public feed should only show approved posts
+      query.isApproved = { $ne: false };
+    }
+
+    const posts = await Post.find(query)
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
@@ -80,7 +106,7 @@ export const getposts = async (req, res, next) => {
 };
 
 export const deletepost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
     return next(errorHandler(403, 'You are not allowed to delete this post'));
   }
   try {
@@ -92,7 +118,7 @@ export const deletepost = async (req, res, next) => {
 };
 
 export const updatepost = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
     return next(errorHandler(403, 'You are not allowed to update this post'));
   }
   try {
@@ -104,8 +130,25 @@ export const updatepost = async (req, res, next) => {
           content: req.body.content,
           category: req.body.category,
           image: req.body.image,
+          ...(req.user.isAdmin && req.body.isApproved !== undefined && { isApproved: req.body.isApproved }),
         },
       },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const approvePost = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, 'You are not allowed to approve posts'));
+  }
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      { $set: { isApproved: true } },
       { new: true }
     );
     res.status(200).json(updatedPost);

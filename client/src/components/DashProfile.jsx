@@ -1,5 +1,5 @@
 import { Button, TextInput, Modal, ModalHeader, ModalBody } from 'flowbite-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { getAuth, verifyBeforeUpdateEmail } from 'firebase/auth';
@@ -92,6 +92,35 @@ export default function DashProfile() {
 
     // ==================== DELETE ACCOUNT MODAL STATE ====================
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    // ==================== POST LIMIT STATE ====================
+    const [canPost, setCanPost] = useState(true);
+    const [nextPostDate, setNextPostDate] = useState(null);
+
+    useEffect(() => {
+        if (currentUser && !currentUser.isAdmin) {
+            const fetchLatestPost = async () => {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}&limit=1`);
+                    const data = await res.json();
+                    if (res.ok && data.posts.length > 0) {
+                        const lastPost = new Date(data.posts[0].createdAt);
+                        const nextDate = new Date(lastPost);
+                        nextDate.setMonth(nextDate.getMonth() + 1);
+                        const now = new Date();
+                        
+                        if (now < nextDate) {
+                            setCanPost(false);
+                            setNextPostDate(nextDate);
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            fetchLatestPost();
+        }
+    }, [currentUser._id, currentUser.isAdmin]);
 
     // ==================== PROFILE PICTURE FUNCTIONS ====================
 
@@ -470,10 +499,24 @@ export default function DashProfile() {
                         Change Password
                     </Button>
 
+                    <Link to={canPost || currentUser.isAdmin ? '/create-post' : '#'}>
+                        <Button 
+                            className={`w-full ${(!canPost && !currentUser.isAdmin) ? 'opacity-50 cursor-not-allowed bg-gray-600 hover:bg-gray-600' : 'bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800'} text-white`}
+                            disabled={!canPost && !currentUser.isAdmin}
+                        >
+                            Create a Post
+                        </Button>
+                    </Link>
+                    {!canPost && !currentUser.isAdmin && nextPostDate && (
+                        <div className="text-xs text-amber-500 dark:text-amber-400 text-center font-medium bg-amber-50 dark:bg-amber-900/20 p-2 rounded-lg border border-amber-200 dark:border-amber-800/50">
+                            Monthly limit reached. You can post again on {nextPostDate.toLocaleDateString()}.
+                        </div>
+                    )}
+
                     {currentUser.isAdmin && (
-                        <Link to='/create-post'>
-                            <Button className='w-full bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
-                                Create a Post
+                        <Link to='/upload-paper'>
+                            <Button className='w-full bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white'>
+                                Upload Question Paper
                             </Button>
                         </Link>
                     )}

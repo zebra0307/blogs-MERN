@@ -4,7 +4,7 @@ import About from './pages/About';
 import SignIn from './pages/SignIn';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
-import Projects from './pages/Projects';
+import QuestionPapers from './pages/QuestionPapers';
 import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -12,10 +12,13 @@ import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
 import CreatePost from './pages/CreatePost';
 import UpdatePost from './pages/UpdatePost';
+import UploadPaper from './pages/UploadPaper';
 import PostPage from './pages/PostPage';
 import ScrollToTop from './components/ScrollToTop';
 import Search from './pages/Search';
 import ComingSoon from './pages/ComingSoon';
+import Resources from './pages/Resources';
+import Contact from './pages/Contact';
 
 export default function App() {
   return (
@@ -29,16 +32,19 @@ export default function App() {
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/search' element={<Search />} />
+        <Route path='/resources' element={<Resources />} />
+        <Route path='/contact' element={<Contact />} />
         <Route path='/coming-soon' element={<ComingSoon />} />
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />} />
-        </Route>
-        <Route element={<OnlyAdminPrivateRoute />}>
           <Route path='/create-post' element={<CreatePost />} />
           <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
+        <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path='/upload-paper' element={<UploadPaper />} />
+        </Route>
 
-        <Route path='/projects' element={<Projects />} />
+        <Route path='/question-papers' element={<QuestionPapers />} />
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
       <Footer />

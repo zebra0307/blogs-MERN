@@ -12,16 +12,21 @@ export default function DashPosts() {
     const [showMore, setShowMore] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [postIdToDelete, setPostIdToDelete] = useState('');
+    const [showPendingOnly, setShowPendingOnly] = useState(false);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch(
-                    `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}`,
-                    {
-                        credentials: 'include',
-                    }
-                );
+                let url = currentUser.isAdmin
+                    ? `${BACKEND_URL}/api/post/getposts`
+                    : `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}`;
+                
+                if (currentUser.isAdmin && showPendingOnly) {
+                    url += '?isApproved=false';
+                }
+                const res = await fetch(url, {
+                    credentials: 'include',
+                });
                 const data = await res.json();
                 if (res.ok) {
                     setUserPosts(data.posts);
@@ -33,20 +38,22 @@ export default function DashPosts() {
                 console.log(error.message);
             }
         };
-        if (currentUser.isAdmin) {
-            fetchPosts();
-        }
-    }, [currentUser._id, currentUser.isAdmin]);
+        fetchPosts();
+    }, [currentUser._id, currentUser.isAdmin, showPendingOnly]);
 
     const handleShowMore = async () => {
         const startIndex = userPosts.length;
         try {
-            const res = await fetch(
-                `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`,
-                {
-                    credentials: 'include',
-                }
-            );
+            let url = currentUser.isAdmin
+                ? `${BACKEND_URL}/api/post/getposts?startIndex=${startIndex}`
+                : `${BACKEND_URL}/api/post/getposts?userId=${currentUser._id}&startIndex=${startIndex}`;
+                
+            if (currentUser.isAdmin && showPendingOnly) {
+                url += '&isApproved=false';
+            }
+            const res = await fetch(url, {
+                credentials: 'include',
+            });
             const data = await res.json();
             if (res.ok) {
                 setUserPosts((prev) => [...prev, ...data.posts]);
@@ -82,9 +89,38 @@ export default function DashPosts() {
         }
     };
 
+    const handleApprovePost = async (postId) => {
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/post/approvepost/${postId}`, {
+                method: 'PUT',
+                credentials: 'include',
+            });
+            if (res.ok) {
+                setUserPosts((prev) =>
+                    prev.map((post) =>
+                        post._id === postId ? { ...post, isApproved: true } : post
+                    )
+                );
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
+
     return (
         <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-            {currentUser.isAdmin && userPosts.length > 0 ? (
+            {currentUser.isAdmin && (
+                <div className='flex justify-end mb-4'>
+                    <Button 
+                        outline 
+                        gradientDuoTone="purpleToBlue" 
+                        onClick={() => setShowPendingOnly(!showPendingOnly)}
+                    >
+                        {showPendingOnly ? 'Show All Approved Posts' : 'View Pending Posts'}
+                    </Button>
+                </div>
+            )}
+            {userPosts.length > 0 ? (
                 <>
                     <Table hoverable className='shadow-md'>
                         <TableHead>
@@ -93,6 +129,7 @@ export default function DashPosts() {
                                 <TableHeadCell>Post image</TableHeadCell>
                                 <TableHeadCell>Post title</TableHeadCell>
                                 <TableHeadCell>Category</TableHeadCell>
+                                <TableHeadCell>Status</TableHeadCell>
                                 <TableHeadCell>Delete</TableHeadCell>
                                 <TableHeadCell>
                                     <span>Edit</span>
@@ -123,6 +160,17 @@ export default function DashPosts() {
                                         </Link>
                                     </TableCell>
                                     <TableCell>{post.category}</TableCell>
+                                    <TableCell>
+                                        {post.isApproved ? (
+                                            <span className='text-green-500 font-semibold'>Approved</span>
+                                        ) : (
+                                            currentUser.isAdmin ? (
+                                                <Button size='xs' color='success' onClick={() => handleApprovePost(post._id)}>Approve</Button>
+                                            ) : (
+                                                <span className='text-yellow-500 font-semibold'>Pending</span>
+                                            )
+                                        )}
+                                    </TableCell>
                                     <TableCell>
                                         <span
                                             onClick={() => {

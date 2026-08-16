@@ -1,9 +1,8 @@
 import { Avatar, Button, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Navbar, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { FaMoon, FaSun } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { toggleTheme } from '../redux/theme/themeSlice';
+
 import { signoutSuccess } from '../redux/user/userSlice';
 import SearchAutocomplete from './SearchAutocomplete';
 
@@ -15,7 +14,6 @@ export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const { theme } = useSelector((state) => state.theme);
   const searchTerm = new URLSearchParams(location.search).get('searchTerm') || '';
 
   const handleSignout = async () => {
@@ -64,14 +62,6 @@ export default function Header() {
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>
-        <Button
-          className='w-12 h-10'
-          color='gray'
-          pill
-          onClick={() => dispatch(toggleTheme())}
-        >
-          {theme === 'light' ? <FaMoon /> : <FaSun />}
-        </Button>
         {currentUser ? (
           <Dropdown
             arrowIcon={false}
@@ -122,9 +112,14 @@ export default function Header() {
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
           <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/about' ? 'font-bold text-black dark:text-white' : ''}`}>About</span>
         </NavbarLink>
-        <NavbarLink active={path === '/projects'} as={Link} to='/projects'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/projects' ? 'font-bold text-black dark:text-white' : ''}`}>
-            Projects
+        <NavbarLink active={path === '/resources'} as={Link} to='/resources'>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/resources' ? 'font-bold text-black dark:text-white' : ''}`}>
+            Resources
+          </span>
+        </NavbarLink>
+        <NavbarLink active={path === '/question-papers'} as={Link} to='/question-papers'>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/question-papers' ? 'font-bold text-black dark:text-white' : ''}`}>
+            Question Papers
           </span>
         </NavbarLink>
       </NavbarCollapse>

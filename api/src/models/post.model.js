@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: 'uncategorized',
     },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
     slug: {
       type: String,
       required: true,

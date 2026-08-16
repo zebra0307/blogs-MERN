@@ -55,17 +55,15 @@ export default function DashSidebar() {
                             Profile
                         </SidebarItem>
                     </Link>
-                    {currentUser.isAdmin && (
-                        <Link to='/dashboard?tab=posts'>
-                            <SidebarItem
-                                active={tab === 'posts'}
-                                icon={HiDocumentText}
-                                as='div'
-                            >
-                                Posts
-                            </SidebarItem>
-                        </Link>
-                    )}
+                    <Link to='/dashboard?tab=posts'>
+                        <SidebarItem
+                            active={tab === 'posts'}
+                            icon={HiDocumentText}
+                            as='div'
+                        >
+                            Posts
+                        </SidebarItem>
+                    </Link>
                     {currentUser.isAdmin && (
                         <>
                             <Link to='/dashboard?tab=users'>

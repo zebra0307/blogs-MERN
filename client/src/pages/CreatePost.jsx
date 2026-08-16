@@ -1,4 +1,5 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+import { useSelector } from 'react-redux';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useState } from 'react';
@@ -14,6 +15,8 @@ export default function CreatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const [publishSuccess, setPublishSuccess] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -100,7 +103,15 @@ export default function CreatePost() {
 
       if (res.ok) {
         setPublishError(null);
-        navigate(`/post/${data.slug}`);
+        if (currentUser?.isAdmin) {
+          navigate(`/post/${data.slug}`);
+        } else {
+          setPublishSuccess('Post submitted successfully! It will be visible on the blog once approved by an admin.');
+          setFormData({});
+          setFile(null);
+          // Scroll to bottom to see success message
+          window.scrollTo(0, document.body.scrollHeight);
+        }
       }
     } catch {
       setPublishError('Something went wrong');
@@ -425,6 +436,11 @@ export default function CreatePost() {
         {publishError && (
           <Alert className='mt-5' color='failure'>
             {publishError}
+          </Alert>
+        )}
+        {publishSuccess && (
+          <Alert className='mt-5' color='success'>
+            {publishSuccess}
           </Alert>
         )}
       </form>

@@ -8,6 +8,7 @@ export default function Contact() {
     message: '',
   });
   const [status, setStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -44,9 +45,13 @@ export default function Contact() {
         setFormData({ name: '', email: '', message: '' });
       } else {
         setStatus('error');
+        setErrorMessage(result.message || 'Unknown error from Web3Forms');
+        console.error('Web3Forms Error:', result);
       }
     } catch (error) {
       setStatus('error');
+      setErrorMessage(error.message || 'Network error occurred');
+      console.error('Fetch Error:', error);
     }
   };
 
@@ -115,7 +120,7 @@ export default function Contact() {
             <Alert color='success'>Message sent successfully! I will get back to you soon.</Alert>
           )}
           {status === 'error' && (
-            <Alert color='failure'>Something went wrong. Please try again later.</Alert>
+            <Alert color='failure'>{errorMessage || 'Something went wrong. Please try again later.'}</Alert>
           )}
           {status === 'error_key' && (
             <Alert color='warning'>

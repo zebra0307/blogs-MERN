@@ -86,6 +86,8 @@ export default function CreatePost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPublishError(null);
+    setPublishSuccess(null);
     try {
       const res = await fetch(`${BACKEND_URL}/api/post/create`, {
         method: 'POST',

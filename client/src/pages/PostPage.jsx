@@ -12,6 +12,7 @@ export default function PostPage() {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
+  const [author, setAuthor] = useState(null);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -30,6 +31,17 @@ export default function PostPage() {
           setPost(data.posts[0]);
           setLoading(false);
           setError(false);
+          
+          // Fetch author
+          try {
+            const userRes = await fetch(`${BACKEND_URL}/api/user/${data.posts[0].userId}`);
+            if (userRes.ok) {
+              const userData = await userRes.json();
+              setAuthor(userData);
+            }
+          } catch (err) {
+            console.log(err.message);
+          }
         }
       } catch {
         setError(true);
@@ -93,7 +105,15 @@ export default function PostPage() {
         />
 
         <div className='mt-4 flex justify-between border-b border-slate-400 dark:border-slate-600 pb-3 w-full text-sm'>
-          <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+          <div className='flex items-center gap-2'>
+            <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+            {author && (
+              <>
+                <span className='text-gray-400'>•</span>
+                <span className='font-medium italic text-gray-700 dark:text-gray-300'>By {author.username}</span>
+              </>
+            )}
+          </div>
           <span className='italic'>
             {post && (post.content.length / 1000).toFixed(0)} mins read
           </span>

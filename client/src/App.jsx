@@ -10,6 +10,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
+import OnlyCollegeStudentsPrivateRoute from './components/OnlyCollegeStudentsPrivateRoute';
 import CreatePost from './pages/CreatePost';
 import UpdatePost from './pages/UpdatePost';
 import UploadPaper from './pages/UploadPaper';
@@ -43,8 +44,10 @@ export default function App() {
         <Route element={<OnlyAdminPrivateRoute />}>
           <Route path='/upload-paper' element={<UploadPaper />} />
         </Route>
-
-        <Route path='/question-papers' element={<QuestionPapers />} />
+        <Route element={<OnlyCollegeStudentsPrivateRoute />}>
+          <Route path='/question-papers' element={<QuestionPapers />} />
+        </Route>
+        
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
       <Footer />

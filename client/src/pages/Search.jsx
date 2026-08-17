@@ -160,8 +160,8 @@ export default function Search() {
             <p className='text-lg text-gray-500 text-center py-8'>No matching notes found.</p>
           )}
           {loading && <p className='text-lg text-gray-500 text-center py-8'>Loading...</p>}
-          {/* 3-Column Grid */}
-          <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4'>
+          {/* 4-Column Grid */}
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
             {!loading &&
               posts &&
               posts.map((post) => <PostCard key={post._id} post={post} />)}

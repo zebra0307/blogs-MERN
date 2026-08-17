@@ -55,7 +55,7 @@ export default function PostPage() {
     try {
       const fetchRecentPosts = async () => {
         const res = await fetch(
-          `${BACKEND_URL}/api/post/getposts?limit=3`
+          `${BACKEND_URL}/api/post/getposts?limit=5`
         );
         const data = await res.json();
         if (res.ok) {
@@ -144,10 +144,11 @@ export default function PostPage() {
         <h2 className='text-2xl font-semibold text-center text-gray-900 dark:text-white'>
           Recent articles
         </h2>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-5'>
           {recentPosts &&
             recentPosts
               .filter((recentPost) => recentPost._id !== post?._id)
+              .slice(0, 4)
               .map((recentPost) => <PostCard key={recentPost._id} post={recentPost} />)}
         </div>
       </div>

@@ -1,8 +1,11 @@
 import { Footer, FooterLink, FooterLinkGroup, FooterTitle } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsEnvelope } from 'react-icons/bs';
+import { BsEnvelope, BsInfoCircle } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
+import { isCollegeStudent } from '../utils/authUtils';
 
 export default function FooterCom() {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <Footer id='site-footer' container className='border-t-4 border-gray-300 dark:border-gray-700'>
       <div className='w-full max-w-7xl mx-auto'>
@@ -47,6 +50,15 @@ export default function FooterCom() {
             </div>
           </div>
         </div>
+        
+        {/* Caution Message for Non-College Users */}
+        {!isCollegeStudent(currentUser) && (
+          <div className='mt-8 flex items-center justify-center gap-2 text-xs sm:text-sm text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-900/20 py-2 px-4 rounded-lg border border-amber-200 dark:border-amber-800/50 w-fit mx-auto'>
+            <BsInfoCircle className='shrink-0' />
+            <span>To access AKTU (REC Sonbhadra) papers, login with your college mail ID.</span>
+          </div>
+        )}
+
         {/* Divider */}
         <div className='w-full border-t border-gray-200 dark:border-gray-700 mt-6'></div>
         {/* Copyright */}

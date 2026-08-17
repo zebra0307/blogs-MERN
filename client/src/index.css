@@ -153,12 +153,17 @@ a:hover {
 
 /* Twitter-like hover effect for buttons and interactive elements */
 button,
-[role="button"] {
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"] {
   cursor: pointer;
 }
 
 button:disabled,
 [role="button"][aria-disabled="true"],
+select:disabled,
+input:disabled,
 [disabled] {
   cursor: not-allowed;
 }

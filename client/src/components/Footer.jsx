@@ -56,7 +56,7 @@ export default function FooterCom() {
         <div className='w-full border-t border-gray-200 dark:border-gray-700 mt-6'></div>
         {/* Copyright */}
         <p className='text-center text-sm text-gray-500 dark:text-gray-400 py-4'>
-          © {new Date().getFullYear()} Z Blog. All rights reserved.
+          © {new Date().getFullYear()} Z Blogs. All rights reserved.
         </p>
       </div>
     </Footer>

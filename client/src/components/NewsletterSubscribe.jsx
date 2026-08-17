@@ -59,22 +59,24 @@ export default function NewsletterSubscribe() {
             className='w-full'
           />
         </div>
-        
-        <Button 
+        <button 
           type='submit' 
-          gradientDuoTone='tealToLime' 
           disabled={status === 'loading' || !email}
-          className='w-full font-semibold'
+          className={`w-full py-2.5 px-5 rounded-lg text-white font-semibold transition-all ${
+            status === 'loading' || !email 
+              ? 'bg-gray-400 cursor-not-allowed' 
+              : 'bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800'
+          }`}
         >
           {status === 'loading' ? (
-            <>
-              <Spinner size='sm' light={true} className='mr-2' />
+            <span className='flex items-center justify-center'>
+              <Spinner size='sm' className='mr-2' />
               Subscribing...
-            </>
+            </span>
           ) : (
             'Subscribe'
           )}
-        </Button>
+        </button>
       </form>
 
       {status === 'success' && (

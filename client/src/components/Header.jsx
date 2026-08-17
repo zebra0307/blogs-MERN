@@ -67,10 +67,8 @@ export default function Header() {
       </Button>
       <div className='flex gap-2 md:order-2'>
         <Button 
-          outline 
-          gradientDuoTone='tealToLime' 
           onClick={() => setIsSubscribeOpen(true)}
-          className='hidden sm:block font-semibold mr-2'
+          className='hidden sm:block font-semibold mr-2 bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
         >
           Subscribe
         </Button>

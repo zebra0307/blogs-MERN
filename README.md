@@ -8,7 +8,8 @@ A full-stack modern blog platform for a tech community, offering anonymous discu
 - **Anonymous Community:** Users can post comments and blogs completely anonymously without exposing personal information. Only usernames are public.
 - **Admin Portal:** Comprehensive dashboard to manage posts, users, comments, and approvals.
 - **Question Papers Bank:** Dedicated section to access past university question papers in PDF format.
+- **Newsletter:** Production-ready double opt-in newsletter subscription system, integrated with Brevo for automated new-post email notifications.
 - **Contact:** Integrated Web3Forms for direct communication.
 
 ## Setup
-Ensure you configure environment variables for both the backend (`api`) and frontend (`client`). You will need MongoDB, Firebase/Google Auth, JWT secret, Cloudinary, and Web3Forms keys.
+Ensure you configure environment variables for both the backend (`api`) and frontend (`client`). You will need MongoDB, Firebase/Google Auth, JWT secret, Cloudinary, Web3Forms, and Brevo API keys.

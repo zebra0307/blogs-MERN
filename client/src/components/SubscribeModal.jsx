@@ -1,13 +1,13 @@
-import { Modal } from 'flowbite-react';
+import { Modal, ModalHeader, ModalBody } from 'flowbite-react';
 import NewsletterSubscribe from './NewsletterSubscribe';
 
 export default function SubscribeModal({ show, onClose }) {
   return (
     <Modal show={show} onClose={onClose} size='md' popup>
-      <Modal.Header />
-      <Modal.Body>
+      <ModalHeader />
+      <ModalBody>
         <NewsletterSubscribe />
-      </Modal.Body>
+      </ModalBody>
     </Modal>
   );
 }

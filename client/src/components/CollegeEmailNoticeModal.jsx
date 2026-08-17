@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Modal } from 'flowbite-react';
+import { Button, Modal, ModalHeader, ModalBody } from 'flowbite-react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { isCollegeStudent } from '../utils/authUtils';
@@ -42,8 +42,8 @@ export default function CollegeEmailNoticeModal() {
       size='md'
       className='z-[9999]'
     >
-      <Modal.Header />
-      <Modal.Body>
+      <ModalHeader />
+      <ModalBody>
         <div className='text-center'>
           <HiOutlineLockClosed className='mx-auto mb-4 h-14 w-14 text-amber-500 dark:text-amber-400' />
           <h3 className='mb-5 text-lg font-normal text-gray-700 dark:text-gray-300'>
@@ -62,7 +62,7 @@ export default function CollegeEmailNoticeModal() {
             </Button>
           </div>
         </div>
-      </Modal.Body>
+      </ModalBody>
     </Modal>
   );
 }

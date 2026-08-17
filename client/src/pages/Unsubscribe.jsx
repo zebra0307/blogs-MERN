@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { Button, Spinner } from 'flowbite-react';
 import { HiCheckCircle, HiXCircle } from 'react-icons/hi';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
+
 export default function Unsubscribe() {
   const { token } = useParams();
   const [status, setStatus] = useState('loading');
@@ -11,7 +13,7 @@ export default function Unsubscribe() {
   useEffect(() => {
     const unsubscribeToken = async () => {
       try {
-        const res = await fetch(`/api/subscribers/unsubscribe/${token}`);
+        const res = await fetch(`${BACKEND_URL}/api/subscribers/unsubscribe/${token}`);
         const data = await res.json();
         
         if (res.ok) {

@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Button, TextInput, Alert, Spinner } from 'flowbite-react';
+import { TextInput, Alert, Spinner } from 'flowbite-react';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
 export default function NewsletterSubscribe() {
   const [email, setEmail] = useState('');
@@ -14,7 +16,7 @@ export default function NewsletterSubscribe() {
     setMessage('');
 
     try {
-      const res = await fetch('/api/subscribers/subscribe', {
+      const res = await fetch(`${BACKEND_URL}/api/subscribers/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

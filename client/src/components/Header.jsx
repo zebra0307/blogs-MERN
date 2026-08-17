@@ -1,11 +1,13 @@
 import { Avatar, Button, Dropdown, DropdownHeader, DropdownItem, DropdownDivider, Navbar, NavbarCollapse, NavbarLink, NavbarToggle } from 'flowbite-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { signoutSuccess } from '../redux/user/userSlice';
 import SearchAutocomplete from './SearchAutocomplete';
 import { isCollegeStudent } from '../utils/authUtils';
+import SubscribeModal from './SubscribeModal';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
@@ -16,6 +18,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const searchTerm = new URLSearchParams(location.search).get('searchTerm') || '';
+  const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
 
   const handleSignout = async () => {
     try {
@@ -63,6 +66,14 @@ export default function Header() {
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>
+        <Button 
+          outline 
+          gradientDuoTone='tealToLime' 
+          onClick={() => setIsSubscribeOpen(true)}
+          className='hidden sm:block font-semibold mr-2'
+        >
+          Subscribe
+        </Button>
         {currentUser ? (
           <Dropdown
             arrowIcon={false}
@@ -126,6 +137,11 @@ export default function Header() {
           </NavbarLink>
         )}
       </NavbarCollapse>
+      
+      <SubscribeModal 
+        show={isSubscribeOpen} 
+        onClose={() => setIsSubscribeOpen(false)} 
+      />
     </Navbar>
   );
 }

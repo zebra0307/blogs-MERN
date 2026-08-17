@@ -1,5 +1,7 @@
 import Post from '../models/post.model.js';
+import Subscriber from '../models/subscriber.model.js';
 import { errorHandler } from '../utils/error.js';
+import { sendNewPostNotification } from '../services/email.service.js';
 
 export const create = async (req, res, next) => {
   if (!req.body.title || !req.body.content) {
@@ -33,6 +35,16 @@ export const create = async (req, res, next) => {
   
   try {
     const savedPost = await newPost.save();
+    
+    // Notify subscribers if the post is published directly (admin)
+    if (savedPost.isApproved) {
+      Subscriber.find({ status: 'ACTIVE' }).then(subscribers => {
+        if (subscribers.length > 0) {
+          sendNewPostNotification(subscribers, savedPost).catch(err => console.error('Failed to send notifications:', err));
+        }
+      }).catch(err => console.error('Failed to fetch subscribers:', err));
+    }
+
     res.status(201).json(savedPost);
   } catch (error) {
     next(error);
@@ -151,6 +163,16 @@ export const approvePost = async (req, res, next) => {
       { $set: { isApproved: true } },
       { new: true }
     );
+
+    // Notify subscribers when a post is approved
+    if (updatedPost) {
+      Subscriber.find({ status: 'ACTIVE' }).then(subscribers => {
+        if (subscribers.length > 0) {
+          sendNewPostNotification(subscribers, updatedPost).catch(err => console.error('Failed to send notifications:', err));
+        }
+      }).catch(err => console.error('Failed to fetch subscribers:', err));
+    }
+
     res.status(200).json(updatedPost);
   } catch (error) {
     next(error);

@@ -11,6 +11,7 @@ import postRoutes from './src/routes/post.route.js';
 import commentRoutes from './src/routes/comment.route.js';
 import questionPaperRoutes from './src/routes/questionPaper.route.js';
 import uploadRoutes from './src/routes/upload.route.js';
+import subscriberRoutes from './src/routes/subscriber.route.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -125,6 +126,7 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 app.use('/api/question-paper', questionPaperRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/subscribers', subscriberRoutes);
 
 app.get('/test', (req, res) => {
     res.json({ message: 'API is working!' });

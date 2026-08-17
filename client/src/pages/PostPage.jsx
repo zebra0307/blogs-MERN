@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
+import NewsletterSubscribe from '../components/NewsletterSubscribe';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
@@ -132,6 +133,10 @@ export default function PostPage() {
           </Link>
           .
         </p>
+
+        <div className='my-8'>
+          <NewsletterSubscribe />
+        </div>
       </article>
 
       {post && (

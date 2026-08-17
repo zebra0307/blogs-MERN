@@ -21,6 +21,8 @@ import ComingSoon from './pages/ComingSoon';
 import Resources from './pages/Resources';
 import Contact from './pages/Contact';
 import CollegeEmailNoticeModal from './components/CollegeEmailNoticeModal';
+import VerifySubscription from './pages/VerifySubscription';
+import Unsubscribe from './pages/Unsubscribe';
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
         <Route path='/resources' element={<Resources />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/coming-soon' element={<ComingSoon />} />
+        <Route path='/verify-subscription/:token' element={<VerifySubscription />} />
+        <Route path='/unsubscribe/:token' element={<Unsubscribe />} />
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/create-post' element={<CreatePost />} />

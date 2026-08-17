@@ -108,3 +108,80 @@ export const unsubscribe = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSubscribers = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, 'You are not allowed to see all subscribers'));
+  }
+  try {
+    const startIndex = parseInt(req.query.startIndex) || 0;
+    const limit = parseInt(req.query.limit) || 9;
+    const sortDirection = req.query.sort === 'asc' ? 1 : -1;
+
+    const subscribers = await Subscriber.find()
+      .sort({ createdAt: sortDirection })
+      .skip(startIndex)
+      .limit(limit);
+
+    const totalSubscribers = await Subscriber.countDocuments();
+    const activeSubscribers = await Subscriber.countDocuments({ status: 'ACTIVE' });
+
+    res.status(200).json({
+      subscribers,
+      totalSubscribers,
+      activeSubscribers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteSubscriber = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, 'You are not allowed to delete this subscriber'));
+  }
+  try {
+    await Subscriber.findByIdAndDelete(req.params.subscriberId);
+    res.status(200).json('Subscriber has been deleted');
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const addSubscriberAdmin = async (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return next(errorHandler(403, 'You are not allowed to add subscribers manually'));
+  }
+  try {
+    const { email } = req.body;
+    if (!email || !email.includes('@')) {
+      return next(errorHandler(400, 'Please provide a valid email address'));
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    let subscriber = await Subscriber.findOne({ email: normalizedEmail });
+
+    if (subscriber) {
+      if (subscriber.status === 'ACTIVE') {
+        return res.status(200).json({ message: 'Subscriber already exists and is active.' });
+      }
+      subscriber.status = 'ACTIVE';
+      subscriber.verifiedAt = new Date();
+      await subscriber.save();
+      return res.status(200).json({ message: 'Existing subscriber status updated to ACTIVE.' });
+    }
+
+    const token = crypto.randomBytes(32).toString('hex');
+    subscriber = new Subscriber({
+      email: normalizedEmail,
+      verificationToken: token,
+      status: 'ACTIVE', // Automatically active if added by admin
+      verifiedAt: new Date(),
+    });
+
+    await subscriber.save();
+    res.status(201).json({ message: 'Subscriber successfully added.' });
+  } catch (error) {
+    next(error);
+  }
+};

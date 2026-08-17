@@ -5,6 +5,7 @@ import {
     HiArrowNarrowUp,
     HiDocumentText,
     HiOutlineUserGroup,
+    HiOutlineMail,
 } from 'react-icons/hi';
 import { Button, Table, TableHead, TableHeadCell, TableBody, TableRow, TableCell } from 'flowbite-react';
 import { Link } from 'react-router-dom';
@@ -21,6 +22,9 @@ export default function DashboardComp() {
     const [lastMonthUsers, setLastMonthUsers] = useState(0);
     const [lastMonthPosts, setLastMonthPosts] = useState(0);
     const [lastMonthComments, setLastMonthComments] = useState(0);
+    const [subscribers, setSubscribers] = useState([]);
+    const [totalSubscribers, setTotalSubscribers] = useState(0);
+    const [activeSubscribers, setActiveSubscribers] = useState(0);
     const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
@@ -78,10 +82,29 @@ export default function DashboardComp() {
                 console.log(error.message);
             }
         };
+        const fetchSubscribers = async () => {
+            try {
+                const res = await fetch(
+                    `${BACKEND_URL}/api/subscribers/getsubscribers?limit=5`,
+                    {
+                        credentials: 'include',
+                    }
+                );
+                const data = await res.json();
+                if (res.ok) {
+                    setSubscribers(data.subscribers);
+                    setTotalSubscribers(data.totalSubscribers);
+                    setActiveSubscribers(data.activeSubscribers);
+                }
+            } catch (error) {
+                console.log(error.message);
+            }
+        };
         if (currentUser.isAdmin) {
             fetchUsers();
             fetchPosts();
             fetchComments();
+            fetchSubscribers();
         }
     }, [currentUser]);
 
@@ -136,6 +159,18 @@ export default function DashboardComp() {
                             {lastMonthPosts}
                         </span>
                         <div className='text-gray-500'>Last month</div>
+                    </div>
+                </div>
+                <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md'>
+                    <div className='flex justify-between'>
+                        <div className=''>
+                            <h3 className='text-gray-500 text-md uppercase'>Active Subscribers</h3>
+                            <p className='text-2xl'>{activeSubscribers}</p>
+                        </div>
+                        <HiOutlineMail className='bg-pink-600 text-white rounded-full text-5xl p-3 shadow-lg' />
+                    </div>
+                    <div className='flex gap-2 text-sm'>
+                        <div className='text-gray-500'>Total: {totalSubscribers} subscribers</div>
                     </div>
                 </div>
             </div>
@@ -226,6 +261,39 @@ export default function DashboardComp() {
                                         </TableCell>
                                         <TableCell className='w-96'>{post.title}</TableCell>
                                         <TableCell className='w-5'>{post.category}</TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                </div>
+                <div className='flex flex-col w-full md:w-auto shadow-md p-2 rounded-md dark:bg-gray-800'>
+                    <div className='flex justify-between p-3 text-sm font-semibold'>
+                        <h1 className='text-center p-2'>Recent subscribers</h1>
+                        <Button outline className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-gray-600'>
+                            <Link to={'/dashboard?tab=subscribers'}>See all</Link>
+                        </Button>
+                    </div>
+                    <Table hoverable>
+                        <TableHead>
+                            <TableRow>
+                                <TableHeadCell>Email</TableHeadCell>
+                                <TableHeadCell>Status</TableHeadCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody className='divide-y'>
+                            {subscribers &&
+                                subscribers.map((subscriber) => (
+                                    <TableRow key={subscriber._id} className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                                        <TableCell>{subscriber.email}</TableCell>
+                                        <TableCell>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                                subscriber.status === 'ACTIVE' ? 'bg-green-100 text-green-800' :
+                                                subscriber.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                                                'bg-red-100 text-red-800'
+                                            }`}>
+                                                {subscriber.status}
+                                            </span>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                         </TableBody>

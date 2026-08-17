@@ -152,16 +152,27 @@ a:hover {
 }
 
 /* Twitter-like hover effect for buttons and interactive elements */
-button:hover,
-[role="button"]:hover {
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+[disabled] {
+  cursor: not-allowed;
+}
+
+button:not(:disabled):hover,
+[role="button"]:not([aria-disabled="true"]):hover {
   transition: background-color 0.2s ease;
 }
 
-.light button:hover {
+.light button:not(:disabled):hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-.dark button:hover {
+.dark button:not(:disabled):hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 

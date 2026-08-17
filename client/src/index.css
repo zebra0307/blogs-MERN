@@ -268,6 +268,15 @@ aside a:hover {
   list-style-type: decimal;
 }
 
+/* Ensure images inside post content are responsive */
+.post-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  display: block;
+}
+
 /* Post content links keep the underline on hover for readability */
 .post-content a {
   color: var(--twitter-blue);

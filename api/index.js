@@ -84,7 +84,7 @@ const defaultCorsOrigins = [
     'http://localhost:5175',
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
-    'https://z-blogs.vercel.app'
+    'https://zblogs.in','https://www.zblogs.in'
 ].map(normalizeOrigin);
 
 const corsOrigins = parseCorsOrigins(process.env.CORS_ORIGINS || '');

@@ -30,9 +30,15 @@ export default function ResourceSelector({ onInsert }) {
     }
   }, [showModal]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
     fetchResources(searchTerm);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent accidental parent form submission
+      handleSearch();
+    }
   };
 
   return (
@@ -49,17 +55,18 @@ export default function ResourceSelector({ onInsert }) {
       <Modal show={showModal} onClose={() => setShowModal(false)} size="2xl">
         <ModalHeader>Select a Resource to Embed</ModalHeader>
         <ModalBody>
-          <form onSubmit={handleSearch} className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-4">
             <TextInput
               className="flex-1"
               type='text'
               placeholder='Search resources...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
               icon={AiOutlineSearch}
             />
-            <Button type="submit" className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'>Search</Button>
-          </form>
+            <Button type="button" onClick={handleSearch} className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'>Search</Button>
+          </div>
 
           <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
             {loading ? (

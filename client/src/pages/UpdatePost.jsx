@@ -114,11 +114,15 @@ export default function UpdatePost() {
   };
 
   const handleInsertResource = (resourceId) => {
-    const currentContent = formData.content || '';
-    setFormData({
-      ...formData,
-      content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
-      attachedResources: [...(formData.attachedResources || []), resourceId]
+    setFormData((prev) => {
+      const currentContent = prev.content || '';
+      // Ensure we extract just the _id if attachedResources objects were populated
+      const currentAttachedIds = (prev.attachedResources || []).map(r => typeof r === 'object' ? r._id : r);
+      return {
+        ...prev,
+        content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
+        attachedResources: [...currentAttachedIds, resourceId]
+      };
     });
   };
 
@@ -222,7 +226,7 @@ export default function UpdatePost() {
           className='h-72 mb-12'
           required
           onChange={(value) => {
-            setFormData({ ...formData, content: value });
+            setFormData((prev) => ({ ...prev, content: value }));
           }}
         />
         <div className="flex justify-end -mt-8 mb-4">

@@ -88,11 +88,13 @@ export default function CreatePost() {
   };
 
   const handleInsertResource = (resourceId) => {
-    const currentContent = formData.content || '';
-    setFormData({
-      ...formData,
-      content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
-      attachedResources: [...(formData.attachedResources || []), resourceId]
+    setFormData((prev) => {
+      const currentContent = prev.content || '';
+      return {
+        ...prev,
+        content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
+        attachedResources: [...(prev.attachedResources || []), resourceId]
+      };
     });
   };
 
@@ -201,7 +203,7 @@ export default function CreatePost() {
           required
           value={formData.content || ''}
           onChange={(value) => {
-            setFormData({ ...formData, content: value });
+            setFormData((prev) => ({ ...prev, content: value }));
           }}
         />
         <div className="flex justify-end -mt-8 mb-4">

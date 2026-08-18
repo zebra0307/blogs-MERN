@@ -1,4 +1,5 @@
-import { Button } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
+import { useState } from 'react';
 import { AiFillGoogleCircle } from 'react-icons/ai';
 import { GoogleAuthProvider, signInWithPopup, getAuth } from 'firebase/auth';
 import { app } from '../firebase';
@@ -12,11 +13,13 @@ export default function OAuth() {
   const auth = getAuth(app);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleGoogleClick = async () => {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
     try {
+      setLoading(true);
       const resultsFromGoogle = await signInWithPopup(auth, provider);
       const idToken = await resultsFromGoogle.user.getIdToken();
 
@@ -43,6 +46,7 @@ export default function OAuth() {
       navigate('/');
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -52,8 +56,17 @@ export default function OAuth() {
       onClick={handleGoogleClick}
       className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'
     >
-      <AiFillGoogleCircle className='w-6 h-6 mr-2' />
-      Continue with Google
+      {loading ? (
+        <>
+          <Spinner size='sm' />
+          <span className='pl-3'>Signing in...</span>
+        </>
+      ) : (
+        <>
+          <AiFillGoogleCircle className='w-6 h-6 mr-2' />
+          Continue with Google
+        </>
+      )}
     </Button>
   );
 }

@@ -517,7 +517,7 @@ export default function DashProfile() {
                         <Link to='/upload-resource'>
                             <Button
                                 type='button'
-                                className='w-full bg-teal-500 hover:bg-teal-600 dark:bg-teal-600 dark:hover:bg-teal-700 text-white border-0 shadow-sm transition-all shadow-teal-500/30'
+                                className='w-full bg-linear-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white! border-0 shadow-sm transition-all shadow-teal-500/30'
                             >
                                 Upload Resource
                             </Button>

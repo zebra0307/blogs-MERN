@@ -39,9 +39,8 @@ export default function ResourceSelector({ onInsert }) {
     <>
       <Button 
         type="button" 
-        gradientDuoTone='tealToLime' 
+        className='bg-linear-to-r from-teal-500 to-lime-500 hover:from-teal-600 hover:to-lime-600 text-white! border-0'
         size='sm' 
-        outline 
         onClick={() => setShowModal(true)}
       >
         Attach Resource
@@ -59,7 +58,7 @@ export default function ResourceSelector({ onInsert }) {
               onChange={(e) => setSearchTerm(e.target.value)}
               icon={AiOutlineSearch}
             />
-            <Button type="submit" gradientDuoTone='purpleToBlue'>Search</Button>
+            <Button type="submit" className='bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'>Search</Button>
           </form>
 
           <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
@@ -81,7 +80,7 @@ export default function ResourceSelector({ onInsert }) {
                   </div>
                   <Button 
                     size="sm" 
-                    gradientDuoTone='purpleToPink' 
+                    className='bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white! border-0'
                     onClick={() => {
                       onInsert(resource._id);
                       setShowModal(false);

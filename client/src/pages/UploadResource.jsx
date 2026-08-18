@@ -170,9 +170,8 @@ export default function UploadResource() {
           />
           <Button
             type='button'
-            gradientDuoTone='purpleToBlue'
+            className='bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'
             size='sm'
-            outline
             onClick={handleUploadFile}
             disabled={fileUploadProgress !== null}
           >
@@ -197,9 +196,8 @@ export default function UploadResource() {
 
         <Button 
           type='submit' 
-          gradientDuoTone='purpleToPink' 
+          className='mt-4 w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white! border-0'
           disabled={loading}
-          className='mt-4'
         >
           {loading ? 'Publishing...' : 'Publish Resource'}
         </Button>

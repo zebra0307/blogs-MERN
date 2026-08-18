@@ -77,7 +77,7 @@ export default function Resources() {
                 <option value='DBMS'>DBMS</option>
               </Select>
             </div>
-            <Button type='submit' gradientDuoTone='purpleToBlue'>
+            <Button type='submit' className='bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'>
               Search
             </Button>
           </form>
@@ -92,9 +92,7 @@ export default function Resources() {
           <div className='text-center py-20 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800'>
             <p className='text-gray-500 dark:text-gray-400 text-lg'>No resources found.</p>
             <Button 
-              className='mt-4 mx-auto' 
-              outline 
-              gradientDuoTone='purpleToBlue'
+              className='mt-4 mx-auto bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600'
               onClick={() => setFilter({ category: '', searchTerm: '' })}
             >
               Clear Filters

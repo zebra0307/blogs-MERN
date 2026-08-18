@@ -33,8 +33,7 @@ export default function ResourceCard({ resource }) {
           View
         </Button>
         <Button
-          gradientDuoTone='purpleToBlue'
-          className='flex-1'
+          className='flex-1 bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'
           onClick={async () => {
             try {
               let downloadUrl = resource.fileUrl;

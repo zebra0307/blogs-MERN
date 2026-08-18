@@ -170,7 +170,7 @@ export default function UploadResource() {
           />
           <Button
             type='button'
-            className='bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'
+            className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'
             size='sm'
             onClick={handleUploadFile}
             disabled={fileUploadProgress !== null}
@@ -196,7 +196,7 @@ export default function UploadResource() {
 
         <Button 
           type='submit' 
-          className='mt-4 w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white! border-0'
+          className='mt-4 w-full bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'
           disabled={loading}
         >
           {loading ? 'Publishing...' : 'Publish Resource'}

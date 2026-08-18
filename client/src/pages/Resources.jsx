@@ -77,7 +77,7 @@ export default function Resources() {
                 <option value='DBMS'>DBMS</option>
               </Select>
             </div>
-            <Button type='submit' className='bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'>
+            <Button type='submit' className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'>
               Search
             </Button>
           </form>

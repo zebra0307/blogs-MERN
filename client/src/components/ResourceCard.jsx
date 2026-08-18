@@ -33,7 +33,7 @@ export default function ResourceCard({ resource }) {
           View
         </Button>
         <Button
-          className='flex-1 bg-linear-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white! border-0'
+          className='flex-1 bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'
           onClick={async () => {
             try {
               let downloadUrl = resource.fileUrl;

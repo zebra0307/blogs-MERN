@@ -62,16 +62,7 @@ export default function Home() {
                 Read & Contribute
               </p>
             </div>
-            {isCollegeStudent(currentUser) && (
-              <div className='rounded-lg border border-slate-700 bg-slate-900/55 backdrop-blur-sm px-4 py-3'>
-                <p className='text-xs uppercase tracking-wide text-slate-400'>
-                  Exam Prep
-                </p>
-                <p className='text-sm font-semibold text-white'>
-                  Past Question Papers
-                </p>
-              </div>
-            )}
+
             <div className='rounded-lg border border-slate-700 bg-slate-900/55 backdrop-blur-sm px-4 py-3'>
               <p className='text-xs uppercase tracking-wide text-slate-400'>
                 Privacy

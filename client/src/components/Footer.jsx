@@ -36,14 +36,14 @@ export default function FooterCom() {
             <div>
               <FooterTitle title='Resources' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
-                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
-                  Data Structure
+                <FooterLink href='/resources?category=DSA' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  DSA
                 </FooterLink>
-                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
-                  Web Development
+                <FooterLink href='/resources?category=Operating+System' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Operating System
                 </FooterLink>
-                <FooterLink href='/resources' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
-                  Blockchain
+                <FooterLink href='/resources?category=DBMS' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  DBMS
                 </FooterLink>
               </FooterLinkGroup>
             </div>

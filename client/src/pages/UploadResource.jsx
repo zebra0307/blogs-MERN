@@ -13,7 +13,7 @@ export default function UploadResource() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'Other',
+    category: 'DSA',
     fileUrl: '',
   });
   const [publishError, setPublishError] = useState(null);
@@ -116,7 +116,7 @@ export default function UploadResource() {
       
       // Reset form
       setTimeout(() => {
-        setFormData({ title: '', description: '', category: 'Other', fileUrl: '' });
+        setFormData({ title: '', description: '', category: 'DSA', fileUrl: '' });
         setFile(null);
         setPublishSuccess(null);
       }, 2000);
@@ -157,7 +157,6 @@ export default function UploadResource() {
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
         >
-          <option value='Other'>Other</option>
           <option value='DSA'>DSA</option>
           <option value='Operating System'>Operating System</option>
           <option value='DBMS'>DBMS</option>

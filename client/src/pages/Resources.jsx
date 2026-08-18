@@ -75,7 +75,6 @@ export default function Resources() {
                 <option value='DSA'>DSA</option>
                 <option value='Operating System'>Operating System</option>
                 <option value='DBMS'>DBMS</option>
-                <option value='Other'>Other</option>
               </Select>
             </div>
             <Button type='submit' gradientDuoTone='purpleToBlue'>

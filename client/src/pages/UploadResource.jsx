@@ -199,7 +199,8 @@ export default function UploadResource() {
         <Button 
           type='submit' 
           gradientDuoTone='purpleToPink' 
-          disabled={loading || !formData.fileUrl}
+          disabled={loading}
+          className='mt-4'
         >
           {loading ? 'Publishing...' : 'Publish Resource'}
         </Button>

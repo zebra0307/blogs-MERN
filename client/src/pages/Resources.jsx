@@ -139,14 +139,24 @@ export default function Resources() {
                   <Button
                     gradientDuoTone='purpleToBlue'
                     className='flex-1'
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = resource.fileUrl;
-                      link.download = `${resource.title}.pdf`;
-                      link.target = '_blank';
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
+                    onClick={async () => {
+                      try {
+                        // For Cloudinary URLs, injecting fl_attachment forces download
+                        let downloadUrl = resource.fileUrl;
+                        if (downloadUrl.includes('/upload/')) {
+                          downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
+                        }
+                        
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = `${resource.title}.pdf`;
+                        link.target = '_blank';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      } catch (error) {
+                        console.error('Download failed', error);
+                      }
                     }}
                   >
                     <HiDownload className='mr-2 h-5 w-5' />

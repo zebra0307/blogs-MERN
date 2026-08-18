@@ -2,7 +2,6 @@ import { Footer, FooterLink, FooterLinkGroup, FooterTitle } from 'flowbite-react
 import { Link } from 'react-router-dom';
 import { BsEnvelope, BsInfoCircle } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
-import { isCollegeStudent } from '../utils/authUtils';
 
 export default function FooterCom() {
   const { currentUser } = useSelector((state) => state.user);

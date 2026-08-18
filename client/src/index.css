@@ -256,6 +256,19 @@ aside a:hover {
   margin: 1.5rem 0;
 }
 
+/* ReactQuill text alignment support */
+.post-content .ql-align-center {
+  text-align: center;
+}
+
+.post-content .ql-align-right {
+  text-align: right;
+}
+
+.post-content .ql-align-justify {
+  text-align: justify;
+}
+
 .post-content ul li {
   margin: 1.15rem 0;
   margin-left: 1.3rem;

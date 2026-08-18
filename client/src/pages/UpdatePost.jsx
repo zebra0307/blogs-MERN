@@ -155,6 +155,18 @@ export default function UpdatePost() {
     }
   };
 
+  const modules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image', 'video'],
+      ['clean']
+    ],
+  };
+
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update post</h1>
@@ -225,6 +237,7 @@ export default function UpdatePost() {
           placeholder='Write something...'
           className='h-72 mb-12'
           required
+          modules={modules}
           onChange={(value) => {
             setFormData((prev) => ({ ...prev, content: value }));
           }}

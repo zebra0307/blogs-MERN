@@ -1,4 +1,4 @@
-import { Button, Modal, TextInput, Spinner } from 'flowbite-react';
+import { Button, Modal, ModalHeader, ModalBody, TextInput, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 
@@ -48,8 +48,8 @@ export default function ResourceSelector({ onInsert }) {
       </Button>
 
       <Modal show={showModal} onClose={() => setShowModal(false)} size="2xl">
-        <Modal.Header>Select a Resource to Embed</Modal.Header>
-        <Modal.Body>
+        <ModalHeader>Select a Resource to Embed</ModalHeader>
+        <ModalBody>
           <form onSubmit={handleSearch} className="flex gap-2 mb-4">
             <TextInput
               className="flex-1"
@@ -93,7 +93,7 @@ export default function ResourceSelector({ onInsert }) {
               ))
             )}
           </div>
-        </Modal.Body>
+        </ModalBody>
       </Modal>
     </>
   );

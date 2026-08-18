@@ -2,8 +2,6 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import HomeSlides from '../components/HomeSlides';
 import DotGrid from '../components/DotGrid';
-import { isCollegeStudent } from '../utils/authUtils';
-
 export default function Home() {
   const { currentUser } = useSelector((state) => state.user);
 
@@ -31,14 +29,13 @@ export default function Home() {
           </p>
 
           <h1 className='mt-6 max-w-4xl text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight text-white'>
-            {isCollegeStudent(currentUser) ? 'Learn, interact, and access university resources on' : 'Learn, interact, and explore technology on'}{' '}
+            Learn, interact, and explore technology on{' '}
             <span className='text-teal-300'>Z Blogs</span>
           </h1>
 
           <p className='mt-6 max-w-3xl text-sm sm:text-base lg:text-lg leading-relaxed text-slate-200'>
             Dive into a vibrant community where you can read insightful technical articles, 
-            engage anonymously through comments, and{' '}
-            {isCollegeStudent(currentUser) ? 'access past university question papers to help you ace your exams.' : 'explore a wealth of technical knowledge to boost your career.'}
+            engage anonymously through comments, and explore a wealth of technical knowledge to boost your career.
           </p>
 
           <div className='mt-8 flex flex-wrap items-center gap-3 sm:gap-4'>

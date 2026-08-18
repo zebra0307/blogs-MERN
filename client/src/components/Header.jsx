@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { signoutSuccess } from '../redux/user/userSlice';
 import SearchAutocomplete from './SearchAutocomplete';
-import { isCollegeStudent } from '../utils/authUtils';
 import SubscribeModal from './SubscribeModal';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
@@ -127,13 +126,6 @@ export default function Header() {
             Resources
           </span>
         </NavbarLink>
-        {isCollegeStudent(currentUser) && (
-          <NavbarLink active={path === '/question-papers'} as={Link} to='/question-papers'>
-            <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/question-papers' ? 'font-bold text-black dark:text-white' : ''}`}>
-              Question Papers
-            </span>
-          </NavbarLink>
-        )}
       </NavbarCollapse>
       
       <SubscribeModal 

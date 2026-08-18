@@ -4,23 +4,23 @@ import About from './pages/About';
 import SignIn from './pages/SignIn';
 import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
-import QuestionPapers from './pages/QuestionPapers';
+
 import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from './components/PrivateRoute';
 import OnlyAdminPrivateRoute from './components/OnlyAdminPrivateRoute';
-import OnlyCollegeStudentsPrivateRoute from './components/OnlyCollegeStudentsPrivateRoute';
+
 import CreatePost from './pages/CreatePost';
 import UpdatePost from './pages/UpdatePost';
-import UploadPaper from './pages/UploadPaper';
+import UploadResource from './pages/UploadResource';
 import PostPage from './pages/PostPage';
 import ScrollToTop from './components/ScrollToTop';
 import Search from './pages/Search';
 import ComingSoon from './pages/ComingSoon';
 import Resources from './pages/Resources';
 import Contact from './pages/Contact';
-import CollegeEmailNoticeModal from './components/CollegeEmailNoticeModal';
+
 import VerifySubscription from './pages/VerifySubscription';
 import Unsubscribe from './pages/Unsubscribe';
 
@@ -47,16 +47,12 @@ export default function App() {
           <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
-          <Route path='/upload-paper' element={<UploadPaper />} />
-        </Route>
-        <Route element={<OnlyCollegeStudentsPrivateRoute />}>
-          <Route path='/question-papers' element={<QuestionPapers />} />
+          <Route path='/upload-resource' element={<UploadResource />} />
         </Route>
         
         <Route path='/post/:postSlug' element={<PostPage />} />
       </Routes>
       <Footer />
-      <CollegeEmailNoticeModal />
     </BrowserRouter>
   );
 }

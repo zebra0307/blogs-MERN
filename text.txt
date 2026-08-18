@@ -1,0 +1,28 @@
+                         ZBLOGS
+                           │
+            ┌──────────────┼──────────────┐
+            │              │              │
+         ARTICLES       RESOURCES      PROBLEMS
+            │              │              │
+            │          ┌───┼────┐         │
+            │          │   │    │         │
+          Text        PDF Code  Diagrams  Practice
+            │
+            ↓
+       KNOWLEDGE GRAPH
+            │
+     ┌──────┼───────┐
+     ↓      ↓       ↓
+   Topics  Paths  Prerequisites
+     │
+     ↓
+  STUDY MODE
+     │
+     ↓
+ USER PROGRESS
+     │
+     ↓
+ NEWSLETTER
+
+
+ 

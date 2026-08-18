@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { isCollegeStudent } from '../utils/authUtils';
 
 export default function About() {
   const { currentUser } = useSelector((state) => state.user);
@@ -20,12 +19,10 @@ export default function About() {
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
                 Z-Blogs is a vibrant public community designed for students, developers, and lifelong learners. 
-                Our platform provides a space to interact, read high-quality technical blogs{isCollegeStudent(currentUser) ? ', and access university resources.' : '.'}
+                Our platform provides a space to interact, read high-quality technical blogs, and access community resources.
               </p>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                {isCollegeStudent(currentUser) 
-                  ? 'Whether you are looking for past question papers to prepare for your exams or seeking insightful articles on data structures, algorithms, and web development, you are in the right place!' 
-                  : 'If you are seeking insightful articles on data structures, algorithms, and web development, you are in the right place!'}
+                If you are seeking insightful articles on data structures, algorithms, and web development, you are in the right place!
               </p>
             </div>
           </div>
@@ -51,25 +48,23 @@ export default function About() {
           </div>
 
           {/* Resources */}
-          {isCollegeStudent(currentUser) && (
-            <div className='grid md:grid-cols-3 gap-8 items-start'>
-              <div className='md:col-span-1'>
-                <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
-                  University Resources
-                </h2>
-                <div className='w-12 h-1 bg-teal-500 mt-2'></div>
-              </div>
-              <div className='md:col-span-2'>
-                <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                  Our dedicated <strong>Question Papers</strong> section is continuously updated with past exam papers 
-                  across various branches and semesters. It's a one-stop destination to test your preparation and understand exam patterns.
-                </p>
-                <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                  All papers are neatly categorized by Year, Semester, and Exam Type, and can be instantly viewed or downloaded in PDF format.
-                </p>
-              </div>
+          <div className='grid md:grid-cols-3 gap-8 items-start'>
+            <div className='md:col-span-1'>
+              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+                Learning Resources
+              </h2>
+              <div className='w-12 h-1 bg-teal-500 mt-2'></div>
             </div>
-          )}
+            <div className='md:col-span-2'>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
+                Our dedicated <strong>Resources</strong> section is continuously updated with cheat sheets, study notes, 
+                and guides across various CS concepts like Data Structures, Operating Systems, and DBMS.
+              </p>
+              <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
+                All resources are neatly categorized and can be instantly viewed or downloaded in PDF format.
+              </p>
+            </div>
+          </div>
 
         </div>
 
@@ -79,9 +74,7 @@ export default function About() {
             Where to Go Next
           </h2>
           <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-            {isCollegeStudent(currentUser) 
-              ? 'Dive right in! Read the latest articles from the community, or head over to the Question Papers portal to gear up for your exams.' 
-              : 'Dive right in! Read the latest articles from the community and explore a wealth of technical knowledge.'}
+            Dive right in! Read the latest articles from the community, or head over to the Resources portal to gear up for your studies.
           </p>
           <div className='flex flex-wrap items-center gap-6 mt-5'>
             <Link
@@ -90,14 +83,12 @@ export default function About() {
             >
               Read Community Posts →
             </Link>
-            {isCollegeStudent(currentUser) && (
-              <Link
-                to='/question-papers'
-                className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
-              >
-                Access Question Papers →
-              </Link>
-            )}
+            <Link
+              to='/resources'
+              className='text-teal-600 dark:text-teal-400 font-semibold hover:underline'
+            >
+              Access Learning Resources →
+            </Link>
           </div>
         </div>
       </div>

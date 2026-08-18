@@ -1,5 +1,5 @@
 import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from 'flowbite-react';
-import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiChartPie, HiOutlineMail } from 'react-icons/hi';
+import { HiUser, HiArrowSmRight, HiDocumentText, HiOutlineUserGroup, HiAnnotation, HiChartPie, HiOutlineMail, HiOutlineDocumentText } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
 import { signoutSuccess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,6 +91,15 @@ export default function DashSidebar() {
                                     as='div'
                                 >
                                     Subscribers
+                                </SidebarItem>
+                            </Link>
+                            <Link to='/dashboard?tab=resources'>
+                                <SidebarItem
+                                    active={tab === 'resources'}
+                                    icon={HiOutlineDocumentText}
+                                    as='div'
+                                >
+                                    Resources
                                 </SidebarItem>
                             </Link>
                         </>

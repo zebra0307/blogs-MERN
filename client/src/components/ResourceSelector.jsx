@@ -89,7 +89,7 @@ export default function ResourceSelector({ onInsert }) {
                     size="sm" 
                     className='bg-linear-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white! border-0'
                     onClick={() => {
-                      onInsert(resource._id);
+                      onInsert(resource);
                       setShowModal(false);
                     }}
                   >

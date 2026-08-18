@@ -9,23 +9,23 @@ export function FAQsSlide() {
     const faqs = [
         {
             question: 'What topics does Z Blogs cover?',
-            answer: 'Z Blogs covers a wide range of tech topics including Web Development (React, Node.js, Next.js), Blockchain (Ethereum, Solana, TON), Data Structures & Algorithms, AI/ML, Cyber Security, Cloud Computing, and much more.',
+            answer: 'Z Blogs is a highly curated computer science library focusing exclusively on four core subjects: Data Structures & Algorithms, Database Management Systems, Operating Systems, and System Design.',
         },
         {
-            question: 'Is the content free to access?',
-            answer: 'Yes! All articles and tutorials on Z Blogs are completely free to access. We believe in making quality tech education accessible to everyone.',
+            question: 'Is this a course or tutorial website?',
+            answer: 'No. Z Blogs is a professional, editorial knowledge library. You won\'t find gamified courses or step-by-step tutorials here—just clean, structured notes and high-quality technical blogs.',
         },
         {
             question: 'Can I contribute to Z Blogs?',
-            answer: 'We welcome contributions from the community! If you have valuable knowledge to share, reach out to us through our contact page to discuss guest posting opportunities.',
+            answer: 'Yes, this platform thrives on community participation! Any registered user can publish their own technical articles. To maintain a high standard of quality, users are limited to submitting one blog post per month.',
         },
         {
-            question: 'How often is new content published?',
-            answer: 'We regularly publish new articles covering the latest technologies and trends. Subscribe to stay updated with our newest content.',
+            question: 'Is the content free to access?',
+            answer: 'Yes! All articles and structured resources on Z Blogs are completely free to access. We believe in making quality CS education accessible to everyone.',
         },
         {
-            question: 'Are the tutorials beginner-friendly?',
-            answer: 'Absolutely! We have content for all skill levels. Each article is marked with difficulty level, and we explain concepts from basics to advanced.',
+            question: 'Are the authors anonymous?',
+            answer: 'Yes, privacy is a core feature. When you comment or post an article, only your username and profile picture are visible to the public. Your personal details remain completely hidden.',
         },
     ];
 

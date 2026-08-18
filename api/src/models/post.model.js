@@ -41,6 +41,8 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+postSchema.index({ attachedResources: 1, isApproved: 1 });
+
 const Post = mongoose.model('Post', postSchema);
 
 export default Post;

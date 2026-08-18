@@ -2,7 +2,7 @@ import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import { useSelector } from 'react-redux';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import 'react-circular-progressbar/dist/styles.css';
@@ -20,6 +20,7 @@ export default function CreatePost() {
   const [publishError, setPublishError] = useState(null);
   const [publishSuccess, setPublishSuccess] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
+  const quillRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -87,15 +88,22 @@ export default function CreatePost() {
     }
   };
 
-  const handleInsertResource = (resourceId) => {
-    setFormData((prev) => {
-      const currentContent = prev.content || '';
-      return {
-        ...prev,
-        content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
-        attachedResources: [...(prev.attachedResources || []), resourceId]
-      };
-    });
+  const handleInsertResource = (resource) => {
+    const editor = quillRef.current.getEditor();
+    const range = editor.getSelection(true);
+    
+    if (resource.fileUrl) {
+      editor.insertText(range.index, `\n[RESOURCE_EMBED:${resource._id}]\n`);
+    } else {
+      editor.insertText(range.index, ` [RESOURCE_LINK:${resource._id}|📘 Read ${resource.title} →] `);
+    }
+    
+    setFormData((prev) => ({
+      ...prev,
+      attachedResources: prev.attachedResources?.includes(resource._id) 
+        ? prev.attachedResources 
+        : [...(prev.attachedResources || []), resource._id]
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -209,6 +217,7 @@ export default function CreatePost() {
           />
         )}
         <ReactQuill
+          ref={quillRef}
           theme='snow'
           placeholder='Write something...'
           className='h-72 mb-12'

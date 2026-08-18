@@ -40,7 +40,20 @@ export default function Header() {
   };
 
   return (
-    <Navbar className='border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black sticky top-0 z-[9999]'>
+    <Navbar 
+      className='header-nav border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black sticky top-0 z-[9999]'
+      theme={{
+        root: {
+          inner: {
+            base: 'mx-auto flex flex-wrap items-center justify-between',
+            fluid: {
+              on: '',
+              off: 'max-w-7xl w-full'
+            }
+          }
+        }
+      }}
+    >
       <Link
         to='/'
         className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800'

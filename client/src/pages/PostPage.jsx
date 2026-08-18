@@ -108,11 +108,31 @@ export default function PostPage() {
       
       // Render standard HTML parts
       if (part.trim()) {
+        let htmlContent = part;
+        
+        const categoryToSlug = {
+          'DSA': 'dsa',
+          'Operating System': 'operating-system',
+          'DBMS': 'dbms',
+          'System Design': 'system-design'
+        };
+
+        // Replace inline resource links
+        htmlContent = htmlContent.replace(/\[RESOURCE_LINK:([a-fA-F0-9]{24})\|([^\]]+)\]/g, (match, id, text) => {
+          const resource = post.attachedResources?.find(r => r._id === id);
+          if (resource) {
+            const subjectSlug = categoryToSlug[resource.category] || 'dsa';
+            return `<a href="/resources/${subjectSlug}/${resource.slug}" class="text-teal-600 dark:text-teal-400 hover:underline font-medium transition-colors cursor-pointer" title="${resource.title}">${text}</a>`;
+          } else {
+            return `<span class="italic text-gray-500 bg-gray-100 dark:bg-gray-800 px-1 rounded text-sm">[Unavailable: ${text}]</span>`;
+          }
+        });
+
         return (
           <div
             key={index}
             className='w-full post-content text-gray-800 dark:text-gray-100'
-            dangerouslySetInnerHTML={{ __html: part }}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         );
       }
@@ -169,16 +189,16 @@ export default function PostPage() {
           .
         </p>
 
-        <div className='my-8'>
+        {post && (
+          <div className='w-full mt-10 mb-6 border-t border-gray-200 dark:border-gray-800 pt-8'>
+            <CommentSection postId={post._id} />
+          </div>
+        )}
+
+        <div className='my-12'>
           <NewsletterSubscribe />
         </div>
       </article>
-
-      {post && (
-        <div className='w-full max-w-5xl mx-auto mt-4'>
-          <CommentSection postId={post._id} />
-        </div>
-      )}
 
       <div className='w-full max-w-5xl mx-auto mt-8 mb-6'>
         <h2 className='text-2xl font-semibold text-center text-gray-900 dark:text-white'>

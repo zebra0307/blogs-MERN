@@ -22,7 +22,7 @@ export default function About() {
                 Our platform provides a space to interact, read high-quality technical blogs, and access community resources.
               </p>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                If you are seeking insightful articles on data structures, algorithms, and web development, you are in the right place!
+                If you are seeking insightful articles on Data Structures & Algorithms, Database Management Systems, Operating Systems, and System Design, you are in the right place!
               </p>
             </div>
           </div>
@@ -57,11 +57,11 @@ export default function About() {
             </div>
             <div className='md:col-span-2'>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed'>
-                Our dedicated <strong>Resources</strong> section is continuously updated with cheat sheets, study notes, 
-                and guides across various CS concepts like Data Structures, Operating Systems, and DBMS.
+                Our dedicated <strong>Resources</strong> section is a continuously updated library of structured study notes 
+                and references for our core CS concepts: Data Structures & Algorithms, Database Management Systems, Operating Systems, and System Design.
               </p>
               <p className='text-gray-600 dark:text-gray-400 leading-relaxed mt-4'>
-                All resources are neatly categorized and can be instantly viewed or downloaded in PDF format.
+                All resources are neatly categorized into topics and can be viewed instantly as editorial notes or downloaded as attached PDFs.
               </p>
             </div>
           </div>

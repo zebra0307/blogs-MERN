@@ -109,13 +109,13 @@ body {
 }
 
 /* Navbar dark mode */
-nav {
+.header-nav {
   position: sticky;
   top: 0;
   z-index: 9999 !important;
 }
 
-.dark nav {
+.dark .header-nav {
   background-color: rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(12px);
   border-color: var(--twitter-dark-border) !important;
@@ -182,14 +182,14 @@ button:not(:disabled):hover,
 }
 
 /* Navigation link hover - Twitter style pill background */
-nav a:hover,
+.header-nav a:hover,
 aside a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
   text-decoration: none;
 }
 
-.light nav a:hover,
+.light .header-nav a:hover,
 .light aside a:hover {
   background-color: rgba(0, 0, 0, 0.05);
 }
@@ -321,6 +321,14 @@ aside a:hover {
 .dark .post-content code {
   background-color: #2f3336;
   color: #e7e9ea;
+}
+
+/* Ensure code tags inside pre tags don't have conflicting backgrounds */
+.post-content pre code {
+  background-color: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
 }
 
 /* Alert/notification styling */

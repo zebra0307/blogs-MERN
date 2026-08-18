@@ -19,6 +19,8 @@ import ScrollToTop from './components/ScrollToTop';
 import Search from './pages/Search';
 import ComingSoon from './pages/ComingSoon';
 import Resources from './pages/Resources';
+import SubjectLayout from './pages/SubjectLayout';
+import UpdateResource from './pages/UpdateResource';
 import Contact from './pages/Contact';
 
 import VerifySubscription from './pages/VerifySubscription';
@@ -37,6 +39,8 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/search' element={<Search />} />
         <Route path='/resources' element={<Resources />} />
+        <Route path='/resources/:subjectSlug' element={<SubjectLayout />} />
+        <Route path='/resources/:subjectSlug/:topicSlug' element={<SubjectLayout />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/coming-soon' element={<ComingSoon />} />
         <Route path='/verify-subscription/:token' element={<VerifySubscription />} />
@@ -47,7 +51,10 @@ export default function App() {
           <Route path='/update-post/:postId' element={<UpdatePost />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
+          <Route path='/create-post' element={<CreatePost />} />
+          <Route path='/update-post/:postId' element={<UpdatePost />} />
           <Route path='/upload-resource' element={<UploadResource />} />
+          <Route path='/update-resource/:resourceId' element={<UpdateResource />} />
         </Route>
         
         <Route path='/post/:postSlug' element={<PostPage />} />

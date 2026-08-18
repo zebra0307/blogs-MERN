@@ -1,6 +1,6 @@
 import { Footer, FooterLink, FooterLinkGroup, FooterTitle } from 'flowbite-react';
 import { Link } from 'react-router-dom';
-import { BsEnvelope, BsInfoCircle } from 'react-icons/bs';
+import { BsEnvelope, BsTwitter } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
 export default function FooterCom() {
@@ -31,19 +31,33 @@ export default function FooterCom() {
                     <span>Send a Message</span>
                   </div>
                 </FooterLink>
+                <FooterLink
+                  href='https://twitter.com/stndr_0307'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='p-0! text-gray-700! dark:text-gray-300!'
+                >
+                  <div className='flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'>
+                    <BsTwitter className='text-gray-700 dark:text-gray-300' />
+                    <span>@stndr_0307</span>
+                  </div>
+                </FooterLink>
               </FooterLinkGroup>
             </div>
             <div>
               <FooterTitle title='Resources' className='text-gray-900 dark:text-white' />
               <FooterLinkGroup col>
-                <FooterLink href='/resources?category=DSA' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
-                  DSA
+                <FooterLink href='/resources/dsa' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Data Structures & Algorithms
                 </FooterLink>
-                <FooterLink href='/resources?category=Operating+System' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                <FooterLink href='/resources/dbms' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  Database Management System
+                </FooterLink>
+                <FooterLink href='/resources/operating-system' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
                   Operating System
                 </FooterLink>
-                <FooterLink href='/resources?category=DBMS' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
-                  DBMS
+                <FooterLink href='/resources/system-design' className='text-gray-700 dark:text-gray-300 hover:text-teal-500'>
+                  System Design
                 </FooterLink>
               </FooterLinkGroup>
             </div>

@@ -1,7 +1,7 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,10 +17,11 @@ export default function UpdatePost() {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const [publishSuccess, setPublishSuccess] = useState(null);
   const { postId } = useParams();
-
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
+  const quillRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -113,15 +114,23 @@ export default function UpdatePost() {
     }
   };
 
-  const handleInsertResource = (resourceId) => {
+  const handleInsertResource = (resource) => {
+    const editor = quillRef.current.getEditor();
+    const range = editor.getSelection(true);
+    
+    if (resource.fileUrl) {
+      editor.insertText(range.index, `\n[RESOURCE_EMBED:${resource._id}]\n`);
+    } else {
+      editor.insertText(range.index, ` [RESOURCE_LINK:${resource._id}|📘 Read ${resource.title} →] `);
+    }
+    
     setFormData((prev) => {
-      const currentContent = prev.content || '';
-      // Ensure we extract just the _id if attachedResources objects were populated
       const currentAttachedIds = (prev.attachedResources || []).map(r => typeof r === 'object' ? r._id : r);
       return {
         ...prev,
-        content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
-        attachedResources: [...currentAttachedIds, resourceId]
+        attachedResources: currentAttachedIds.includes(resource._id) 
+          ? currentAttachedIds 
+          : [...currentAttachedIds, resource._id]
       };
     });
   };
@@ -232,6 +241,7 @@ export default function UpdatePost() {
           />
         )}
         <ReactQuill
+          ref={quillRef}
           theme='snow'
           value={formData.content}
           placeholder='Write something...'

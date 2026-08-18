@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
+import ResourceCard from '../components/ResourceCard';
 import NewsletterSubscribe from '../components/NewsletterSubscribe';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
@@ -84,6 +85,41 @@ export default function PostPage() {
     );
   }
 
+  const renderContent = () => {
+    if (!post || !post.content) return null;
+    
+    // Match the shortcode, optionally surrounded by <p> tags from ReactQuill
+    const parts = post.content.split(/(?:<p>)?\s*\[RESOURCE_EMBED:([a-fA-F0-9]{24})\]\s*(?:<\/p>)?/);
+    
+    return parts.map((part, index) => {
+      // If the part is exactly 24 hex characters, it's our matched ID
+      if (part.length === 24 && /^[a-fA-F0-9]{24}$/.test(part)) {
+        const resource = post.attachedResources?.find(r => r._id === part);
+        if (resource) {
+          return (
+            <div key={index} className="my-8 w-full max-w-2xl mx-auto">
+              <ResourceCard resource={resource} />
+            </div>
+          );
+        } else {
+          return <span key={index} className="italic text-gray-500 bg-gray-100 px-2 py-1 rounded text-sm">[Attached Resource Unavailable]</span>;
+        }
+      }
+      
+      // Render standard HTML parts
+      if (part.trim()) {
+        return (
+          <div
+            key={index}
+            className='w-full post-content text-gray-800 dark:text-gray-100'
+            dangerouslySetInnerHTML={{ __html: part }}
+          />
+        );
+      }
+      return null;
+    });
+  };
+
   return (
     <main className='px-4 sm:px-6 lg:px-8 py-6 flex flex-col max-w-7xl mx-auto min-h-screen'>
       <article className='w-full max-w-5xl mx-auto'>
@@ -120,10 +156,9 @@ export default function PostPage() {
           </span>
         </div>
 
-        <div
-          className='pt-6 w-full post-content text-gray-800 dark:text-gray-100'
-          dangerouslySetInnerHTML={{ __html: post && post.content }}
-        ></div>
+        <div className='pt-6 w-full flex flex-col'>
+          {renderContent()}
+        </div>
 
         <p className='pt-4 pb-3 text-sm text-gray-600 dark:text-gray-400'>
           This post is part of my ongoing software engineering learning log. Explore

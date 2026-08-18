@@ -5,8 +5,10 @@ import 'react-quill-new/dist/quill.snow.css';
 import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
 import { POST_CATEGORIES } from '../utils/categories';
+import ResourceSelector from '../components/ResourceSelector';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
@@ -83,6 +85,15 @@ export default function CreatePost() {
       setImageUploadProgress(null);
       console.log(error);
     }
+  };
+
+  const handleInsertResource = (resourceId) => {
+    const currentContent = formData.content || '';
+    setFormData({
+      ...formData,
+      content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
+      attachedResources: [...(formData.attachedResources || []), resourceId]
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -188,10 +199,14 @@ export default function CreatePost() {
           placeholder='Write something...'
           className='h-72 mb-12'
           required
+          value={formData.content || ''}
           onChange={(value) => {
             setFormData({ ...formData, content: value });
           }}
         />
+        <div className="flex justify-end -mt-8 mb-4">
+          <ResourceSelector onInsert={handleInsertResource} />
+        </div>
         <Button type='submit' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
           Publish
         </Button>

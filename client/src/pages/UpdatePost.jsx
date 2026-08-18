@@ -7,6 +7,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import { POST_CATEGORIES } from '../utils/categories';
 import { useSelector } from 'react-redux';
+import ResourceSelector from '../components/ResourceSelector';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
@@ -112,6 +113,15 @@ export default function UpdatePost() {
     }
   };
 
+  const handleInsertResource = (resourceId) => {
+    const currentContent = formData.content || '';
+    setFormData({
+      ...formData,
+      content: currentContent + `\n<p>[RESOURCE_EMBED:${resourceId}]</p>\n`,
+      attachedResources: [...(formData.attachedResources || []), resourceId]
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -215,6 +225,9 @@ export default function UpdatePost() {
             setFormData({ ...formData, content: value });
           }}
         />
+        <div className="flex justify-end -mt-8 mb-4">
+          <ResourceSelector onInsert={handleInsertResource} />
+        </div>
         <Button type='submit' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
           Update post
         </Button>

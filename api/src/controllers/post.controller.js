@@ -84,6 +84,7 @@ export const getposts = async (req, res, next) => {
     }
 
     const posts = await Post.find(query)
+      .populate('attachedResources')
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
@@ -142,6 +143,7 @@ export const updatepost = async (req, res, next) => {
           content: req.body.content,
           category: req.body.category,
           image: req.body.image,
+          ...(req.body.attachedResources !== undefined && { attachedResources: req.body.attachedResources }),
           ...(req.user.isAdmin && req.body.isApproved !== undefined && { isApproved: req.body.isApproved }),
         },
       },

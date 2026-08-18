@@ -33,6 +33,10 @@ const postSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    attachedResources: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Resource',
+    }],
   },
   { timestamps: true }
 );

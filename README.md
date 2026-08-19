@@ -8,6 +8,9 @@ A full-stack modern blog platform for a tech community, offering anonymous discu
 - **Anonymous Community:** Users can post comments and blogs completely anonymously without exposing personal information. Only usernames are public.
 - **Admin Portal:** Comprehensive dashboard to manage posts, users, comments, and approvals.
 - **Question Papers Bank:** Dedicated section to access past university question papers in PDF format.
+- **Dynamic Markdown Curriculum:** Automated GitHub ingestion for multi-phase structured curriculums (Operating System & System Design).
+- **Premium Typography System:** Editorial design across all pages utilizing tailored spacing, serif headings, and collapsible hierarchical sidebars.
+- **High-Performance Architecture:** Stripped API payloads and native MongoDB text indexing for lightning-fast search and pagination without data over-fetching.
 - **Newsletter:** Production-ready double opt-in newsletter subscription system, integrated with Brevo for automated new-post email notifications.
 - **Contact:** Integrated Web3Forms for direct communication.
 

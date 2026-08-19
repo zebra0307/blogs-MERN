@@ -98,7 +98,7 @@ export default function Search() {
   };
 
   return (
-    <div className='flex flex-col md:flex-row'>
+    <div className='flex flex-col md:flex-row min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white'>
       {/* Filter Sidebar - Thin & Compact */}
       <div className='p-4 border-b md:border-r md:min-h-screen border-gray-200 dark:border-gray-700 md:w-56 shrink-0 bg-gray-50 dark:bg-gray-900/50'>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
@@ -148,13 +148,12 @@ export default function Search() {
 
       {/* Main Content Area - Blog Grid */}
       <div className='flex-1 min-w-0'>
-        <h1 className='text-2xl font-semibold border-b border-gray-200 dark:border-gray-700 px-4 py-3'>
+        <h1 className='text-2xl sm:text-3xl font-bold font-serif tracking-tight text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 px-4 py-4'>
           Weekly Technical Notes
         </h1>
         <div className='p-4'>
-          <p className='text-sm md:text-base text-gray-600 dark:text-gray-400 mb-5'>
-            I publish regular learning notes on data structures, C++, web development,
-            systems, and implementation decisions from ongoing projects.
+          <p className='text-sm md:text-base text-gray-600 dark:text-gray-400 mb-5 font-light leading-relaxed'>
+            Technical articles on computer science, data structures, systems, and problem solving.
           </p>
           {!loading && posts.length === 0 && (
             <p className='text-lg text-gray-500 text-center py-8'>No matching notes found.</p>

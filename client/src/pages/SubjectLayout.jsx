@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Spinner, Button } from 'flowbite-react';
-import { HiMenuAlt2, HiX } from 'react-icons/hi';
+import { HiMenuAlt2, HiX, HiChevronDown, HiChevronRight } from 'react-icons/hi';
 import TopicPage from './TopicPage';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
@@ -26,9 +26,41 @@ export default function SubjectLayout() {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({});
   const location = useLocation();
 
   const category = SUBJECT_MAPPING[subjectSlug];
+
+  // Group topics by heading
+  const groupedTopics = useMemo(() => {
+    const groups = [];
+    let currentGroup = { heading: null, items: [] };
+
+    topics.forEach(topic => {
+      if (topic.resourceType === 'Heading') {
+        if (currentGroup.heading || currentGroup.items.length > 0) {
+          groups.push(currentGroup);
+        }
+        currentGroup = { heading: topic, items: [] };
+      } else {
+        currentGroup.items.push(topic);
+      }
+    });
+    if (currentGroup.heading || currentGroup.items.length > 0) {
+      groups.push(currentGroup);
+    }
+    return groups;
+  }, [topics]);
+
+  // Auto-expand the group containing the active topic
+  useEffect(() => {
+    if (topicSlug && groupedTopics.length > 0) {
+      const activeGroupIndex = groupedTopics.findIndex(g => g.items.some(t => t.slug === topicSlug));
+      if (activeGroupIndex !== -1) {
+        setExpandedGroups(prev => ({ ...prev, [activeGroupIndex]: true }));
+      }
+    }
+  }, [topicSlug, groupedTopics]);
 
   useEffect(() => {
     if (!category) {
@@ -46,9 +78,12 @@ export default function SubjectLayout() {
           const data = await res.json();
           setTopics(data.resources);
           
-          // Auto-redirect to the first topic if no topic is selected
+          // Auto-redirect to the first Markdown topic if no topic is selected
           if (!topicSlug && data.resources.length > 0) {
-            navigate(`/resources/${subjectSlug}/${data.resources[0].slug}`, { replace: true });
+            const firstTopic = data.resources.find(r => r.resourceType !== 'Heading');
+            if (firstTopic) {
+              navigate(`/resources/${subjectSlug}/${firstTopic.slug}`, { replace: true });
+            }
           }
         }
       } catch (error) {
@@ -114,23 +149,45 @@ export default function SubjectLayout() {
             </h3>
             
             <nav className='flex flex-col gap-1'>
-              {topics.length === 0 ? (
+              {groupedTopics.length === 0 ? (
                 <p className='text-gray-500 text-sm'>No topics available yet.</p>
               ) : (
-                topics.map((topic) => (
-                  <Link
-                    key={topic._id}
-                    to={`/resources/${subjectSlug}/${topic.slug}`}
-                    className={`
-                      px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      ${topicSlug === topic.slug 
-                        ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400' 
-                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
-                    `}
-                  >
-                    {topic.title}
-                  </Link>
-                ))
+                groupedTopics.map((group, groupIndex) => {
+                  const isExpanded = expandedGroups[groupIndex];
+                  
+                  return (
+                    <div key={group.heading ? group.heading._id : `group-${groupIndex}`} className="mb-2">
+                      {group.heading && (
+                        <button
+                          onClick={() => setExpandedGroups(prev => ({ ...prev, [groupIndex]: !isExpanded }))}
+                          className="w-full flex items-center justify-between mt-4 mb-2 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                        >
+                          <span className="text-left">{group.heading.title}</span>
+                          {isExpanded ? <HiChevronDown className="w-4 h-4" /> : <HiChevronRight className="w-4 h-4" />}
+                        </button>
+                      )}
+                      
+                      {(!group.heading || isExpanded) && (
+                        <div className="flex flex-col gap-1 mt-1">
+                          {group.items.map(topic => (
+                            <Link
+                              key={topic._id}
+                              to={`/resources/${subjectSlug}/${topic.slug}`}
+                              className={`
+                                px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                                ${topicSlug === topic.slug 
+                                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400' 
+                                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'}
+                              `}
+                            >
+                              {topic.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
               )}
             </nav>
           </div>

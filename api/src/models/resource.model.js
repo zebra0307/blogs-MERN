@@ -13,7 +13,7 @@ const resourceSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['DSA', 'Operating System', 'DBMS'],
+      enum: ['DSA', 'Operating System', 'DBMS', 'System Design'],
       required: true,
     },
     resourceType: {

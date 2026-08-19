@@ -1,121 +1,191 @@
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import HomeSlides from '../components/HomeSlides';
-import DotGrid from '../components/DotGrid';
-export default function Home() {
-  const { currentUser } = useSelector((state) => state.user);
+import { useEffect, useState, useRef } from 'react';
+import PostCard from '../components/PostCard';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
+
+function CategorySection({ title, categoryUrl, fetchUrl, bgClass = 'bg-white dark:bg-[#09090b]' }) {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const scrollRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(fetchUrl);
+        if (res.ok) {
+          const data = await res.json();
+          setPosts(data.posts);
+        }
+      } catch (error) {
+        console.error(`Failed to fetch ${title} data`, error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, [fetchUrl]);
+
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(Math.ceil(scrollLeft + clientWidth) < scrollWidth - 1); // -1px tolerance
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+    return () => window.removeEventListener('resize', checkScroll);
+  }, [posts]);
+
+  const scrollLeftClick = () => {
+    if (scrollRef.current) {
+      const scrollAmount = scrollRef.current.clientWidth;
+      scrollRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRightClick = () => {
+    if (scrollRef.current) {
+      const scrollAmount = scrollRef.current.clientWidth;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  if (!loading && (!posts || posts.length === 0)) return null;
 
   return (
-    <div>
-      {/* Welcome Section */}
-      <div className='relative overflow-hidden border-b border-slate-800 bg-slate-950'>
-        <DotGrid
-          className='z-0 opacity-80'
-          dotSize={10}
-          gap={24}
-          baseColor='#155e75'
-          activeColor='#5eead4'
-          proximity={130}
-          speedTrigger={140}
-          shockRadius={200}
-          shockStrength={3}
-          returnDuration={1.1}
-        />
-        <div className='absolute inset-0 z-10 bg-linear-to-b from-slate-950/75 via-slate-950/60 to-slate-950/82' />
-
-        <div className='relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 flex flex-col lg:flex-row items-center justify-between gap-12'>
-          
-          {/* Left Column: Text Content */}
-          <div className='flex-1 max-w-2xl w-full'>
-            <p className='inline-flex items-center gap-2 text-xs sm:text-sm font-semibold tracking-[0.14em] uppercase text-teal-200 bg-teal-500/10 px-3 py-1 rounded-full border border-teal-300/25'>
-              Your Public Tech Community
-            </p>
-
-            <h1 className='mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white'>
-              Learn, interact, and explore technology on{' '}
-              <span className='text-transparent bg-clip-text bg-linear-to-r from-teal-400 to-emerald-300'>Z Blogs</span>
-            </h1>
-
-            <p className='mt-6 text-base sm:text-lg lg:text-xl leading-relaxed text-slate-300'>
-              Dive into a vibrant community where you can read insightful technical articles, 
-              engage anonymously through comments, and explore a wealth of technical knowledge to boost your career.
-            </p>
-
-            <div className='mt-8 flex flex-wrap items-center gap-4'>
-              <Link
-                to='/search'
-                className='inline-flex items-center justify-center rounded-lg bg-teal-600 hover:bg-teal-500 text-white! text-base font-semibold px-6 py-3 transition-colors shadow-lg shadow-teal-500/20'
-              >
-                Read the blog
-              </Link>
-              <Link
-                to='/resources'
-                className='inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-900/50 text-slate-200! hover:bg-slate-800 hover:text-white! hover:border-slate-500 text-base font-semibold px-6 py-3 transition-colors backdrop-blur-sm'
-              >
-                Resources
-              </Link>
-            </div>
-
-            <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg'>
-              <div className='rounded-xl border border-slate-700/50 bg-slate-800/30 backdrop-blur-md px-5 py-4'>
-                <p className='text-xs uppercase tracking-wider text-teal-400 font-medium'>
-                  Community First
-                </p>
-                <p className='text-sm font-semibold text-slate-200 mt-1'>
-                  Read & Contribute
-                </p>
-              </div>
-
-              <div className='rounded-xl border border-slate-700/50 bg-slate-800/30 backdrop-blur-md px-5 py-4'>
-                <p className='text-xs uppercase tracking-wider text-teal-400 font-medium'>
-                  Privacy
-                </p>
-                <p className='text-sm font-semibold text-slate-200 mt-1'>
-                  100% Anonymous
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Zebra Logo */}
-          <div className='hidden lg:flex flex-1 justify-center items-center w-full max-w-md relative'>
-            <style>
-              {`
-                @keyframes float-zebra {
-                  0% { transform: translateY(0px) scaleX(-1); }
-                  50% { transform: translateY(-20px) scaleX(-1); }
-                  100% { transform: translateY(0px) scaleX(-1); }
-                }
-                .animate-float-zebra {
-                  animation: float-zebra 6s ease-in-out infinite;
-                }
-              `}
-            </style>
-            
-            {/* Glowing background blob behind the image */}
-            <div className='absolute w-72 h-72 bg-teal-500/20 rounded-full blur-3xl' />
-            <div className='absolute w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl translate-x-10 translate-y-10' />
-            
-            {/* The Zebra Image */}
-            <div className='relative z-10 w-full aspect-square max-w-[450px] p-2 rounded-[2rem] bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 shadow-2xl shadow-black/50'>
-              <div className='w-full h-full overflow-hidden rounded-3xl bg-white'>
-                <img 
-                  src='/zebra-hero.jpg' 
-                  alt='Zebra Mascot' 
-                  className='w-full h-full object-cover animate-float-zebra origin-center'
-                />
-              </div>
-            </div>
-          </div>
-          
+    <section className={`w-full py-10 border-t border-gray-200 dark:border-gray-800 ${bgClass}`}>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4'>
+          <h2 className='text-3xl font-bold tracking-tight text-gray-900 dark:text-white'>
+            {title}
+          </h2>
+          <Link to={categoryUrl} className='text-sm font-semibold text-teal-600 dark:text-teal-400 hover:underline flex items-center gap-1 group'>
+            See all <span className='group-hover:translate-x-1 transition-transform'>&rarr;</span>
+          </Link>
         </div>
+        
+        {loading ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse'>
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className='w-full h-[340px] bg-gray-200 dark:bg-gray-800 rounded-xl'></div>
+            ))}
+          </div>
+        ) : (
+          <div className='relative group/carousel -mx-4'>
+            {/* Left Navigation Arrow */}
+            {posts.length > 4 && (
+              <button 
+                onClick={scrollLeftClick}
+                disabled={!canScrollLeft}
+                aria-label="Previous articles"
+                className={`hidden sm:flex absolute left-0 lg:-left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full items-center justify-center bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-md transition-opacity duration-300 ${canScrollLeft ? 'opacity-100 hover:text-teal-500 dark:hover:text-teal-400 cursor-pointer' : 'opacity-0 pointer-events-none'}`}
+              >
+                <BsChevronLeft size={20} className='mr-1' />
+              </button>
+            )}
+
+            {/* Carousel Track */}
+            <div 
+              ref={scrollRef}
+              onScroll={checkScroll}
+              className='flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4'
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {posts.map((post) => (
+                <div key={post._id} className='w-full sm:w-1/2 lg:w-1/4 flex-none snap-start px-4'>
+                  <PostCard post={post} />
+                </div>
+              ))}
+            </div>
+
+            {/* Right Navigation Arrow */}
+            {posts.length > 4 && (
+              <button 
+                onClick={scrollRightClick}
+                disabled={!canScrollRight}
+                aria-label="Next articles"
+                className={`hidden sm:flex absolute right-0 lg:-right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full items-center justify-center bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-md transition-opacity duration-300 ${canScrollRight ? 'opacity-100 hover:text-teal-500 dark:hover:text-teal-400 cursor-pointer' : 'opacity-0 pointer-events-none'}`}
+              >
+                <BsChevronRight size={20} className='ml-1' />
+              </button>
+            )}
+          </div>
+        )}
       </div>
-
-
-
-      {/* Homepage Slides: FAQs */}
-      <HomeSlides />
-    </div>
+    </section>
   );
 }
 
+export default function Home() {
+  return (
+    <div className='min-h-screen bg-white dark:bg-black font-sans'>
+      
+      {/* Compact Branded Hero */}
+      <section className='relative w-full overflow-hidden bg-[#09090b] text-white py-8 sm:py-12'>
+        <div className='absolute inset-0 opacity-20'>
+          <div className='absolute -top-24 -right-24 w-96 h-96 bg-teal-500 rounded-full mix-blend-screen filter blur-[100px]'></div>
+        </div>
+        
+        <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-8'>
+          <div className='flex-1'>
+            <h1 className='text-2xl sm:text-4xl font-bold font-serif tracking-tight text-teal-400 mb-2'>
+              Learn. Build. Understand.
+            </h1>
+            <p className='text-base sm:text-lg text-gray-400 max-w-2xl font-light leading-relaxed'>
+              Technical articles on computer science, data structures, systems, and problem solving. 
+            </p>
+          </div>
+          
+          <div className='hidden md:block w-32 h-32 rounded-2xl overflow-hidden shadow-2xl border border-gray-800 shrink-0 bg-white'>
+            <img src='/zebra-hero.jpg' alt='Zebra Branding' className='w-full h-full object-cover scale-x-[-1]' />
+          </div>
+        </div>
+      </section>
+
+      {/* Article Sections (Independent Fetching) */}
+      <CategorySection 
+        title="Recent Articles" 
+        categoryUrl="/search" 
+        fetchUrl={`${BACKEND_URL}/api/post/getposts?limit=8`}
+        bgClass="bg-white dark:bg-[#09090b]" 
+      />
+      
+      <CategorySection 
+        title="Data Structures & Algorithms" 
+        categoryUrl="/search?category=data-structures-algorithms" 
+        fetchUrl={`${BACKEND_URL}/api/post/getposts?category=data-structures-algorithms&limit=8`}
+        bgClass="bg-gray-50 dark:bg-[#121212]" 
+      />
+      
+      <CategorySection 
+        title="Database Management System" 
+        categoryUrl="/search?category=database-management-system" 
+        fetchUrl={`${BACKEND_URL}/api/post/getposts?category=database-management-system&limit=8`}
+        bgClass="bg-white dark:bg-[#09090b]" 
+      />
+      
+      <CategorySection 
+        title="Operating Systems" 
+        categoryUrl="/search?category=operating-system" 
+        fetchUrl={`${BACKEND_URL}/api/post/getposts?category=operating-system&limit=8`}
+        bgClass="bg-gray-50 dark:bg-[#121212]" 
+      />
+      
+      <CategorySection 
+        title="System Design" 
+        categoryUrl="/search?category=system-design" 
+        fetchUrl={`${BACKEND_URL}/api/post/getposts?category=system-design&limit=8`}
+        bgClass="bg-white dark:bg-[#09090b]" 
+      />
+
+    </div>
+  );
+}

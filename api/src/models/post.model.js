@@ -42,6 +42,10 @@ const postSchema = new mongoose.Schema(
 );
 
 postSchema.index({ attachedResources: 1, isApproved: 1 });
+postSchema.index({ category: 1, isApproved: 1, updatedAt: -1 });
+postSchema.index({ isApproved: 1, updatedAt: -1 });
+// Add a text index for high-performance full-text search
+postSchema.index({ title: 'text', content: 'text' });
 
 const Post = mongoose.model('Post', postSchema);
 

@@ -21,10 +21,11 @@ export const create = async (req, res, next) => {
   }
 
   const slug = req.body.title
+    .trim()
     .split(' ')
     .join('-')
     .toLowerCase()
-    .replace(/[^a-zA-Z0-9-]/g, '');
+    .replace(/[^a-zA-Z0-9-]/g, '') + '-' + Math.random().toString(36).slice(-6);
     
   const newPost = new Post({
     ...req.body,
@@ -66,10 +67,7 @@ export const getposts = async (req, res, next) => {
       ...(req.query.postId && { _id: req.query.postId }),
       ...(req.query.attachedResource && { attachedResources: req.query.attachedResource }),
       ...(req.query.searchTerm && {
-        $or: [
-          { title: { $regex: req.query.searchTerm, $options: 'i' } },
-          { content: { $regex: req.query.searchTerm, $options: 'i' } },
-        ],
+        $text: { $search: req.query.searchTerm }
       }),
     };
     
@@ -84,16 +82,23 @@ export const getposts = async (req, res, next) => {
       query.isApproved = { $ne: false };
     }
 
-    const posts = await Post.find(query)
-      .populate('attachedResources')
+    let queryBuilder = Post.find(query)
+      .populate('attachedResources', 'title slug resourceType order category')
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
+      
+    // Exclude the heavy 'content' field if we are fetching a list of posts
+    if (!req.query.slug && !req.query.postId) {
+      queryBuilder = queryBuilder.select('-content');
+    }
+
+    const posts = await queryBuilder;
 
     console.log('Posts fetched:', posts.length);
 
-    const totalPosts = await Post.countDocuments();
-    console.log('Total posts:', totalPosts);
+    const totalPosts = await Post.countDocuments(query);
+    console.log('Total posts matching query:', totalPosts);
 
     const now = new Date();
 
@@ -177,6 +182,20 @@ export const approvePost = async (req, res, next) => {
     }
 
     res.status(200).json(updatedPost);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCategoryStats = async (req, res, next) => {
+  try {
+    const stats = await Post.aggregate([
+      { $match: { isApproved: { $ne: false }, category: { $ne: 'uncategorized' } } },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+      { $project: { _id: 0, category: "$_id", count: 1 } },
+      { $sort: { count: -1 } }
+    ]);
+    res.status(200).json(stats);
   } catch (error) {
     next(error);
   }

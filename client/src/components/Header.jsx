@@ -41,7 +41,7 @@ export default function Header() {
 
   return (
     <Navbar 
-      className='header-nav border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black sticky top-0 z-[9999]'
+      className='header-nav border-b border-[#2F3030] bg-[#1F2020] sticky top-0 z-[9999]'
       theme={{
         root: {
           inner: {
@@ -56,10 +56,10 @@ export default function Header() {
     >
       <Link
         to='/'
-        className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800'
+        className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-[#2F3030]'
       >
         <img src='/logo.png' alt='Z Blogs' className='h-8 w-8 rounded' />
-        <span className='text-gray-900 dark:text-white'>Blogs</span>
+        <span className='text-white'>Blogs</span>
       </Link>
 
       {/* Desktop Search with Autocomplete */}
@@ -80,7 +80,7 @@ export default function Header() {
       <div className='flex gap-2 md:order-2'>
         <Button 
           onClick={() => setIsSubscribeOpen(true)}
-          className='hidden sm:block font-semibold mr-2 bg-transparent border border-gray-400 text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white transition-colors'
+          className='hidden sm:block font-semibold mr-2 bg-transparent border border-gray-500 text-gray-300 hover:bg-[#2F3030] hover:text-white transition-colors'
         >
           Subscribe
         </Button>
@@ -126,16 +126,16 @@ export default function Header() {
       </div>
       <NavbarCollapse>
         <NavbarLink active={path === '/'} as={Link} to='/'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/' ? 'font-bold text-black dark:text-white' : ''}`}>Home</span>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/' ? 'font-bold text-teal-400' : ''}`}>Home</span>
         </NavbarLink>
         <NavbarLink active={path === '/search' || path.startsWith('/post/')} as={Link} to='/search'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-black dark:text-white' : ''}`}>Blogs</span>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-teal-400' : ''}`}>Blogs</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/about' ? 'font-bold text-black dark:text-white' : ''}`}>About</span>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/about' ? 'font-bold text-teal-400' : ''}`}>About</span>
         </NavbarLink>
         <NavbarLink active={path === '/resources'} as={Link} to='/resources'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white ${path === '/resources' ? 'font-bold text-black dark:text-white' : ''}`}>
+          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/resources' ? 'font-bold text-teal-400' : ''}`}>
             Resources
           </span>
         </NavbarLink>

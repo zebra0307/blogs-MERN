@@ -136,7 +136,7 @@ export default function SubjectLayout() {
             ${sidebarOpen ? 'block' : 'hidden'} 
             md:block w-full md:w-56 lg:w-64 shrink-0 border-r border-gray-200 dark:border-gray-800 
             absolute md:sticky md:top-0 h-[calc(100vh-64px)] overflow-y-auto 
-            bg-white dark:bg-[#000000] z-10 transition-all
+            bg-white/90 dark:bg-[#000000]/90 backdrop-blur-md md:bg-white md:dark:bg-[#000000] md:backdrop-blur-none z-10 transition-all
           `}
         >
           <div className='p-4 pb-20 md:pb-4'>

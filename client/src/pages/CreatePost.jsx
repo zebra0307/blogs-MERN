@@ -161,6 +161,11 @@ export default function CreatePost() {
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Create a post</h1>
+      {!currentUser?.isAdmin && (
+        <div className='mb-6 p-4 bg-teal-50 dark:bg-teal-900/20 text-teal-800 dark:text-teal-400 border border-teal-200 dark:border-teal-800 rounded-lg text-sm text-center'>
+          <span className='font-semibold'>Note:</span> As a community member, you can publish exactly <strong>1 article per month</strong>. Make it count!
+        </div>
+      )}
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 sm:flex-row justify-between'>
           <TextInput

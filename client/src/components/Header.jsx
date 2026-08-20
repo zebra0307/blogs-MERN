@@ -124,18 +124,18 @@ export default function Header() {
         )}
         <NavbarToggle />
       </div>
-      <NavbarCollapse>
+      <NavbarCollapse className="absolute top-[62px] left-0 w-full bg-[#1F2020]/90 backdrop-blur-md p-4 md:static md:w-auto md:bg-transparent md:p-0 border-b border-[#2F3030] md:border-none shadow-2xl md:shadow-none">
         <NavbarLink active={path === '/'} as={Link} to='/'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/' ? 'font-bold text-teal-400' : ''}`}>Home</span>
+          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/' ? 'font-bold text-teal-400' : ''}`}>Home</span>
         </NavbarLink>
         <NavbarLink active={path === '/search' || path.startsWith('/post/')} as={Link} to='/search'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-teal-400' : ''}`}>Blogs</span>
+          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-teal-400' : ''}`}>Blogs</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/about' ? 'font-bold text-teal-400' : ''}`}>About</span>
+          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/about' ? 'font-bold text-teal-400' : ''}`}>About</span>
         </NavbarLink>
         <NavbarLink active={path === '/resources'} as={Link} to='/resources'>
-          <span className={`px-4 py-2 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/resources' ? 'font-bold text-teal-400' : ''}`}>
+          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/resources' ? 'font-bold text-teal-400' : ''}`}>
             Resources
           </span>
         </NavbarLink>

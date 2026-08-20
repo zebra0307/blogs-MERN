@@ -179,9 +179,6 @@ export default function PostPage() {
         <div className='pt-6 w-full flex flex-col'>
           {renderContent()}
         </div>
-
-
-
         {post && (
           <div className='w-full mt-10 mb-6 border-t border-gray-200 dark:border-gray-800 pt-8'>
             <CommentSection postId={post._id} />

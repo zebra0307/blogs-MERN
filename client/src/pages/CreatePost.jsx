@@ -19,6 +19,7 @@ export default function CreatePost() {
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const [publishSuccess, setPublishSuccess] = useState(null);
+  const [isPublishing, setIsPublishing] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const quillRef = useRef(null);
 
@@ -110,6 +111,7 @@ export default function CreatePost() {
     e.preventDefault();
     setPublishError(null);
     setPublishSuccess(null);
+    setIsPublishing(true);
     try {
       const res = await fetch(`${BACKEND_URL}/api/post/create`, {
         method: 'POST',
@@ -139,6 +141,8 @@ export default function CreatePost() {
       }
     } catch {
       setPublishError('Something went wrong');
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -231,8 +235,12 @@ export default function CreatePost() {
         <div className="flex justify-end -mt-8 mb-4">
           <ResourceSelector onInsert={handleInsertResource} />
         </div>
-        <Button type='submit' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
-          Publish
+        <Button 
+          type='submit' 
+          className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white transition-all'
+          disabled={isPublishing}
+        >
+          {isPublishing ? 'Publishing...' : 'Publish'}
         </Button>
         {publishError && (
           <Alert className='mt-5' color='failure'>

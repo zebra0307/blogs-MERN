@@ -11,15 +11,17 @@ export default function CommentSection({ postId }) {
     const { currentUser } = useSelector((state) => state.user);
     const [comment, setComment] = useState('');
     const [commentError, setCommentError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [comments, setComments] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
     const navigate = useNavigate();
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (comment.length > 200) {
+        if (comment.length > 200 || comment.trim() === '') {
             return;
         }
+        setIsSubmitting(true);
         try {
             const res = await fetch(
                 `${BACKEND_URL}/api/comment/create`,
@@ -44,6 +46,8 @@ export default function CommentSection({ postId }) {
             }
         } catch (error) {
             setCommentError(error.message);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -166,9 +170,13 @@ export default function CommentSection({ postId }) {
                         <p className='text-gray-500 text-xs'>
                             {200 - comment.length} characters remaining
                         </p>
-                        <Button outline className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white' type='submit'>
-                            Submit
-                        </Button>
+                        <button 
+                            className='px-4 py-2 rounded-lg bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm' 
+                            type='submit'
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Submitting...' : 'Submit'}
+                        </button>
                     </div>
                     {commentError && (
                         <Alert color='failure' className='mt-5'>

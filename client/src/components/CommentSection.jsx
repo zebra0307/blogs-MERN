@@ -43,6 +43,8 @@ export default function CommentSection({ postId }) {
                 setComment('');
                 setCommentError(null);
                 setComments([data, ...comments]);
+            } else {
+                setCommentError(data.message || 'Failed to submit comment. Please try again.');
             }
         } catch (error) {
             setCommentError(error.message);

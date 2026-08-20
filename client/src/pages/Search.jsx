@@ -13,13 +13,14 @@ export default function Search() {
     return {
       searchTerm: urlParams.get('searchTerm') || '',
       sort: urlParams.get('sort') || 'desc',
-      category: urlParams.get('category') || 'uncategorized',
+      category: urlParams.get('category') || '',
     };
   });
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,9 +42,9 @@ export default function Search() {
         setPosts(data.posts);
         setLoading(false);
         if (data.posts.length === 9) {
-          setShowMore(true);
+          setHasMore(true);
         } else {
-          setShowMore(false);
+          setHasMore(false);
         }
       }
     };
@@ -59,7 +60,7 @@ export default function Search() {
       setSidebarData({ ...sidebarData, sort: order });
     }
     if (e.target.id === 'category') {
-      const category = e.target.value || 'uncategorized';
+      const category = e.target.value || '';
       setSidebarData({ ...sidebarData, category });
     }
   };
@@ -75,6 +76,8 @@ export default function Search() {
   };
 
   const handleShowMore = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
     const numberOfPosts = posts.length;
     const startIndex = numberOfPosts;
     const urlParams = new URLSearchParams(location.search);
@@ -84,18 +87,32 @@ export default function Search() {
       `${BACKEND_URL}/api/post/getposts?${searchQuery}`
     );
     if (!res.ok) {
+      setLoadingMore(false);
       return;
     }
     if (res.ok) {
       const data = await res.json();
-      setPosts([...posts, ...data.posts]);
+      setPosts((prev) => [...prev, ...data.posts]);
+      setLoadingMore(false);
       if (data.posts.length === 9) {
-        setShowMore(true);
+        setHasMore(true);
       } else {
-        setShowMore(false);
+        setHasMore(false);
       }
     }
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200) {
+        if (hasMore && !loadingMore) {
+          handleShowMore();
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasMore, loadingMore, posts]);
 
   return (
     <div className='flex flex-col md:flex-row min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white'>
@@ -132,7 +149,7 @@ export default function Search() {
               value={sidebarData.category}
               id='category'
             >
-              <option value='uncategorized'>All Categories</option>
+              <option value=''>All Categories</option>
               {POST_CATEGORIES.map((category) => (
                 <option key={category.value} value={category.value}>
                   {category.label}
@@ -165,13 +182,10 @@ export default function Search() {
               posts &&
               posts.map((post) => <PostCard key={post._id} post={post} />)}
           </div>
-          {showMore && (
-            <button
-              onClick={handleShowMore}
-              className='text-teal-500 text-sm font-medium hover:underline py-6 w-full text-center'
-            >
-              Show More
-            </button>
+          {loadingMore && (
+            <p className='text-teal-500 text-sm font-medium py-6 w-full text-center'>
+              Loading more posts...
+            </p>
           )}
         </div>
       </div>

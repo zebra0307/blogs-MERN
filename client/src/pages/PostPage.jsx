@@ -180,14 +180,7 @@ export default function PostPage() {
           {renderContent()}
         </div>
 
-        <p className='pt-4 pb-3 text-sm text-gray-600 dark:text-gray-400'>
-          This post is part of my ongoing software engineering learning log. Explore
-          more notes on data structures, C++, web development, and systems in the{' '}
-          <Link to='/search' className='text-teal-600 dark:text-teal-400 hover:underline'>
-            blog index
-          </Link>
-          .
-        </p>
+
 
         {post && (
           <div className='w-full mt-10 mb-6 border-t border-gray-200 dark:border-gray-800 pt-8'>

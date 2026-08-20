@@ -4,13 +4,15 @@ import { HiOutlineDocumentDownload, HiOutlineArrowLeft, HiOutlineArrowRight } fr
 import { useState, useEffect } from 'react';
 import PostCard from '../components/PostCard';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
+
 export default function TopicPage({ topic, subjectSlug, subjectName, previousTopic, nextTopic }) {
   const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
     const fetchRelatedPosts = async () => {
       try {
-        const res = await fetch(`/api/post/getposts?attachedResource=${topic._id}&limit=4`);
+        const res = await fetch(`${BACKEND_URL}/api/post/getposts?attachedResource=${topic._id}&limit=4`);
         if (res.ok) {
           const data = await res.json();
           setRelatedPosts(data.posts);

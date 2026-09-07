@@ -39,8 +39,7 @@ export default function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/search' element={<Search />} />
         <Route path='/resources' element={<Resources />} />
-        <Route path='/resources/:subjectSlug' element={<SubjectLayout />} />
-        <Route path='/resources/:subjectSlug/:topicSlug' element={<SubjectLayout />} />
+        <Route path='/resources/:subjectSlug/:topicSlug?' element={<SubjectLayout />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/coming-soon' element={<ComingSoon />} />
         <Route path='/verify-subscription/:token' element={<VerifySubscription />} />

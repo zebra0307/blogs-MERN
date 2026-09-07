@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useParams, Link, useNavigate, Outlet, useLocation } from 'react-router-dom';
 import { Spinner, Button } from 'flowbite-react';
 import { HiMenuAlt2, HiX, HiChevronDown, HiChevronRight } from 'react-icons/hi';
@@ -64,21 +64,34 @@ export default function SubjectLayout() {
     }
   }, [topicSlug, groupedTopics]);
 
+  const loadedSubjectRef = useRef(null);
+
   useEffect(() => {
     if (!category) {
       navigate('/resources');
       return;
     }
 
+    // Only fetch if the subject actually changed
+    if (loadedSubjectRef.current === subjectSlug && topics.length > 0) {
+      // Subject hasn't changed, just handle auto-redirect if needed
+      if (!topicSlug && topics.length > 0) {
+        const firstTopic = topics.find(r => r.resourceType !== 'Heading');
+        if (firstTopic) {
+          navigate(`/resources/${subjectSlug}/${firstTopic.slug}`, { replace: true });
+        }
+      }
+      return;
+    }
+
     const fetchTopics = async () => {
       try {
         setLoading(true);
-        // Fetch all resources for this category to build the sidebar
-        // order=asc is default in our updated backend logic for documentation flow
         const res = await fetch(`${BACKEND_URL}/api/resource/getresources?category=${category}&limit=100`);
         if (res.ok) {
           const data = await res.json();
           setTopics(data.resources);
+          loadedSubjectRef.current = subjectSlug;
           
           // Auto-redirect to the first Markdown topic if no topic is selected
           if (!topicSlug && data.resources.length > 0) {
@@ -240,4 +253,5 @@ export default function SubjectLayout() {
     </div>
   );
 }
+
 

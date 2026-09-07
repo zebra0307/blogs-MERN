@@ -10,14 +10,16 @@ const SUBJECT_MAPPING = {
   'dsa': 'DSA',
   'operating-system': 'Operating System',
   'dbms': 'DBMS',
-  'system-design': 'System Design'
+  'system-design': 'System Design',
+  'ad-hoc': 'Ad-hoc'
 };
 
 const SUBJECT_NAMES = {
   'dsa': 'Data Structures & Algorithms',
   'operating-system': 'Operating System Notes',
   'dbms': 'Database Management System',
-  'system-design': 'System Design'
+  'system-design': 'System Design',
+  'ad-hoc': 'Ad-hoc'
 };
 
 export default function SubjectLayout() {
@@ -103,8 +105,23 @@ export default function SubjectLayout() {
 
   if (loading) {
     return (
-      <div className='flex justify-center items-center min-h-screen'>
-        <Spinner size='xl' />
+      <div className='min-h-screen bg-white dark:bg-[#000000] flex flex-col'>
+        <div className='flex flex-1 max-w-7xl mx-auto w-full'>
+          <aside className='hidden md:block w-full md:w-56 lg:w-64 shrink-0 border-r border-gray-200 dark:border-gray-800 p-4'>
+             <div className='h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/2 mb-6 animate-pulse'></div>
+             <div className='flex flex-col gap-2'>
+               {[...Array(6)].map((_, i) => (
+                 <div key={i} className='h-10 bg-gray-200 dark:bg-gray-800 rounded animate-pulse'></div>
+               ))}
+             </div>
+          </aside>
+          <main className='flex-1 min-w-0 p-4 sm:p-8 lg:px-12'>
+             <div className='h-12 bg-gray-200 dark:bg-gray-800 rounded w-3/4 mb-8 animate-pulse'></div>
+             <div className='h-4 bg-gray-200 dark:bg-gray-800 rounded w-full mb-2 animate-pulse'></div>
+             <div className='h-4 bg-gray-200 dark:bg-gray-800 rounded w-full mb-2 animate-pulse'></div>
+             <div className='h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6 mb-8 animate-pulse'></div>
+          </main>
+        </div>
       </div>
     );
   }
@@ -223,3 +240,4 @@ export default function SubjectLayout() {
     </div>
   );
 }
+

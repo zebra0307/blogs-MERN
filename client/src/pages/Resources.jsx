@@ -30,6 +30,13 @@ export default function Resources() {
       description: 'Architecture, scalability, and system components',
       slug: 'system-design',
       topics: ['Microservices', 'Load Balancing', 'Caching', 'Message Queues', 'Databases', 'API Design']
+    },
+    {
+      id: '05',
+      title: 'Ad-hoc',
+      description: 'General software engineering principles, tools, and miscellaneous notes',
+      slug: 'ad-hoc',
+      topics: ['Principles', 'Best Practices', 'Tools', 'Mindset']
     }
   ];
 
@@ -87,3 +94,4 @@ export default function Resources() {
     </div>
   );
 }
+

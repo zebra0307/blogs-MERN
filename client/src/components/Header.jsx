@@ -80,7 +80,7 @@ export default function Header() {
       <div className='flex gap-2 md:order-2'>
         <Button size='sm'
           onClick={() => setIsSubscribeOpen(true)}
-          className='hidden sm:block font-semibold mr-2 bg-transparent border border-gray-500 text-gray-300 hover:bg-[#2F3030] hover:text-white transition-colors'
+          className='hidden sm:block font-semibold mr-2 bg-transparent border border-gray-500 text-gray-300 hover:bg-[#2F3030] hover:text-white transition-colors !py-1 !px-3 text-xs'
         >
           Subscribe
         </Button>
@@ -148,6 +148,7 @@ export default function Header() {
     </Navbar>
   );
 }
+
 
 
 

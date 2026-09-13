@@ -99,7 +99,7 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
                         }}
                         onFocus={() => setShowSuggestions(true)}
                         onKeyDown={handleKeyDown}
-                        className="w-full pl-4 pr-10 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
+                        className="w-full pl-4 pr-10 py-1 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
                     />
                     <button
                         type="submit"
@@ -148,4 +148,5 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
         </div>
     );
 }
+
 

@@ -168,6 +168,7 @@ export default function UpdatePost() {
     toolbar: [
       [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       ['bold', 'italic', 'underline', 'strike'],
+      ['blockquote', 'code-block'],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'align': [] }],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],
@@ -177,7 +178,7 @@ export default function UpdatePost() {
   };
 
   return (
-    <div className='p-3 max-w-3xl mx-auto min-h-screen'>
+    <div className='p-3 max-w-6xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update post</h1>
       <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className='flex flex-col gap-4 sm:flex-row justify-between'>
@@ -245,7 +246,7 @@ export default function UpdatePost() {
           theme='snow'
           value={formData.content}
           placeholder='Write something...'
-          className='h-72 mb-12'
+          className='h-[500px] mb-16'
           required
           modules={modules}
           onChange={(value) => {

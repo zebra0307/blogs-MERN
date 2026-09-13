@@ -401,3 +401,30 @@ aside a:hover {
 .animate-fadeIn {
   animation: fadeIn 0.15s ease-out forwards;
 }
+
+/* Quill code-block styling - ensure dark background in editor and output */
+.ql-snow .ql-editor pre.ql-syntax,
+.ql-snow .ql-editor .ql-code-block-container {
+  background-color: #16181c !important;
+  color: #e7e9ea !important;
+  border: 1px solid #2f3336;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-family: 'Fira Code', 'Monaco', monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  margin: 0.5rem 0;
+}
+
+/* Quill blockquote styling */
+.ql-snow .ql-editor blockquote {
+  border-left: 4px solid #14b8a6;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: #536471;
+  font-style: italic;
+}
+
+.dark .ql-snow .ql-editor blockquote {
+  color: #71767b;
+}

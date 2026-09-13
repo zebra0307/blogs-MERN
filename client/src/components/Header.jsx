@@ -41,7 +41,7 @@ export default function Header() {
 
   return (
     <Navbar 
-      className='header-nav border-b border-[#2F3030] bg-[#1F2020] sticky top-0 z-[9999]'
+      className='header-nav border-b border-[#2F3030] bg-[#1F2020] sticky top-0 z-[9999] py-1!'
       theme={{
         root: {
           inner: {
@@ -148,3 +148,4 @@ export default function Header() {
     </Navbar>
   );
 }
+

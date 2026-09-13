@@ -281,13 +281,21 @@ aside a:hover {
   list-style-type: decimal;
 }
 
-/* Ensure images inside post content are responsive */
+/* Ensure images inside post content are responsive and elegant */
 .post-content img {
   max-width: 100%;
-  height: auto;
+  max-height: 65vh; /* Keep huge screenshots from taking up the whole screen height */
+  object-fit: contain; /* Ensure it scales down nicely */
   border-radius: 0.5rem;
-  margin: 1rem auto;
+  margin: 2.5rem auto;
   display: block;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Nice editorial shadow */
+  border: 1px solid #e5e7eb;
+}
+
+.dark .post-content img {
+  border-color: #2f3336;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Post content links keep the underline on hover for readability */
@@ -380,8 +388,13 @@ aside a:hover {
   box-shadow: 0 0 0 1px var(--twitter-blue) !important;
 }
 
-/* Smooth transitions - exclude animated elements and SVGs so spinners/animations work */
-*:not(svg):not(svg *):not([class*="animate-"]):not([role="status"]):not([role="status"] *) {
+/* Smooth transitions for common interactive elements only */
+button, 
+a, 
+input, 
+textarea, 
+select, 
+.transition-colors {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -404,7 +417,9 @@ aside a:hover {
 
 /* Quill code-block styling - ensure dark background in editor and output */
 .ql-snow .ql-editor pre.ql-syntax,
-.ql-snow .ql-editor .ql-code-block-container {
+.ql-snow .ql-editor .ql-code-block-container,
+.post-content pre.ql-syntax,
+.post-content .ql-code-block-container {
   background-color: #16181c !important;
   color: #e7e9ea !important;
   border: 1px solid #2f3336;
@@ -413,18 +428,23 @@ aside a:hover {
   font-family: 'Fira Code', 'Monaco', monospace;
   font-size: 0.9rem;
   white-space: pre-wrap;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
 }
 
 /* Quill blockquote styling */
-.ql-snow .ql-editor blockquote {
+.ql-snow .ql-editor blockquote,
+.post-content blockquote {
   border-left: 4px solid #14b8a6;
   padding-left: 1rem;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
   color: #536471;
   font-style: italic;
+  font-size: 1.1rem;
 }
 
-.dark .ql-snow .ql-editor blockquote {
+.dark .ql-snow .ql-editor blockquote,
+.dark .post-content blockquote {
   color: #71767b;
 }
+
+

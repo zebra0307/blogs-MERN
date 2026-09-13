@@ -3,7 +3,7 @@ import { errorHandler } from '../utils/error.js';
 
 export const createComment = async (req, res, next) => {
   try {
-    const { content, postId, userId } = req.body;
+    const { content, postId, userId, replyTo } = req.body;
 
     if (userId !== req.user.id) {
       return next(
@@ -15,6 +15,7 @@ export const createComment = async (req, res, next) => {
       content,
       postId,
       userId,
+      replyTo: replyTo || null,
     });
     await newComment.save();
 
@@ -125,3 +126,4 @@ export const getcomments = async (req, res, next) => {
     next(error);
   }
 };
+

@@ -1,4 +1,4 @@
-import { Alert, Button, Modal, ModalHeader, ModalBody, Textarea } from 'flowbite-react';
+import { Alert, Button, Modal, ModalBody, ModalHeader, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,17 +11,22 @@ export default function CommentSection({ postId }) {
     const { currentUser } = useSelector((state) => state.user);
     const [comment, setComment] = useState('');
     const [commentError, setCommentError] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [comments, setComments] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
     const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (comment.length > 200 || comment.trim() === '') {
-            return;
+        handleReplySubmit(comment, null);
+    };
+
+    const handleReplySubmit = async (content, replyTo = null) => {
+        if (content.length > 200 || content.length === 0) {
+            return false;
         }
-        setIsSubmitting(true);
+        if (!replyTo) setIsSubmitting(true);
         try {
             const res = await fetch(
                 `${BACKEND_URL}/api/comment/create`,
@@ -32,24 +37,30 @@ export default function CommentSection({ postId }) {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        content: comment,
+                        content,
                         postId,
                         userId: currentUser._id,
+                        replyTo,
                     }),
                 }
             );
             const data = await res.json();
             if (res.ok) {
-                setComment('');
-                setCommentError(null);
+                if (!replyTo) {
+                    setComment('');
+                    setCommentError(null);
+                }
                 setComments([data, ...comments]);
+                return true;
             } else {
-                setCommentError(data.message || 'Failed to submit comment. Please try again.');
+                if (!replyTo) setCommentError(data.message || 'Failed to submit comment. Please try again.');
+                return false;
             }
         } catch (error) {
-            setCommentError(error.message);
+            if (!replyTo) setCommentError(error.message);
+            return false;
         } finally {
-            setIsSubmitting(false);
+            if (!replyTo) setIsSubmitting(false);
         }
     };
 
@@ -197,16 +208,18 @@ export default function CommentSection({ postId }) {
                             <p>{comments.length}</p>
                         </div>
                     </div>
-                    {comments.map((comment) => (
+                    {comments.filter(c => !c.replyTo).map((comment) => (
                         <Comment
                             key={comment._id}
                             comment={comment}
+                            allComments={comments}
                             onLike={handleLike}
                             onEdit={handleEdit}
                             onDelete={(commentId) => {
                                 setShowModal(true);
                                 setCommentToDelete(commentId);
                             }}
+                            onReply={handleReplySubmit}
                         />
                     ))}
                 </>

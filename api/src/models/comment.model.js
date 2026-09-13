@@ -22,6 +22,10 @@ const commentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    replyTo: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true }
 );

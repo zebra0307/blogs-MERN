@@ -5,16 +5,16 @@ import { BsGithub, BsEnvelope, BsTwitter } from 'react-icons/bs';
 export default function FooterCom() {
   return (
     <Footer id='site-footer' container className='border-t border-[#2F3030] bg-[#1F2020] rounded-none shadow-none'>
-      <div className='w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center py-4 gap-4'>
+      <div className='w-full max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center py-1.5 gap-2'>
         
         {/* Brand */}
         <Link to='/' className='flex items-center gap-2 text-white font-semibold'>
-          <img src='/logo.png' alt='Z Blogs' className='h-6 w-6 rounded' />
+          <img src='/logo.png' alt='Z Blogs' className='h-5 w-5 rounded' />
           <span className='text-white'></span>
         </Link>
 
         {/* Links */}
-        <div className='flex flex-wrap items-center justify-center gap-6 text-sm font-medium text-gray-300'>
+        <div className='flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-gray-300'>
           <Link to='/about' className='hover:text-teal-400 transition-colors'>About</Link>
           <Link to='/resources' className='hover:text-teal-400 transition-colors'>Resources</Link>
           <Link to='/contact' className='hover:text-teal-400 transition-colors flex items-center gap-1'>

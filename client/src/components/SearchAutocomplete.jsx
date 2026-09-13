@@ -99,7 +99,7 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
                         }}
                         onFocus={() => setShowSuggestions(true)}
                         onKeyDown={handleKeyDown}
-                        className="w-full pl-4 pr-10 py-2.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
+                        className="w-full pl-4 pr-10 py-1.5 text-sm rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all duration-200"
                     />
                     <button
                         type="submit"
@@ -122,7 +122,7 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
                             key={suggestion.value}
                             type="button"
                             onClick={() => handleSuggestionClick(suggestion)}
-                            className={`w-full px-4 py-2.5 text-left text-sm flex items-center gap-2 transition-colors ${index === activeIndex
+                            className={`w-full px-4 py-1.5 text-left text-sm flex items-center gap-2 transition-colors ${index === activeIndex
                                 ? 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300'
                                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                                 }`}
@@ -137,7 +137,7 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
                         <button
                             type="button"
                             onClick={() => handleSearch(searchTerm)}
-                            className="w-full px-4 py-3 text-left text-sm text-teal-600 dark:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700 flex items-center gap-2 font-medium"
+                            className="w-full px-4 py-2 text-left text-sm text-teal-600 dark:text-teal-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 border-t border-gray-100 dark:border-gray-700 flex items-center gap-2 font-medium"
                         >
                             <AiOutlineSearch size={14} />
                             <span>Search for "{searchTerm}"</span>
@@ -148,3 +148,4 @@ export default function SearchAutocomplete({ initialValue = '', className = '' }
         </div>
     );
 }
+

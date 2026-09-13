@@ -41,7 +41,7 @@ export default function Header() {
 
   return (
     <Navbar 
-      className='header-nav border-b border-[#2F3030] bg-[#1F2020] sticky top-0 z-[9999] py-1!'
+      className='header-nav border-b border-[#2F3030] bg-[#1F2020] sticky top-0 z-[9999] !py-0.5'
       theme={{
         root: {
           inner: {
@@ -56,9 +56,9 @@ export default function Header() {
     >
       <Link
         to='/'
-        className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold text-white flex items-center gap-2 px-3 py-2 -ml-3 rounded-full transition-colors hover:bg-[#2F3030]'
+        className='self-center whitespace-nowrap text-sm sm:text-lg font-semibold text-white flex items-center gap-2 px-3 py-1 -ml-3 rounded-full transition-colors hover:bg-[#2F3030]'
       >
-        <img src='/logo.png' alt='Z Blogs' className='h-8 w-8 rounded' />
+        <img src='/logo.png' alt='Z Blogs' className='h-6 w-6 rounded' />
         <span className='text-white'>Blogs</span>
       </Link>
 
@@ -70,7 +70,7 @@ export default function Header() {
 
       {/* Mobile Search Button */}
       <Button
-        className='w-12 h-10 lg:hidden'
+        className='w-10 h-8 lg:hidden'
         color='gray'
         pill
         onClick={() => navigate('/search')}
@@ -78,7 +78,7 @@ export default function Header() {
         <AiOutlineSearch />
       </Button>
       <div className='flex gap-2 md:order-2'>
-        <Button 
+        <Button size='sm'
           onClick={() => setIsSubscribeOpen(true)}
           className='hidden sm:block font-semibold mr-2 bg-transparent border border-gray-500 text-gray-300 hover:bg-[#2F3030] hover:text-white transition-colors'
         >
@@ -89,7 +89,7 @@ export default function Header() {
             arrowIcon={false}
             inline
             label={
-              <Avatar alt='user' img={currentUser.profilePicture} rounded />
+              <Avatar alt='user' img={currentUser.profilePicture} size='sm' rounded />
             }
             theme={{
               floating: {
@@ -117,7 +117,7 @@ export default function Header() {
           </Dropdown>
         ) : (
           <Link to='/sign-in'>
-            <Button className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'>
+            <Button size='sm' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white border-0'>
               Sign In
             </Button>
           </Link>
@@ -126,16 +126,16 @@ export default function Header() {
       </div>
       <NavbarCollapse className="absolute top-[62px] left-0 w-full bg-[#1F2020]/90 backdrop-blur-md p-4 md:static md:w-auto md:bg-transparent md:p-0 border-b border-[#2F3030] md:border-none shadow-2xl md:shadow-none">
         <NavbarLink active={path === '/'} as={Link} to='/'>
-          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/' ? 'font-bold text-teal-400' : ''}`}>Home</span>
+          <span className={`block px-3 py-1.5 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/' ? 'font-bold text-teal-400' : ''}`}>Home</span>
         </NavbarLink>
         <NavbarLink active={path === '/search' || path.startsWith('/post/')} as={Link} to='/search'>
-          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-teal-400' : ''}`}>Blogs</span>
+          <span className={`block px-3 py-1.5 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/search' || path.startsWith('/post/') ? 'font-bold text-teal-400' : ''}`}>Blogs</span>
         </NavbarLink>
         <NavbarLink active={path === '/about'} as={Link} to='/about'>
-          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/about' ? 'font-bold text-teal-400' : ''}`}>About</span>
+          <span className={`block px-3 py-1.5 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/about' ? 'font-bold text-teal-400' : ''}`}>About</span>
         </NavbarLink>
         <NavbarLink active={path === '/resources'} as={Link} to='/resources'>
-          <span className={`block px-4 py-3 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/resources' ? 'font-bold text-teal-400' : ''}`}>
+          <span className={`block px-3 py-1.5 rounded-full transition-colors hover:bg-[#2F3030] text-gray-300 hover:text-white ${path === '/resources' ? 'font-bold text-teal-400' : ''}`}>
             Resources
           </span>
         </NavbarLink>
@@ -148,4 +148,6 @@ export default function Header() {
     </Navbar>
   );
 }
+
+
 

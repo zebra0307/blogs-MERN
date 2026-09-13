@@ -10,7 +10,7 @@ export default function FooterCom() {
         {/* Brand */}
         <Link to='/' className='flex items-center gap-2 text-white font-semibold'>
           <img src='/logo.png' alt='Z Blogs' className='h-6 w-6 rounded' />
-          <span className='text-white'>Blogs</span>
+          <span className='text-white'></span>
         </Link>
 
         {/* Links */}
@@ -30,7 +30,7 @@ export default function FooterCom() {
 
         {/* Copyright */}
         <div className='text-sm text-gray-400'>
-          © {new Date().getFullYear()} Blogs
+          {/* © {new Date().getFullYear()} ZBlogs */}
         </div>
 
       </div>

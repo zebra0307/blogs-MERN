@@ -149,6 +149,7 @@ export const updatepost = async (req, res, next) => {
           content: req.body.content,
           category: req.body.category,
           image: req.body.image,
+            ...(req.body.fileUrl !== undefined && { fileUrl: req.body.fileUrl }),
           ...(req.body.attachedResources !== undefined && { attachedResources: req.body.attachedResources }),
           ...(req.user.isAdmin && req.body.isApproved !== undefined && { isApproved: req.body.isApproved }),
         },

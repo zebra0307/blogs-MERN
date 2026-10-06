@@ -147,14 +147,23 @@ export default function UpdatePost() {
 
       const res = await fetch(`${BACKEND_URL}/api/upload/pdf`, {
         method: 'POST',
+        credentials: 'include',
         body: uploadData,
       });
 
       setFileUploadProgress(60);
-      const data = await res.json();
+
+      const contentType = res.headers.get('content-type');
+      let data;
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        data = { message: text || 'Server returned non-JSON response (' + res.status + ')' };
+      }
 
       if (!res.ok) {
-        setFileUploadError(data.message || 'File upload failed');
+        setFileUploadError(data.message || `File upload failed (${res.status})`);
         setFileUploadProgress(null);
         return;
       }

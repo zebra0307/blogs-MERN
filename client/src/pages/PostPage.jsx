@@ -1,10 +1,9 @@
-import { Button, Spinner } from 'flowbite-react';
+﻿import { Button, Spinner } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import CommentSection from '../components/CommentSection';
 import PostCard from '../components/PostCard';
 import ResourceCard from '../components/ResourceCard';
-import NewsletterSubscribe from '../components/NewsletterSubscribe';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://z-blogs.onrender.com';
 
@@ -166,7 +165,7 @@ export default function PostPage() {
             <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
             {author && (
               <>
-                <span className='text-gray-400'>•</span>
+                <span className='text-gray-400'>â€¢</span>
                 <span className='font-medium italic text-gray-700 dark:text-gray-300'>By {author.username}</span>
               </>
             )}
@@ -184,10 +183,6 @@ export default function PostPage() {
             <CommentSection postId={post._id} />
           </div>
         )}
-
-        <div className='my-12'>
-          <NewsletterSubscribe />
-        </div>
       </article>
 
       <div className='w-full max-w-5xl mx-auto mt-8 mb-6'>

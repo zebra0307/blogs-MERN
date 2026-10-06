@@ -1,4 +1,4 @@
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
+﻿import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { useEffect, useState, useRef } from 'react';
@@ -15,6 +15,10 @@ export default function UpdatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
+  // PDF upload state
+  const [pdfFile, setPdfFile] = useState(null);
+  const [fileUploadProgress, setFileUploadProgress] = useState(null);
+  const [fileUploadError, setFileUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const [publishSuccess, setPublishSuccess] = useState(null);
@@ -114,22 +118,103 @@ export default function UpdatePost() {
     }
   };
 
+  /**
+   * Upload PDF file to server
+   */
+  const handleUploadFile = async () => {
+    try {
+      if (!pdfFile) {
+        setFileUploadError('Please select a PDF file');
+        return;
+      }
+
+      if (pdfFile.type !== 'application/pdf') {
+        setFileUploadError('Only PDF files are allowed');
+        return;
+      }
+
+      // Max 10MB
+      if (pdfFile.size > 10 * 1024 * 1024) {
+        setFileUploadError('File size must be less than 10MB');
+        return;
+      }
+
+      setFileUploadError(null);
+      setFileUploadProgress(10);
+
+      const uploadData = new FormData();
+      uploadData.append('file', pdfFile);
+
+      const res = await fetch(`${BACKEND_URL}/api/upload/pdf`, {
+        method: 'POST',
+        body: uploadData,
+      });
+
+      setFileUploadProgress(60);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setFileUploadError(data.message || 'File upload failed');
+        setFileUploadProgress(null);
+        return;
+      }
+
+      setFileUploadProgress(100);
+      setTimeout(() => {
+        setFileUploadProgress(null);
+        setFileUploadError(null);
+        setFormData((prev) => ({ ...prev, fileUrl: data.url }));
+      }, 500);
+
+    } catch (error) {
+      setFileUploadError('Something went wrong');
+      setFileUploadProgress(null);
+      console.log(error);
+    }
+  };
+
+  /**
+   * Delete PDF from server and clear from formData
+   */
+  const handleDeletePDF = async () => {
+    try {
+      if (!formData.fileUrl) return;
+      const res = await fetch(`${BACKEND_URL}/api/upload/delete-pdf`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ fileUrl: formData.fileUrl }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFormData((prev) => ({ ...prev, fileUrl: '' }));
+        setPublishSuccess('PDF removed successfully. Remember to update the post to save changes.');
+        setTimeout(() => setPublishSuccess(null), 3000);
+      } else {
+        setPublishError(data.message || 'Failed to remove PDF');
+      }
+    } catch (error) {
+      setPublishError('Something went wrong while removing the PDF');
+    }
+  };
+
   const handleInsertResource = (resource) => {
     const editor = quillRef.current.getEditor();
     const range = editor.getSelection(true);
-    
+
     if (resource.fileUrl) {
       editor.insertText(range.index, `\n[RESOURCE_EMBED:${resource._id}]\n`);
     } else {
-      editor.insertText(range.index, ` [RESOURCE_LINK:${resource._id}|📘 Read ${resource.title} →] `);
+      editor.insertText(range.index, ` [RESOURCE_LINK:${resource._id}| Read ${resource.title}] `);
     }
-    
+
     setFormData((prev) => {
       const currentAttachedIds = (prev.attachedResources || []).map(r => typeof r === 'object' ? r._id : r);
       return {
         ...prev,
-        attachedResources: currentAttachedIds.includes(resource._id) 
-          ? currentAttachedIds 
+        attachedResources: currentAttachedIds.includes(resource._id)
+          ? currentAttachedIds
           : [...currentAttachedIds, resource._id]
       };
     });
@@ -207,6 +292,8 @@ export default function UpdatePost() {
             ))}
           </Select>
         </div>
+
+        {/* Cover Image Upload */}
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
           <FileInput
             type='file'
@@ -241,6 +328,7 @@ export default function UpdatePost() {
             className='w-full h-72 object-cover'
           />
         )}
+
         <ReactQuill
           ref={quillRef}
           theme='snow'
@@ -256,12 +344,57 @@ export default function UpdatePost() {
         <div className="flex justify-end -mt-8 mb-4">
           <ResourceSelector onInsert={handleInsertResource} />
         </div>
+
+        {/* PDF Attachment Upload */}
+        <div className='flex gap-4 items-center justify-between border-4 border-indigo-500 border-dotted p-3'>
+          <FileInput
+            type='file'
+            accept='application/pdf'
+            onChange={(e) => setPdfFile(e.target.files[0])}
+          />
+          <Button
+            type='button'
+            size='sm'
+            outline
+            onClick={handleUploadFile}
+            disabled={fileUploadProgress !== null}
+            className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'
+          >
+            {fileUploadProgress !== null ? (
+              <div className='w-16 h-16'>
+                <CircularProgressbar
+                  value={fileUploadProgress}
+                  text={`${fileUploadProgress || 0}%`}
+                />
+              </div>
+            ) : (
+              'Upload PDF'
+            )}
+          </Button>
+        </div>
+        {fileUploadError && <Alert color='failure'>{fileUploadError}</Alert>}
+        {formData.fileUrl && (
+          <div className='flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border border-green-300 bg-green-50 dark:bg-green-900/20 dark:border-green-800 rounded-lg'>
+            <span className='text-green-800 dark:text-green-400 text-sm font-medium truncate w-full'>
+              PDF attached! <a href={formData.fileUrl} target='_blank' rel='noreferrer' className='underline text-blue-600 dark:text-blue-400'>View PDF</a>
+            </span>
+            <Button color='failure' size='sm' onClick={handleDeletePDF} type='button'>
+              Remove PDF
+            </Button>
+          </div>
+        )}
+
         <Button type='submit' className='bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white'>
           Update post
         </Button>
         {publishError && (
           <Alert className='mt-5' color='failure'>
             {publishError}
+          </Alert>
+        )}
+        {publishSuccess && (
+          <Alert className='mt-5' color='success'>
+            {publishSuccess}
           </Alert>
         )}
       </form>

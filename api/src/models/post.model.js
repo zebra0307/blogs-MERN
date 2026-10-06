@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+﻿import mongoose from 'mongoose';
 
 const postSchema = new mongoose.Schema(
   {
@@ -33,7 +33,11 @@ const postSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    attachedResources: [{
+    fileUrl: {
+      type: String,
+      default: '',
+    },
+        attachedResources: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Resource',
     }],

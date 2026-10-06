@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import upload from '../middleware/upload.js';
 import cloudinary from '../config/cloudinary.js';
 
@@ -17,7 +17,7 @@ router.post('/pdf', upload.single('file'), async (req, res) => {
                 {
                     folder: 'zblogs/question-papers',
                     resource_type: 'raw', 
-                    public_id: Date.now() + '-' + req.file.originalname 
+                    public_id: Date.now() + '-' + req.file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_') 
                 },
                 (error, result) => {
                     if (error) {
@@ -70,3 +70,4 @@ router.post('/delete-pdf', async (req, res) => {
 });
 
 export default router;
+
